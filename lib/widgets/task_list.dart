@@ -19,6 +19,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:todo_list_app/main.dart';
 import 'package:todo_list_app/models/task.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
 import 'package:todo_list_app/widgets/task_dialogs.dart';
@@ -47,12 +48,14 @@ class TaskListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return UI.decoratedContainer(ListTile(
       title: Text(
         task.isImportant ? '${task.title} (Important)' : task.title,
         style: TextStyle(
           fontWeight: task.isImportant ? FontWeight.bold : FontWeight.normal,
-          color: task.isCompleted ? Colors.grey : Colors.black,
+          color: task.isCompleted
+              ? Colors.grey
+              : (task.isImportant ? Colors.red : Colors.black),
           decoration: task.isCompleted ? TextDecoration.lineThrough : null,
         ),
       ),
@@ -60,7 +63,7 @@ class TaskListItem extends StatelessWidget {
         'Created on: ${task.creationDate.toString()}',
       ),
       trailing: TaskActions(task: task),
-    );
+    ));
   }
 }
 

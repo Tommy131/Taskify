@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-20 04:51:06
+ * @LastEditTime : 2024-01-20 22:28:15
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -189,7 +189,7 @@ class TodoProvider extends ChangeNotifier {
 
     Application.debug('正在保存待办清单数据...');
     Map<String, dynamic> saveList = {};
-    for (var key in {'default', ...list.keys}) {
+    for (var key in {Application.defaultCategory.name, ...list.keys}) {
       saveList[key] = _tasks
           .where((Task task) => key == task.category.name)
           .map((Task task) => task.toJson())

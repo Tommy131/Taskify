@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-20 05:11:55
+ * @LastEditTime : 2024-01-21 01:45:07
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -82,9 +82,9 @@ class Application {
     return _settings;
   }
 
-  static debug(String msg) {
+  static debug(String message) {
     if (isDebugMode) {
-      mainLogger.info('[DEBUG] ${msg}');
+      mainLogger.info('[DEBUG] $message');
     }
   }
 
@@ -99,6 +99,59 @@ class Application {
     } else {
       // mainLogger.warning('Directory already exists: $path');
     }
+  }
+
+  static void showStandardDialog(BuildContext context,
+      {String title = 'Success', String content = 'Action done.'}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(title),
+              content: Text(content),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                )
+              ],
+            ));
+  }
+
+  static void showConfirmationDialog(BuildContext context,
+      {String confirmMessage = '', Function? onCall}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Text('Are you sure you want to perform this action?'),
+            Text(
+              confirmMessage,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            )
+          ]),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (onCall != null) {
+                  onCall();
+                }
+                showStandardDialog(context);
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   static bool moveFile(String sourcePath, String destinationDirectory) {
@@ -121,5 +174,36 @@ class Application {
       Application.debug('WARN >> Error moving file: $e');
     }
     return false;
+  }
+}
+
+class UI {
+  static Ink decoratedContainer(Widget widget) {
+    return Ink(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(5),
+        child: Container(
+          // margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.8),
+                spreadRadius: 3,
+                blurRadius: 7,
+                blurStyle: BlurStyle.outer,
+              ),
+            ],
+          ),
+          child: widget,
+        ),
+      ),
+    );
   }
 }

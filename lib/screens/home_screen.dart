@@ -36,15 +36,18 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Todo List App'),
       ),
-      body: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CategoryDropdown(),
-          CategoryButtons(),
-          Expanded(
-            child: TaskList(),
-          ),
-        ],
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CategoryDropdown(),
+            CategoryButtons(),
+            Expanded(
+              child: TaskList(),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
