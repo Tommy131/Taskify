@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-19 21:33:51
+ * @LastEditTime : 2024-01-21 03:55:37
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,10 +20,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:todo_list_app/models/category.dart';
+import 'package:todo_list_app/models/task.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
 
 class CategoryDropdown extends StatelessWidget {
-  const CategoryDropdown({super.key});
+  static const triggerNormal = 0;
+  static const triggerChangeTaskCategory = 1;
+
+  final int triggerMode;
+  final Task? task;
+
+  const CategoryDropdown({super.key, this.triggerMode = 0, this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,11 @@ class CategoryDropdown extends StatelessWidget {
         onChanged: (String? newCategoryName) {
           if (newCategoryName != null) {
             todoProvider.changeCategory(newCategoryName);
+
+            if (triggerMode == triggerChangeTaskCategory) {
+              todoProvider.updateTaskDetails(task!,
+                  category: todoProvider.getCategoryByName(newCategoryName));
+            }
           }
         },
         items: todoProvider.categories.values.map<DropdownMenuItem<String>>(

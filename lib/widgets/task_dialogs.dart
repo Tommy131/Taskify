@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-20 22:51:49
+ * @LastEditTime : 2024-01-21 03:19:11
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -24,6 +24,7 @@ import 'package:todo_list_app/main.dart';
 import 'package:todo_list_app/models/category.dart';
 import 'package:todo_list_app/models/task.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/widgets/category_dropdown.dart';
 
 class AddTaskDialog extends StatelessWidget {
   const AddTaskDialog({super.key});
@@ -52,8 +53,7 @@ class AddTaskDialog extends StatelessWidget {
             if (taskTitle.isNotEmpty) {
               Task newTask = Task(
                 title: taskTitle,
-                category:
-                    todoProvider.categories[todoProvider.selectedCategory]!,
+                category: todoProvider.getCurrentCategory(),
                 creationDate: DateTime.now(),
               );
               todoProvider.addTask(newTask);
@@ -86,19 +86,14 @@ class EditTaskDialog extends StatelessWidget {
             controller: controller,
             decoration: const InputDecoration(hintText: 'Enter new title'),
           ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const Text('Mark as Important:'),
-              Checkbox(
-                value: task.isImportant,
-                onChanged: (bool? value) {
-                  todoProvider.toggleTaskImportance(task);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
+          Row(children: [
+            const Text('Change Category to: '),
+            const SizedBox(width: 10),
+              CategoryDropdown(
+              triggerMode: CategoryDropdown.triggerChangeTaskCategory,
+              task: task,
+            ),
+          ]),
         ],
       ),
       actions: <Widget>[

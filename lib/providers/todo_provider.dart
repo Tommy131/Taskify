@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-20 22:28:15
+ * @LastEditTime : 2024-01-21 03:45:24
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -57,6 +57,14 @@ class TodoProvider extends ChangeNotifier {
     return _categories;
   }
 
+  Category? getCategoryByName(String categoryName) {
+    return _categories[categoryName];
+  }
+
+  Category getCurrentCategory() {
+    return getCategoryByName(selectedCategory)!;
+  }
+
   void addTask(Task task) {
     _tasks.add(task);
     _saveData();
@@ -75,8 +83,19 @@ class TodoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateTaskDetails(Task task, {String? title}) {
-    task.updateTaskDetails(title: title);
+  void updateTaskDetails(
+    Task task, {
+    String? title,
+    bool? isCompleted,
+    bool? isImportant,
+    Category? category,
+  }) {
+    task.updateTaskDetails(
+      title: title,
+      isCompleted: isCompleted,
+      isImportant: isImportant,
+      category: category,
+    );
     _saveData();
     notifyListeners();
   }
@@ -155,12 +174,17 @@ class TodoProvider extends ChangeNotifier {
       for (var category in _todoList.data.entries) {
         for (int i = 0; i < category.value.length; i++) {
           dynamic taskData = category.value[i];
-          _tasks.add(Task(
+          _tasks.add(
+            Task(
               title: taskData['title'],
               category: _categories[taskData['category']]!,
               creationDate: DateTime.parse(
                 taskData['creationDate'],
-              )));
+              ),
+              isCompleted: taskData['isCompleted'],
+              isImportant: taskData['isImportant'],
+            ),
+          );
         }
       }
       Application.debug('待办清单加载完成.');
@@ -172,7 +196,7 @@ class TodoProvider extends ChangeNotifier {
   void _saveData() {
     Application.debug('正在保存分类数据...');
     JsonDriver settings = Application.userSettings();
-    Map<dynamic, dynamic> list = Application.settings['categories']['list'];
+    Map<String, dynamic> list = Application.settings['categories']['list'];
 
     list = Map.fromEntries(
       _categories.entries

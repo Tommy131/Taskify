@@ -58,9 +58,11 @@ class Task {
     String? title,
     bool? isCompleted,
     bool? isImportant,
+    Category? category,
   }) {
     this.title = title ?? this.title;
     this.isCompleted = isCompleted ?? this.isCompleted;
     this.isImportant = isImportant ?? this.isImportant;
+    this.category = category ?? this.category;
   }
 }
