@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 03:45:24
+ * @LastEditTime : 2024-01-21 04:12:13
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -152,8 +152,6 @@ class TodoProvider extends ChangeNotifier {
   }
 
   void _loadTodoList() {
-    String savePath = '${Directory.current.path}/userData';
-
     try {
       Application.debug('加载分类中...');
       Map<String, dynamic> list = Application.settings['categories']['list'];
@@ -170,7 +168,7 @@ class TodoProvider extends ChangeNotifier {
       Application.debug('分类加载完成.');
 
       Application.debug('加载待办清单中...');
-      _todoList = JsonDriver('todoList', savePath: savePath);
+      _todoList = JsonDriver('todoList', savePath: 'userData');
       for (var category in _todoList.data.entries) {
         for (int i = 0; i < category.value.length; i++) {
           dynamic taskData = category.value[i];
