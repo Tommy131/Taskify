@@ -15,31 +15,52 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/category_buttons.dart
+// widgets/function_buttons.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:todo_list_app/providers/todo_provider.dart';
 import 'package:todo_list_app/widgets/task_dialogs.dart';
 
-class CategoryButtons extends StatelessWidget {
-  const CategoryButtons({super.key});
+class FunctionButtons extends StatelessWidget {
+  const FunctionButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    final todoProvider = Provider.of<TodoProvider>(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        ElevatedButton(
+        FloatingActionButton(
           onPressed: () {
             _showAddCategoryDialog(context);
           },
-          child: const Text('Add Category'),
+          child: const Icon(Icons.playlist_add),
         ),
-        ElevatedButton(
+        const SizedBox(height: 10),
+        FloatingActionButton(
           onPressed: () {
             _showDeleteCategoryDialog(context);
           },
-          child: const Text('Delete Category'),
+          child: const Icon(Icons.delete_sweep),
+        ),
+        const SizedBox(height: 10),
+        FloatingActionButton(
+          onPressed: () {
+            _showAddTaskDialog(context, todoProvider);
+          },
+          child: const Icon(Icons.add),
         ),
       ],
+    );
+  }
+
+  void _showAddTaskDialog(BuildContext context, TodoProvider todoProvider) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AddTaskDialog();
+      },
     );
   }
 

@@ -178,14 +178,18 @@ class Application {
 }
 
 class UI {
-  static Ink decoratedContainer(Widget widget) {
+  static Ink decoratedContainer(Widget widget, {Function? onTapCall}) {
     return Ink(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if (onTapCall != null) {
+            onTapCall();
+          }
+        },
         borderRadius: BorderRadius.circular(5),
         child: Container(
           // margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),

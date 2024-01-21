@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-19 01:14:26
+ * @LastEditTime : 2024-01-21 02:43:37
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -48,22 +48,26 @@ class TaskListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UI.decoratedContainer(ListTile(
-      title: Text(
-        task.isImportant ? '${task.title} (Important)' : task.title,
-        style: TextStyle(
-          fontWeight: task.isImportant ? FontWeight.bold : FontWeight.normal,
-          color: task.isCompleted
-              ? Colors.grey
-              : (task.isImportant ? Colors.red : Colors.black),
-          decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-        ),
-      ),
-      subtitle: Text(
-        'Created on: ${task.creationDate.toString()}',
-      ),
-      trailing: TaskActions(task: task),
-    ));
+    return UI.decoratedContainer(
+        ListTile(
+          title: Text(
+            task.isImportant ? '${task.title} (Important)' : task.title,
+            style: TextStyle(
+              fontWeight:
+                  task.isImportant ? FontWeight.bold : FontWeight.normal,
+              color: task.isCompleted
+                  ? Colors.grey
+                  : (task.isImportant ? Colors.red : Colors.black),
+              decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+            ),
+          ),
+          subtitle: Text(
+            'Created on: ${task.creationDate.toString()}',
+          ),
+          trailing: TaskActions(task: task),
+        ), onTapCall: () {
+      TaskActions.showEditTaskDialog(context, task);
+    });
   }
 }
 
@@ -79,21 +83,30 @@ class TaskActions extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
+        /* IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            _showEditTaskDialog(context, task);
+            showEditTaskDialog(context, task);
           },
-        ),
+        ), */
         IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            _showDeleteTaskDialog(context, task);
+            showDeleteTaskDialog(context, task);
           },
         ),
-        Checkbox(
-          value: task.isCompleted,
-          onChanged: (bool? value) {
+        IconButton(
+          icon: Icon(Icons.notification_important,
+              color: task.isImportant ? Colors.red : Colors.grey.shade500),
+          onPressed: () {
+            todoProvider.toggleTaskImportance(task);
+          },
+        ),
+        IconButton(
+          icon: Icon(
+              task.isCompleted ? Icons.task_alt : Icons.radio_button_unchecked,
+              color: task.isCompleted ? Colors.green : Colors.grey.shade500),
+          onPressed: () {
             todoProvider.toggleTaskCompletion(task);
           },
         ),
@@ -101,7 +114,7 @@ class TaskActions extends StatelessWidget {
     );
   }
 
-  void _showEditTaskDialog(BuildContext context, Task task) {
+  static void showEditTaskDialog(BuildContext context, Task task) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,7 +123,7 @@ class TaskActions extends StatelessWidget {
     );
   }
 
-  void _showDeleteTaskDialog(BuildContext context, Task task) {
+  static void showDeleteTaskDialog(BuildContext context, Task task) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
