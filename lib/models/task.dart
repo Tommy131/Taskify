@@ -17,7 +17,7 @@
  */
 // models/task.dart
 
-import 'package:todo_list_app/models/category.dart';
+import 'package:todolist_app/models/category.dart';
 
 class Task {
   String title;

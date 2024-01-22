@@ -19,8 +19,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todo_list_app/providers/todo_provider.dart';
-import 'package:todo_list_app/widgets/task_dialogs.dart';
+import 'package:todolist_app/providers/todo_provider.dart';
+import 'package:todolist_app/widgets/task_dialogs.dart';
 
 class FunctionButtons extends StatelessWidget {
   const FunctionButtons({super.key});

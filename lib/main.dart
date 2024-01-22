@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 01:45:07
+ * @LastEditTime : 2024-01-22 11:13:34
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -22,9 +22,11 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-import 'package:todo_list_app/app.dart';
-import 'package:todo_list_app/models/category.dart';
-import 'package:todo_list_app/providers/json_driver.dart';
+import 'package:window_size/window_size.dart';
+
+import 'package:todolist_app/app.dart';
+import 'package:todolist_app/models/category.dart';
+import 'package:todolist_app/providers/json_driver.dart';
 
 /// 全局常量: DEBUG状态
 const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;
@@ -38,6 +40,9 @@ void main() {
         '[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 
+  WidgetsFlutterBinding.ensureInitialized();
+  setWindowTitle("TodoListApp by Jay");
+
   mainLogger.info('正在启动TodoList程序...');
   Application();
   MyApp.run();
@@ -49,7 +54,7 @@ class Application {
   static late Category _defaultCategory;
 
   Application() {
-    _settings = JsonDriver('userSettings');
+    _settings = JsonDriver('userSettings', savePath: 'userData');
 
     Map<String, dynamic> mergedData = {
       ...{

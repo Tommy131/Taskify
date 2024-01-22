@@ -20,7 +20,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:todo_list_app/main.dart';
+import 'package:todolist_app/main.dart';
 
 class JsonDriver {
   late String _fileName;
@@ -29,8 +29,7 @@ class JsonDriver {
   late Map<dynamic, dynamic> _data;
 
   JsonDriver(String fileName, {String savePath = ''}) {
-    _savePath =
-        '${Directory.current.path}/$savePath/'.trim();
+    _savePath = '${Directory.current.path}/$savePath/'.trim();
     _fileName = fileName;
     _filePath = '$_savePath$_fileName.json';
     _data = {};

@@ -17,9 +17,9 @@
  */
 // screens/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:todo_list_app/widgets/category_dropdown.dart';
-import 'package:todo_list_app/widgets/function_buttons.dart';
-import 'package:todo_list_app/widgets/task_list.dart';
+import 'package:todolist_app/widgets/category_dropdown.dart';
+import 'package:todolist_app/widgets/function_buttons.dart';
+import 'package:todolist_app/widgets/task_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

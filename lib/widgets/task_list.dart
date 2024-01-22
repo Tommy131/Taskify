@@ -19,10 +19,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todo_list_app/main.dart';
-import 'package:todo_list_app/models/task.dart';
-import 'package:todo_list_app/providers/todo_provider.dart';
-import 'package:todo_list_app/widgets/task_dialogs.dart';
+import 'package:todolist_app/main.dart';
+import 'package:todolist_app/models/task.dart';
+import 'package:todolist_app/providers/todo_provider.dart';
+import 'package:todolist_app/widgets/task_dialogs.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({super.key});
@@ -31,13 +31,19 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
 
-    return ListView.builder(
-      itemCount: todoProvider.filteredTasks.length,
-      itemBuilder: (context, index) {
-        Task task = todoProvider.filteredTasks[index];
-        return TaskListItem(task: task);
-      },
-    );
+    if (todoProvider.filteredTasks.isEmpty) {
+      return const Center(
+        child: Text('Here is nothing to do :)'),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: todoProvider.filteredTasks.length,
+        itemBuilder: (context, index) {
+          Task task = todoProvider.filteredTasks[index];
+          return TaskListItem(task: task);
+        },
+      );
+    }
   }
 }
 

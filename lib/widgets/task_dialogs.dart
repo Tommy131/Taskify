@@ -19,12 +19,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:todo_list_app/main.dart';
+import 'package:todolist_app/main.dart';
 
-import 'package:todo_list_app/models/category.dart';
-import 'package:todo_list_app/models/task.dart';
-import 'package:todo_list_app/providers/todo_provider.dart';
-import 'package:todo_list_app/widgets/category_dropdown.dart';
+import 'package:todolist_app/models/category.dart';
+import 'package:todolist_app/models/task.dart';
+import 'package:todolist_app/providers/todo_provider.dart';
+import 'package:todolist_app/widgets/category_dropdown.dart';
 
 class AddTaskDialog extends StatelessWidget {
   const AddTaskDialog({super.key});
@@ -89,7 +89,7 @@ class EditTaskDialog extends StatelessWidget {
           Row(children: [
             const Text('Change Category to: '),
             const SizedBox(width: 10),
-              CategoryDropdown(
+            CategoryDropdown(
               triggerMode: CategoryDropdown.triggerChangeTaskCategory,
               task: task,
             ),

@@ -1,4 +1,4 @@
-name: todo_list_app
+name: todolist_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -35,6 +35,11 @@ dependencies:
   intl: ^0.17.0
   path_provider: ^2.0.14
   flutter_colorpicker: ^0.5.0
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size
+      ref: fd519be1e8398c6b6c2062c2447bac960a71bc02
 
 
   # The following adds the Cupertino Icons font to your application.
