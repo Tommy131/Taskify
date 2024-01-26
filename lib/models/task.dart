@@ -21,6 +21,7 @@ import 'package:todolist_app/models/category.dart';
 
 class Task {
   String title;
+  String? remark;
   Category category;
   DateTime creationDate;
   bool isCompleted;
@@ -30,6 +31,7 @@ class Task {
     required this.title,
     required this.category,
     required this.creationDate,
+    this.remark = 'No Remark',
     this.isCompleted = false,
     this.isImportant = false,
   });
@@ -37,6 +39,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       title: json['title'],
+      remark: json['remark'],
       category: Category.fromJson(json),
       creationDate: DateTime.parse(json['creationDate']),
       isCompleted: json['isCompleted'],
@@ -47,6 +50,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
+      'remark': remark,
       'category': category.name,
       'creationDate': creationDate.toIso8601String(),
       'isCompleted': isCompleted,
@@ -56,11 +60,13 @@ class Task {
 
   void updateTaskDetails({
     String? title,
+    String? remark,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
   }) {
     this.title = title ?? this.title;
+    this.remark = remark ?? this.remark;
     this.isCompleted = isCompleted ?? this.isCompleted;
     this.isImportant = isImportant ?? this.isImportant;
     this.category = category ?? this.category;

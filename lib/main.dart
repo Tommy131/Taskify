@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 17:43:12
+ * @LastEditTime : 2024-01-26 21:39:54
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -227,8 +227,8 @@ class UI {
     return AppBar(
       title: Text(
         title,
-        style: TextStyle(
-          color: Color(Colors.white.value),
+        style: const TextStyle(
+          color: Colors.white,
         ),
       ),
       backgroundColor: UI.getTheme(context).primaryColor,
@@ -304,13 +304,13 @@ class UI {
         },
         borderRadius: BorderRadius.circular(5),
         child: Container(
-          // margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.8),
+                color: Colors.black.withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 7,
                 blurStyle: BlurStyle.outer,

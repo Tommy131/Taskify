@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 02:43:37
+ * @LastEditTime : 2024-01-26 21:23:01
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -60,8 +60,8 @@ class TaskListItem extends StatelessWidget {
       UI.decoratedContainer(
         Container(
           padding: const EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 15.0,
+            vertical: 12.0,
+            horizontal: 18.0,
           ),
           child: Row(
             children: [
@@ -74,10 +74,24 @@ class TaskListItem extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: task.isImportant
                             ? FontWeight.bold
-                            : FontWeight.normal,
+                            : FontWeight.w500,
                         color: task.isCompleted
                             ? Colors.grey
                             : (task.isImportant ? Colors.red : Colors.black),
+                        decoration: task.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      task.remark!,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.normal,
+                        color: task.isCompleted
+                            ? Colors.grey
+                            : (task.isImportant ? Colors.red : Colors.black54),
                         decoration: task.isCompleted
                             ? TextDecoration.lineThrough
                             : null,
@@ -89,7 +103,7 @@ class TaskListItem extends StatelessWidget {
                       style: TextStyle(
                         color: task.isCompleted
                             ? Colors.grey
-                            : (task.isImportant ? Colors.red : Colors.black),
+                            : (task.isImportant ? Colors.red : Colors.black54),
                       ),
                     ),
                   ],

@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 18:03:47
+ * @LastEditTime : 2024-01-26 21:45:10
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -75,8 +75,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Card(
-            color: const Color.fromRGBO(0, 0, 0, 0.1),
-            elevation: 1.0,
+            color: Colors.white.withOpacity(0.5),
+            elevation: 2.0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
@@ -84,6 +84,7 @@ class AboutScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(height: 10.0),
                 ListTile(
                   leading: Image.asset(
                     'assets/images/hanskijay.jpg',
@@ -102,7 +103,7 @@ class AboutScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
-                const Divider(),
+                const Divider(color: Colors.black38),
                 ListTile(
                   leading: Icon(Icons.email, color: labelColor),
                   title: const Text('hanskijay@owoblog.com'),

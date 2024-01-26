@@ -83,12 +83,14 @@ class TodoProvider extends ChangeNotifier {
   void updateTaskDetails(
     Task task, {
     String? title,
+    String? remark,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
   }) {
     task.updateTaskDetails(
       title: title,
+      remark: remark,
       isCompleted: isCompleted,
       isImportant: isImportant,
       category: category,

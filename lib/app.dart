@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 19:29:51
+ * @LastEditTime : 2024-01-26 21:49:35
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -40,14 +40,19 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           primarySwatch: Colors.blue,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          inputDecorationTheme: InputDecorationTheme(
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: UI.getTheme(context).inputDecorationTheme.fillColor,
-            hintStyle: TextStyle(
-              color: UI.getTheme(context).inputDecorationTheme.fillColor,
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(
+              fontFamily: 'Roboto',
             ),
-            contentPadding: const EdgeInsets.all(12),
+          ),
+          inputDecorationTheme: const InputDecorationTheme(
+            border: UnderlineInputBorder(borderSide: BorderSide(width: 3.0)),
+            filled: true,
+            fillColor: Colors.white60,
+            hintStyle: TextStyle(
+              color: Colors.white54,
+            ),
+            contentPadding: EdgeInsets.all(12),
           ),
         ),
         home: const ScreenManager(),

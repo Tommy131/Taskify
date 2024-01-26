@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 20:44:45
+ * @LastEditTime : 2024-01-26 21:24:00
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -32,13 +32,25 @@ class AddTaskDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
-    TextEditingController controller = TextEditingController();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController remarkController = TextEditingController();
 
     return AlertDialog(
       title: const Text('Add Task'),
-      content: TextField(
-        controller: controller,
-        decoration: const InputDecoration(hintText: 'Enter task title'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: titleController,
+            decoration: const InputDecoration(hintText: 'Enter task title'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            maxLines: 2,
+            controller: remarkController,
+            decoration: const InputDecoration(hintText: 'Add a Remark...'),
+          ),
+        ],
       ),
       actions: <Widget>[
         TextButton(
@@ -49,10 +61,11 @@ class AddTaskDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            String taskTitle = controller.text;
+            String taskTitle = titleController.text;
             if (taskTitle.isNotEmpty) {
               Task newTask = Task(
                 title: taskTitle,
+                remark: remarkController.text,
                 category: todoProvider.getCurrentCategory(),
                 creationDate: DateTime.now(),
               );
@@ -75,7 +88,10 @@ class EditTaskDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
-    TextEditingController controller = TextEditingController(text: task.title);
+    TextEditingController titleController =
+        TextEditingController(text: task.title);
+    TextEditingController remarkController =
+        TextEditingController(text: task.remark);
     double maxWidth = UI.getMaxWidth(context);
 
     List<Widget> children = [
@@ -93,8 +109,13 @@ class EditTaskDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: controller,
-            decoration: const InputDecoration(hintText: 'Enter new title'),
+            controller: titleController,
+            decoration: const InputDecoration(hintText: 'Edit title'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: remarkController,
+            decoration: const InputDecoration(hintText: 'Edit remark'),
           ),
           maxWidth >= 460
               ? Row(children: children)
@@ -113,11 +134,13 @@ class EditTaskDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            String newTitle = controller.text;
+            String newTitle = titleController.text;
+            String remark = remarkController.text;
             if (newTitle.isNotEmpty) {
               todoProvider.updateTaskDetails(
                 task,
                 title: newTitle,
+                remark: remark,
               );
             }
             Navigator.of(context).pop();
