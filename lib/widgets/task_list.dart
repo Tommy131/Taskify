@@ -17,12 +17,14 @@
  */
 // widgets/task_list.dart
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:todolist_app/main.dart';
 import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/providers/todo_provider.dart';
 import 'package:todolist_app/widgets/task_dialogs.dart';
+import 'package:todolist_app/widgets/important_label.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({super.key});
@@ -54,26 +56,38 @@ class TaskListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UI.decoratedContainer(
-        ListTile(
-          title: Text(
-            task.isImportant ? '${task.title} (Important)' : task.title,
-            style: TextStyle(
-              fontWeight:
-                  task.isImportant ? FontWeight.bold : FontWeight.normal,
-              color: task.isCompleted
-                  ? Colors.grey
-                  : (task.isImportant ? Colors.red : Colors.black),
-              decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+    return Stack(children: [
+      UI.decoratedContainer(
+          ListTile(
+            title: Text(
+              task.title,
+              style: TextStyle(
+                fontWeight:
+                    task.isImportant ? FontWeight.bold : FontWeight.normal,
+                color: task.isCompleted
+                    ? Colors.grey
+                    : (task.isImportant ? Colors.red : Colors.black),
+                decoration:
+                    task.isCompleted ? TextDecoration.lineThrough : null,
+              ),
             ),
-          ),
-          subtitle: Text(
-            'Created on: ${task.creationDate.toString()}',
-          ),
-          trailing: TaskActions(task: task),
-        ), onTapCall: () {
-      TaskActions.showEditTaskDialog(context, task);
-    });
+            subtitle: Text(
+              'Created on: ${DateFormat('yyyy-MM-dd').format(task.creationDate)}',
+            ),
+            trailing: TaskActions(task: task),
+          ), onTapCall: () {
+        TaskActions.showEditTaskDialog(context, task);
+      }),
+      task.isImportant
+          ? Positioned(
+              left: 0,
+              top: 2.0,
+              child: ImportantLabel.put(
+                color: !task.isCompleted ? Colors.red : Colors.grey,
+              ),
+            )
+          : Container(),
+    ]);
   }
 }
 

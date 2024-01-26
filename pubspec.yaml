@@ -40,6 +40,7 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding
       path: plugins/window_size
       ref: fd519be1e8398c6b6c2062c2447bac960a71bc02
+  flutter_svg: ^2.0.9
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -67,6 +68,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/github_mark_white.svg
+    - assets/github_mark.svg
+    - assets/instagram_icon.svg
+    - assets/hanskijay.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

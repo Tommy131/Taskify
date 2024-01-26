@@ -18,9 +18,10 @@
 // app.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todolist_app/main.dart';
 
 import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/screens/home_screen.dart';
+import 'package:todolist_app/screens/screen_manager.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -34,9 +35,22 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => TodoProvider(),
       child: MaterialApp(
-        title: 'Todo List App',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: const HomeScreen(),
+        title: Application.appName,
+        theme: ThemeData(
+          useMaterial3: true,
+          primarySwatch: Colors.blue,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          inputDecorationTheme: InputDecorationTheme(
+            border: const OutlineInputBorder(),
+            filled: true,
+            fillColor: UI.getTheme(context).inputDecorationTheme.fillColor,
+            hintStyle: TextStyle(
+              color: UI.getTheme(context).inputDecorationTheme.fillColor,
+            ),
+            contentPadding: const EdgeInsets.all(12),
+          ),
+        ),
+        home: const ScreenManager(),
       ),
     );
   }

@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-22 11:13:34
+ * @LastEditTime : 2024-01-26 01:09:02
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -41,15 +41,19 @@ void main() {
   });
 
   WidgetsFlutterBinding.ensureInitialized();
-  setWindowTitle("TodoListApp by Jay");
+  setWindowTitle("${Application.appName} v${Application.version} By HanskiJay");
 
-  mainLogger.info('正在启动TodoList程序...');
+  mainLogger.info('正在启动TodoList程序 v${Application.version} By HanskiJay...');
   Application();
   MyApp.run();
 }
 
 /// 主程序类
 class Application {
+  static const String appName = 'TodoList App';
+  static const String version = '0.0.1-beta';
+  static const String author = 'Jay Hanski';
+
   static late JsonDriver _settings;
   static late Category _defaultCategory;
 
@@ -90,19 +94,6 @@ class Application {
   static debug(String message) {
     if (isDebugMode) {
       mainLogger.info('[DEBUG] $message');
-    }
-  }
-
-  static void createDirectory(String path) {
-    // 创建 Directory 对象
-    Directory directory = Directory(path);
-
-    // 检查目录是否存在，如果不存在，则创建
-    if (!directory.existsSync()) {
-      directory.createSync(recursive: true); // 使用 recursive 参数确保创建父目录（如果不存在）
-      Application.debug('Directory created: $path');
-    } else {
-      // mainLogger.warning('Directory already exists: $path');
     }
   }
 
@@ -159,6 +150,26 @@ class Application {
     );
   }
 
+  static bool isValidEmail(String email) {
+    // 使用正则表达式验证邮箱格式
+    final RegExp emailRegex =
+        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  static void createDirectory(String path) {
+    // 创建 Directory 对象
+    Directory directory = Directory(path);
+
+    // 检查目录是否存在，如果不存在，则创建
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true); // 使用 recursive 参数确保创建父目录（如果不存在）
+      Application.debug('Directory created: $path');
+    } else {
+      // mainLogger.warning('Directory already exists: $path');
+    }
+  }
+
   static bool moveFile(String sourcePath, String destinationDirectory) {
     try {
       File sourceFile = File(sourcePath);
@@ -213,6 +224,27 @@ class UI {
           child: widget,
         ),
       ),
+    );
+  }
+
+  static ThemeData getTheme(BuildContext context) {
+    return Theme.of(context);
+  }
+
+  static EdgeInsets getStandardPaddingData() {
+    return const EdgeInsets.symmetric(vertical: 10, horizontal: 20);
+  }
+
+  static AppBar createAppBar(BuildContext context, String title) {
+    return AppBar(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Color(Colors.white.value),
+        ),
+      ),
+      backgroundColor: UI.getTheme(context).primaryColor,
+      elevation: 5,
     );
   }
 }

@@ -17,6 +17,8 @@
  */
 // screens/home_screen.dart
 import 'package:flutter/material.dart';
+
+import 'package:todolist_app/main.dart';
 import 'package:todolist_app/widgets/category_dropdown.dart';
 import 'package:todolist_app/widgets/function_buttons.dart';
 import 'package:todolist_app/widgets/task_list.dart';
@@ -27,11 +29,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Todo List App'),
-      ),
+      appBar: UI.createAppBar(context, 'Todo List'),
+      backgroundColor: Colors.white30,
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: UI.getStandardPaddingData(),
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
