@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:39:54
+ * @LastEditTime : 2024-01-26 21:51:14
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -65,7 +65,7 @@ void main() {
 /// 主程序类
 class Application {
   static const String appName = 'TodoList App';
-  static const String version = '0.0.1-beta';
+  static const String version = '0.0.2-beta';
   static const String author = 'Jay Hanski';
 
   static late JsonDriver _settings;
