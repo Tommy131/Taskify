@@ -10,27 +10,35 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 01:09:02
+ * @LastEditTime : 2024-01-26 17:43:12
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // main.dart
+import 'dart:async';
 import 'dart:io';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 
+import 'package:logging/logging.dart';
 import 'package:window_size/window_size.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:todolist_app/app.dart';
 import 'package:todolist_app/models/category.dart';
 import 'package:todolist_app/providers/json_driver.dart';
+import 'package:todolist_app/core/android.dart';
 
 /// 全局常量: DEBUG状态
 const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;
+
+/// 全局常量: 主日志记录器
 final Logger mainLogger = Logger('MainLogger');
+
+/// 全局常量: 文件夹名称
+const savePathName = 'userData';
 
 /// 主函数
 void main() {
@@ -41,11 +49,17 @@ void main() {
   });
 
   WidgetsFlutterBinding.ensureInitialized();
-  setWindowTitle("${Application.appName} v${Application.version} By HanskiJay");
+  if (Platform.isWindows) {
+    setWindowTitle(
+        "${Application.appName} v${Application.version} By HanskiJay");
+  }
 
   mainLogger.info('正在启动TodoList程序 v${Application.version} By HanskiJay...');
   Application();
-  MyApp.run();
+
+  Timer(const Duration(seconds: 2), () {
+    MyApp.run();
+  });
 }
 
 /// 主程序类
@@ -55,10 +69,41 @@ class Application {
   static const String author = 'Jay Hanski';
 
   static late JsonDriver _settings;
+  static late JsonDriver _todoList;
   static late Category _defaultCategory;
 
   Application() {
-    _settings = JsonDriver('userSettings', savePath: 'userData');
+    if (Platform.isAndroid) {
+      Android.checkStoragePermission(
+        onGrantedCallback: () {
+          debug('获取权限成功.');
+        },
+        onDeclinedCallback: () {
+          debug('获取权限失败!');
+          // exit(0);
+        },
+      );
+
+      getApplicationDocumentsDirectory().then((Directory directory) {
+        generateConfiguration(savePath: '${directory.path}/$savePathName');
+      });
+    } else {
+      generateConfiguration();
+    }
+  }
+
+  static void generateConfiguration({String savePath = savePathName}) {
+    _settings = JsonDriver(
+      'userSettings',
+      savePath: savePath,
+      useDefault: !Platform.isAndroid,
+    );
+
+    _todoList = JsonDriver(
+      'todoList',
+      savePath: savePath,
+      useDefault: !Platform.isAndroid,
+    );
 
     Map<String, dynamic> mergedData = {
       ...{
@@ -74,9 +119,12 @@ class Application {
       ..._settings.data
     };
     _settings.writeData(mergedData);
+
     Map<String, dynamic> setting = _settings.data['categories']['settings'];
-    _defaultCategory =
-        Category(name: setting['name'], color: Color(setting['color']));
+    _defaultCategory = Category(
+      name: setting['name'],
+      color: Color(setting['color']),
+    );
   }
 
   static Category get defaultCategory {
@@ -87,8 +135,16 @@ class Application {
     return _settings.data;
   }
 
+  static Map get todoList {
+    return _todoList.data;
+  }
+
   static JsonDriver userSettings() {
     return _settings;
+  }
+
+  static JsonDriver todoListJson() {
+    return _todoList;
   }
 
   static debug(String message) {
@@ -97,64 +153,29 @@ class Application {
     }
   }
 
-  static void showStandardDialog(BuildContext context,
-      {String title = 'Success', String content = 'Action done.'}) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(title),
-              content: Text(content),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                )
-              ],
-            ));
-  }
-
-  static void showConfirmationDialog(BuildContext context,
-      {String confirmMessage = '', Function? onCall}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmation'),
-          content: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Text('Are you sure you want to perform this action?'),
-            Text(
-              confirmMessage,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            )
-          ]),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (onCall != null) {
-                  onCall();
-                }
-                showStandardDialog(context);
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   static bool isValidEmail(String email) {
     // 使用正则表达式验证邮箱格式
     final RegExp emailRegex =
         RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
+  }
+
+  void getStorageDirectory() async {
+    // 获取应用程序文档目录
+    final directory = await getApplicationDocumentsDirectory();
+    debug("应用程序文档目录：${directory.path}");
+
+    // 获取应用程序缓存目录
+    final cacheDirectory = await getTemporaryDirectory();
+    debug("应用程序缓存目录：${cacheDirectory.path}");
+
+    // 获取外部存储目录
+    final externalDirectory = await getExternalStorageDirectory();
+    if (externalDirectory != null) {
+      debug("外部存储目录：${externalDirectory.path}");
+    } else {
+      debug("无法获取外部存储目录");
+    }
   }
 
   static void createDirectory(String path) {
@@ -194,6 +215,81 @@ class Application {
 }
 
 class UI {
+  static EdgeInsets getStandardPaddingData() {
+    return const EdgeInsets.symmetric(vertical: 10, horizontal: 20);
+  }
+
+  static double getMaxWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
+
+  static AppBar createAppBar(BuildContext context, String title) {
+    return AppBar(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Color(Colors.white.value),
+        ),
+      ),
+      backgroundColor: UI.getTheme(context).primaryColor,
+      elevation: 5,
+    );
+  }
+
+  static void showStandardDialog(BuildContext context,
+      {String title = 'Success', String content = 'Action done.'}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          )
+        ],
+      ),
+    );
+  }
+
+  static void showConfirmationDialog(BuildContext context,
+      {String confirmMessage = '', Function? onCall}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Text('Are you sure you want to perform this action?'),
+            Text(
+              confirmMessage,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            )
+          ]),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (onCall != null) {
+                  onCall();
+                }
+                showStandardDialog(context);
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static Ink decoratedContainer(Widget widget, {Function? onTapCall}) {
     return Ink(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -229,22 +325,5 @@ class UI {
 
   static ThemeData getTheme(BuildContext context) {
     return Theme.of(context);
-  }
-
-  static EdgeInsets getStandardPaddingData() {
-    return const EdgeInsets.symmetric(vertical: 10, horizontal: 20);
-  }
-
-  static AppBar createAppBar(BuildContext context, String title) {
-    return AppBar(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Color(Colors.white.value),
-        ),
-      ),
-      backgroundColor: UI.getTheme(context).primaryColor,
-      elevation: 5,
-    );
   }
 }

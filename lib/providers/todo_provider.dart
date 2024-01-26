@@ -10,22 +10,21 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 19:16:02
+ * @LastEditTime : 2024-01-26 16:28:48
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // providers/todo_provider.dart
-import 'package:flutter/material.dart';
-// import 'package:path_provider/path_provider.dart';
-import 'package:todolist_app/main.dart';
 
+import 'package:flutter/material.dart';
+
+import 'package:todolist_app/main.dart';
 import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/models/category.dart';
 import 'package:todolist_app/providers/json_driver.dart';
 
 class TodoProvider extends ChangeNotifier {
-  late JsonDriver _todoList;
   late String selectedCategory = Application.defaultCategory.name;
 
   // ignore: prefer_final_fields
@@ -152,10 +151,11 @@ class TodoProvider extends ChangeNotifier {
   void _loadTodoList() {
     try {
       Application.debug('加载分类中...');
-      Map<String, dynamic> list = Application.settings['categories']['list'];
+      // ignore: no_leading_underscores_for_local_identifiers
+      Map<String, dynamic> _list = Application.settings['categories']['list'];
 
       _categories.addAll(Map.fromEntries(
-        list.entries
+        _list.entries
             .where(
               (entry) => entry.key != Application.defaultCategory.name,
             )
@@ -166,8 +166,8 @@ class TodoProvider extends ChangeNotifier {
       Application.debug('分类加载完成.');
 
       Application.debug('加载待办清单中...');
-      _todoList = JsonDriver('todoList', savePath: 'userData');
-      for (var category in _todoList.data.entries) {
+
+      for (var category in Application.todoList.entries) {
         for (int i = 0; i < category.value.length; i++) {
           dynamic taskData = category.value[i];
           _tasks.add(
@@ -192,9 +192,10 @@ class TodoProvider extends ChangeNotifier {
   void _saveData() {
     Application.debug('正在保存分类数据...');
     JsonDriver settings = Application.userSettings();
-    Map<String, dynamic> list = Application.settings['categories']['list'];
+    // ignore: no_leading_underscores_for_local_identifiers
+    Map<String, dynamic> _list = Application.settings['categories']['list'];
 
-    list = Map.fromEntries(
+    _list = Map.fromEntries(
       _categories.entries
           .where(
             (entry) => entry.key != Application.defaultCategory.name,
@@ -204,18 +205,18 @@ class TodoProvider extends ChangeNotifier {
           ),
     );
 
-    settings.data['categories']['list'] = list;
+    settings.data['categories']['list'] = _list;
     settings.writeData(settings.data);
 
     Application.debug('正在保存待办清单数据...');
     Map<String, dynamic> saveList = {};
-    for (var key in {Application.defaultCategory.name, ...list.keys}) {
+    for (var key in {Application.defaultCategory.name, ..._list.keys}) {
       saveList[key] = _tasks
           .where((Task task) => key == task.category.name)
           .map((Task task) => task.toJson())
           .toList();
     }
-    _todoList.writeData(saveList);
+    Application.todoListJson().writeData(saveList);
     Application.debug('操作成功完成.');
   }
 }
