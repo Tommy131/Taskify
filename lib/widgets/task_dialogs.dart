@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-21 03:19:11
+ * @LastEditTime : 2024-01-26 20:44:45
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -76,6 +76,16 @@ class EditTaskDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
     TextEditingController controller = TextEditingController(text: task.title);
+    double maxWidth = UI.getMaxWidth(context);
+
+    List<Widget> children = [
+      const Text('Change Category to: '),
+      const SizedBox(width: 10),
+      CategoryDropdown(
+        triggerMode: CategoryDropdown.triggerChangeTaskCategory,
+        task: task,
+      ),
+    ];
 
     return AlertDialog(
       title: const Text('Edit Task'),
@@ -86,14 +96,12 @@ class EditTaskDialog extends StatelessWidget {
             controller: controller,
             decoration: const InputDecoration(hintText: 'Enter new title'),
           ),
-          Row(children: [
-            const Text('Change Category to: '),
-            const SizedBox(width: 10),
-            CategoryDropdown(
-              triggerMode: CategoryDropdown.triggerChangeTaskCategory,
-              task: task,
-            ),
-          ]),
+          maxWidth >= 460
+              ? Row(children: children)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [const SizedBox(height: 10), ...children],
+                ),
         ],
       ),
       actions: <Widget>[
@@ -196,7 +204,7 @@ class AddCategoryDialog extends StatelessWidget {
               todoProvider.changeCategory(categoryName);
             }
             Navigator.of(context).pop();
-            Application.showStandardDialog(context);
+            UI.showStandardDialog(context);
           },
           child: const Text('Add'),
         ),
@@ -267,7 +275,7 @@ class DeleteCategoryDialog extends StatelessWidget {
               ? null // Disable the button if there is only one category
               : () {
                   Navigator.of(context).pop();
-                  Application.showConfirmationDialog(context,
+                  UI.showConfirmationDialog(context,
                       confirmMessage:
                           'Delete Category: "${todoProvider.selectedCategory}"',
                       onCall: () {

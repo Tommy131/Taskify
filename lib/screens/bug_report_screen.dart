@@ -56,10 +56,10 @@ class _BugReportScreenState extends State<BugReportScreen> {
   }
 
   void submitForm() {
-    print('Email: ${emailController.text}');
-    print('Title: ${titleController.text}');
-    print('Category: ${categoryController.text}');
-    print('Text: ${textController.text}');
+    Application.debug('Email: ${emailController.text}');
+    Application.debug('Title: ${titleController.text}');
+    Application.debug('Category: ${categoryController.text}');
+    Application.debug('Text: ${textController.text}');
   }
 
   @override

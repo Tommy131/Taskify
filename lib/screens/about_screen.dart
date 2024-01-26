@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 00:11:38
+ * @LastEditTime : 2024-01-26 18:03:47
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -75,7 +75,7 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Card(
-            color: Color.fromRGBO(0, 0, 0, 0.1),
+            color: const Color.fromRGBO(0, 0, 0, 0.1),
             elevation: 1.0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -86,7 +86,7 @@ class AboutScreen extends StatelessWidget {
               children: [
                 ListTile(
                   leading: Image.asset(
-                    'assets/hanskiJay.jpg',
+                    'assets/images/hanskijay.jpg',
                     width: 64.0,
                     height: 64.0,
                   ),
@@ -105,15 +105,15 @@ class AboutScreen extends StatelessWidget {
                 const Divider(),
                 ListTile(
                   leading: Icon(Icons.email, color: labelColor),
-                  title: Text('hanskijay@owoblog.com'),
+                  title: const Text('hanskijay@owoblog.com'),
                 ),
                 ListTile(
                   leading: Icon(Icons.public, color: labelColor),
-                  title: Text('https://owoblog.com/blog'),
+                  title: const Text('https://owoblog.com/blog'),
                 ),
                 ListTile(
                   leading: SvgPicture.asset(
-                    'assets/github_mark.svg',
+                    'assets/images/github_mark.svg',
                     width: 24.0,
                     height: 24.0,
                     color: labelColor,
@@ -122,7 +122,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 ListTile(
                   leading: SvgPicture.asset(
-                    'assets/instagram_icon.svg',
+                    'assets/images/instagram_icon.svg',
                     width: 24.0,
                     height: 24.0,
                     color: labelColor,

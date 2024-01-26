@@ -58,26 +58,51 @@ class TaskListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       UI.decoratedContainer(
-          ListTile(
-            title: Text(
-              task.title,
-              style: TextStyle(
-                fontWeight:
-                    task.isImportant ? FontWeight.bold : FontWeight.normal,
-                color: task.isCompleted
-                    ? Colors.grey
-                    : (task.isImportant ? Colors.red : Colors.black),
-                decoration:
-                    task.isCompleted ? TextDecoration.lineThrough : null,
+        Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 15.0,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      style: TextStyle(
+                        fontWeight: task.isImportant
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        color: task.isCompleted
+                            ? Colors.grey
+                            : (task.isImportant ? Colors.red : Colors.black),
+                        decoration: task.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Created on: ${DateFormat('yyyy-MM-dd').format(task.creationDate)}',
+                      style: TextStyle(
+                        color: task.isCompleted
+                            ? Colors.grey
+                            : (task.isImportant ? Colors.red : Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            subtitle: Text(
-              'Created on: ${DateFormat('yyyy-MM-dd').format(task.creationDate)}',
-            ),
-            trailing: TaskActions(task: task),
-          ), onTapCall: () {
-        TaskActions.showEditTaskDialog(context, task);
-      }),
+              TaskActions(task: task),
+            ],
+          ),
+        ),
+        onTapCall: () {
+          TaskActions.showEditTaskDialog(context, task);
+        },
+      ),
       task.isImportant
           ? Positioned(
               left: 0,
@@ -99,38 +124,92 @@ class TaskActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
+    double maxWidth = UI.getMaxWidth(context);
 
+    return maxWidth >= 500
+        ? buildActions(context, todoProvider, task)
+        : buildPopupMenuButton(context, todoProvider, task);
+  }
+
+  Widget buildActions(
+      BuildContext context, TodoProvider todoProvider, Task task) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        /* IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            showEditTaskDialog(context, task);
-          },
-        ), */
-        IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            showDeleteTaskDialog(context, task);
-          },
+        _buildIconButton(Icons.edit, () => showEditTaskDialog(context, task)),
+        _buildIconButton(
+            Icons.delete, () => showDeleteTaskDialog(context, task)),
+        _buildIconButton(
+          Icons.notification_important,
+          () => todoProvider.toggleTaskImportance(task),
+          color: task.isImportant ? Colors.red : Colors.grey.shade500,
         ),
-        IconButton(
-          icon: Icon(Icons.notification_important,
-              color: task.isImportant ? Colors.red : Colors.grey.shade500),
-          onPressed: () {
-            todoProvider.toggleTaskImportance(task);
-          },
-        ),
-        IconButton(
-          icon: Icon(
-              task.isCompleted ? Icons.task_alt : Icons.radio_button_unchecked,
-              color: task.isCompleted ? Colors.green : Colors.grey.shade500),
-          onPressed: () {
-            todoProvider.toggleTaskCompletion(task);
-          },
+        _buildIconButton(
+          task.isCompleted ? Icons.task_alt : Icons.radio_button_unchecked,
+          () => todoProvider.toggleTaskCompletion(task),
+          color: task.isCompleted ? Colors.green : Colors.grey.shade500,
         ),
       ],
+    );
+  }
+
+  Widget buildPopupMenuButton(
+      BuildContext context, TodoProvider todoProvider, Task task) {
+    return PopupMenuButton<int>(
+      itemBuilder: (context) => [
+        _buildPopupMenuItem(Icons.edit, "Edit", 0),
+        _buildPopupMenuItem(Icons.delete, "Delete", 1),
+        _buildPopupMenuItem(
+          Icons.notification_important,
+          task.isImportant ? "Mark as Normal" : "Mark as Important",
+          2,
+          color: task.isImportant ? Colors.red : Colors.grey.shade500,
+        ),
+        _buildPopupMenuItem(
+          task.isCompleted ? Icons.task_alt : Icons.radio_button_unchecked,
+          task.isCompleted ? "Mask as TODO" : "Mark as Completed",
+          3,
+          color: task.isCompleted ? Colors.green : Colors.grey.shade500,
+        ),
+      ],
+      onSelected: (int value) {
+        switch (value) {
+          case 0:
+            showEditTaskDialog(context, task);
+            break;
+          case 1:
+            showDeleteTaskDialog(context, task);
+            break;
+          case 2:
+            todoProvider.toggleTaskImportance(task);
+            break;
+          case 3:
+            todoProvider.toggleTaskCompletion(task);
+            break;
+        }
+      },
+      child: const Icon(Icons.more_vert),
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, Function onPressed, {Color? color}) {
+    return IconButton(
+      icon: Icon(icon, color: color),
+      onPressed: onPressed as void Function()?,
+    );
+  }
+
+  PopupMenuItem<int> _buildPopupMenuItem(IconData icon, String text, int value,
+      {Color? color}) {
+    return PopupMenuItem<int>(
+      value: value,
+      child: Row(
+        children: [
+          Icon(icon, color: color),
+          const SizedBox(width: 8.0),
+          Text(text),
+        ],
+      ),
     );
   }
 
