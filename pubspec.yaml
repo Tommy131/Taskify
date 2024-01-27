@@ -42,6 +42,7 @@ dependencies:
       ref: fd519be1e8398c6b6c2062c2447bac960a71bc02
   flutter_svg: ^2.0.9
   permission_handler: ^11.0.1
+  fluttertoast: ^8.2.4
 
 
   # The following adds the Cupertino Icons font to your application.
