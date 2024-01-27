@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:24:00
+ * @LastEditTime : 2024-01-27 01:50:56
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -42,13 +42,13 @@ class AddTaskDialog extends StatelessWidget {
         children: [
           TextField(
             controller: titleController,
-            decoration: const InputDecoration(hintText: 'Enter task title'),
+            decoration: UI.input('Enter task title'),
           ),
           const SizedBox(height: 10),
           TextField(
             maxLines: 2,
             controller: remarkController,
-            decoration: const InputDecoration(hintText: 'Add a Remark...'),
+            decoration: UI.input('Add a Remark...'),
           ),
         ],
       ),
@@ -110,12 +110,12 @@ class EditTaskDialog extends StatelessWidget {
         children: [
           TextField(
             controller: titleController,
-            decoration: const InputDecoration(hintText: 'Edit title'),
+            decoration: UI.input('Edit title'),
           ),
           const SizedBox(height: 10),
           TextField(
             controller: remarkController,
-            decoration: const InputDecoration(hintText: 'Edit remark'),
+            decoration: UI.input('Edit remark'),
           ),
           maxWidth >= 460
               ? Row(children: children)
@@ -199,7 +199,7 @@ class AddCategoryDialog extends StatelessWidget {
         children: [
           TextField(
             controller: controller,
-            decoration: const InputDecoration(hintText: 'Enter category name'),
+            decoration: UI.input('Enter category name'),
           ),
           const SizedBox(height: 10),
           BlockPicker(

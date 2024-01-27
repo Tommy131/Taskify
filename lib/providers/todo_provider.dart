@@ -153,11 +153,10 @@ class TodoProvider extends ChangeNotifier {
   void _loadTodoList() {
     try {
       Application.debug('加载分类中...');
-      // ignore: no_leading_underscores_for_local_identifiers
-      Map<String, dynamic> _list = Application.settings['categories']['list'];
+      Map<String, dynamic> list = Application.settings['categories']['list'];
 
       _categories.addAll(Map.fromEntries(
-        _list.entries
+        list.entries
             .where(
               (entry) => entry.key != Application.defaultCategory.name,
             )
@@ -194,10 +193,9 @@ class TodoProvider extends ChangeNotifier {
   void _saveData() {
     Application.debug('正在保存分类数据...');
     JsonDriver settings = Application.userSettings();
-    // ignore: no_leading_underscores_for_local_identifiers
-    Map<String, dynamic> _list = Application.settings['categories']['list'];
+    Map<String, dynamic> list = Application.settings['categories']['list'];
 
-    _list = Map.fromEntries(
+    list = Map.fromEntries(
       _categories.entries
           .where(
             (entry) => entry.key != Application.defaultCategory.name,
@@ -207,12 +205,12 @@ class TodoProvider extends ChangeNotifier {
           ),
     );
 
-    settings.data['categories']['list'] = _list;
+    settings.data['categories']['list'] = list;
     settings.writeData(settings.data);
 
     Application.debug('正在保存待办清单数据...');
     Map<String, dynamic> saveList = {};
-    for (var key in {Application.defaultCategory.name, ..._list.keys}) {
+    for (var key in {Application.defaultCategory.name, ...list.keys}) {
       saveList[key] = _tasks
           .where((Task task) => key == task.category.name)
           .map((Task task) => task.toJson())

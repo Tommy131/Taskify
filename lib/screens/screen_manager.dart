@@ -21,7 +21,8 @@ import 'package:todolist_app/main.dart';
 
 import 'package:todolist_app/screens/about_screen.dart';
 import 'package:todolist_app/screens/bug_report_screen.dart';
-import 'package:todolist_app/screens/home_screen.dart';
+import 'package:todolist_app/screens/todolist_screen.dart';
+import 'package:todolist_app/screens/widget_test_screen.dart';
 
 class ScreenManager extends StatefulWidget {
   const ScreenManager({super.key});
@@ -34,9 +35,10 @@ class _ScreenManagerState extends State<ScreenManager> {
   int selectedIndex = 0;
 
   static const Map<int, Widget> _pages = {
-    0: HomeScreen(),
+    0: TodolistScreen(),
     1: AboutScreen(),
     2: BugReportScreen(),
+    3: WidgetTestScreen(),
   };
 
   static const List<NavigationRailDestination> destinations = [
@@ -51,6 +53,10 @@ class _ScreenManagerState extends State<ScreenManager> {
     NavigationRailDestination(
       icon: Icon(Icons.bug_report),
       label: Text('Bug Report'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.cruelty_free),
+      label: Text('Widget Test'),
     ),
   ];
 

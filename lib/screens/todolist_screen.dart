@@ -23,8 +23,8 @@ import 'package:todolist_app/widgets/category_dropdown.dart';
 import 'package:todolist_app/widgets/function_buttons.dart';
 import 'package:todolist_app/widgets/task_list.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class TodolistScreen extends StatelessWidget {
+  const TodolistScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

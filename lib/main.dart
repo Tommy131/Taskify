@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:51:14
+ * @LastEditTime : 2024-01-26 23:29:05
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -21,6 +21,7 @@ import 'dart:io';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:logging/logging.dart';
 import 'package:window_size/window_size.dart';
@@ -76,11 +77,20 @@ class Application {
     if (Platform.isAndroid) {
       Android.checkStoragePermission(
         onGrantedCallback: () {
-          debug('获取权限成功.');
+          debug('获取读写权限成功.');
         },
         onDeclinedCallback: () {
-          debug('获取权限失败!');
-          // exit(0);
+          debug('获取读写权限失败!');
+          Fluttertoast.showToast(
+            msg: 'Unable to access system storage path! Program exit.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          if (!isDebugMode) exit(0);
         },
       );
 
@@ -320,6 +330,14 @@ class UI {
           child: widget,
         ),
       ),
+    );
+  }
+
+  static InputDecoration input(String hintText,
+      {Color color = Colors.black45}) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(color: color),
     );
   }
 
