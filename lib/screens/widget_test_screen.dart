@@ -10,14 +10,15 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 23:35:31
+ * @LastEditTime : 2024-01-27 04:02:27
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // screens/widget_test_screen.dart
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:todolist_app/core/update_checker.dart';
 
 import 'package:todolist_app/main.dart';
 
@@ -35,14 +36,7 @@ class _WidgetTestState extends State<WidgetTestScreen> {
         ? Center(
             child: ElevatedButton(
               onPressed: () {
-                Fluttertoast.showToast(
-                    msg: "This is Center Short Toast",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
+                UpdateChecker().checkForUpdates(context, Application.version);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

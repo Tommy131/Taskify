@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:logging/logging.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:window_size/window_size.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -52,7 +53,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
     setWindowTitle(
-        "${Application.appName} v${Application.version} By HanskiJay");
+        '${Application.appName} v${Application.version} By HanskiJay');
   }
 
   mainLogger.info('正在启动TodoList程序 v${Application.version} By HanskiJay...');
@@ -81,15 +82,8 @@ class Application {
         },
         onDeclinedCallback: () {
           debug('获取读写权限失败!');
-          Fluttertoast.showToast(
-            msg: 'Unable to access system storage path! Program exit.',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
+          UI.showBottomSheet(
+              message: 'Unable to access system storage path! Program exit.');
           if (!isDebugMode) exit(0);
         },
       );
@@ -173,18 +167,18 @@ class Application {
   void getStorageDirectory() async {
     // 获取应用程序文档目录
     final directory = await getApplicationDocumentsDirectory();
-    debug("应用程序文档目录：${directory.path}");
+    debug('应用程序文档目录：${directory.path}');
 
     // 获取应用程序缓存目录
     final cacheDirectory = await getTemporaryDirectory();
-    debug("应用程序缓存目录：${cacheDirectory.path}");
+    debug('应用程序缓存目录：${cacheDirectory.path}');
 
     // 获取外部存储目录
     final externalDirectory = await getExternalStorageDirectory();
     if (externalDirectory != null) {
-      debug("外部存储目录：${externalDirectory.path}");
+      debug('外部存储目录：${externalDirectory.path}');
     } else {
-      debug("无法获取外部存储目录");
+      debug('无法获取外部存储目录');
     }
   }
 
@@ -221,6 +215,20 @@ class Application {
       Application.debug('WARN >> Error moving file: $e');
     }
     return false;
+  }
+
+  static void openExternalLink(BuildContext context, String url) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      // ignore: use_build_context_synchronously
+      UI.showBottomSheet(
+        context: context,
+        message: 'Cannot open the external link!',
+      );
+    }
   }
 }
 
@@ -298,6 +306,32 @@ class UI {
         );
       },
     );
+  }
+
+  static void showBottomSheet({BuildContext? context, String? message}) {
+    if (Platform.isWindows) {
+      final snackBar = SnackBar(
+        content: Text(message!),
+        backgroundColor: Colors.black.withOpacity(0.7),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      );
+      ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+    } else {
+      Fluttertoast.showToast(
+        msg: message!,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   static Ink decoratedContainer(Widget widget, {Function? onTapCall}) {
