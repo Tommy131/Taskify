@@ -61,7 +61,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Platform.isWindows
-            ? (MediaQuery.of(context).size.width > 450.0)
+            ? (MediaQuery.of(context).size.width > UI.minimalWidthForWindows)
                 ? _buildScreen(context, _screenOnWindows)
                 : _buildScreen(context, _screenOnMobile)
             : _buildScreen(context, _screenOnMobile);
@@ -172,7 +172,8 @@ class _ScreenManagerState extends State<ScreenManager> {
             ),
           ),
           elevation: 8.0,
-          extended: MediaQuery.of(context).size.width >= 900.0,
+          extended: MediaQuery.of(context).size.width >=
+              UI.minimalExpandWidthForNavigation,
           selectedLabelTextStyle: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,

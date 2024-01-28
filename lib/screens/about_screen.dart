@@ -33,7 +33,6 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UI.createAppBar(context, 'About'),
       backgroundColor: Colors.white30,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

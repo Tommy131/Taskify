@@ -70,7 +70,6 @@ class _BugReportScreenState extends State<BugReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UI.createAppBar(context, 'Bug Report'),
       backgroundColor: Colors.white30,
       body: Padding(
         padding: const EdgeInsets.all(16.0),

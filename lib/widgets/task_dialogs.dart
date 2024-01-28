@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 04:31:47
+ * @LastEditTime : 2024-01-29 00:12:21
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -94,9 +94,9 @@ class AddTaskDialog extends StatelessWidget {
             creationDate: DateTime.now(),
           );
           todoProvider.addTask(newTask);
+          Navigator.of(context).pop();
+          UI.showBottomSheet(context: context, message: 'Success.');
         }
-        Navigator.of(context).pop();
-        UI.showBottomSheet(context: context, message: 'Success.');
       },
     );
   }

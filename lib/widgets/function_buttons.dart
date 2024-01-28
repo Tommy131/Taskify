@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:24:52
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-19 22:18:08
+ * @LastEditTime : 2024-01-28 23:03:40
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,49 +20,56 @@ import 'package:flutter/material.dart';
 
 import 'package:todolist_app/widgets/task_dialogs.dart';
 
-class FunctionButtons extends StatelessWidget {
-  const FunctionButtons({super.key});
+class FunctionButtons {
+  static const List<String> functionLabels = [
+    'Add Category',
+    'Delete Category',
+    'Add Task',
+  ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildFloatingActionButton(
-          context,
-          Icons.playlist_add,
-          const AddCategoryDialog(),
-        ),
-        const SizedBox(height: 10),
-        _buildFloatingActionButton(
-          context,
-          Icons.delete_sweep,
-          const DeleteCategoryDialog(),
-        ),
-        const SizedBox(height: 10),
-        _buildFloatingActionButton(
-          context,
-          Icons.add,
-          const AddTaskDialog(),
-        ),
-      ],
+  static const List<Widget?> _dialogs = [
+    AddCategoryDialog(),
+    null,
+    DeleteCategoryDialog(),
+    null,
+    AddTaskDialog(),
+  ];
+
+  static const List<Icon?> _buttonIcons = [
+    Icon(Icons.playlist_add),
+    null,
+    Icon(Icons.delete_sweep),
+    null,
+    Icon(Icons.add),
+  ];
+
+  static List<Widget> buildList(BuildContext context) {
+    return List.generate(
+      _dialogs.length,
+      (index) => _buildFloatingActionButton(
+        context,
+        _buttonIcons[index],
+        _dialogs[index],
+      ),
     );
   }
 
-  FloatingActionButton _buildFloatingActionButton(
-      BuildContext context, IconData icon, Widget dialog) {
-    return FloatingActionButton(
-      onPressed: () => _showDialog(context, dialog),
-      child: Icon(icon),
-    );
+  static Widget build(BuildContext context) {
+    return Column(mainAxisSize: MainAxisSize.min, children: buildList(context));
   }
 
-  void _showDialog(BuildContext context, Widget widget) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return widget;
-      },
-    );
+  static Widget _buildFloatingActionButton(
+      BuildContext context, Icon? icon, Widget? dialog) {
+    return (dialog == null)
+        ? const SizedBox(height: 10.0, width: 10.0)
+        : FloatingActionButton(
+            onPressed: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return dialog;
+              },
+            ),
+            child: icon,
+          );
   }
 }

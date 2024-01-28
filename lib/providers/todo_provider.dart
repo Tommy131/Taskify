@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist_app/main.dart';
 import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/models/category.dart';
-import 'package:todolist_app/providers/json_driver.dart';
+import 'package:todolist_app/models/json_driver.dart';
 
 class TodoProvider extends ChangeNotifier {
   late String selectedCategory = Application.defaultCategory.name;
