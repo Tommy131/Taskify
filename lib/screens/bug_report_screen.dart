@@ -17,6 +17,7 @@
  */
 // screens/bug_report_screen.dart
 import 'package:flutter/material.dart';
+import 'package:todolist_app/core/bug_reporter.dart';
 
 import 'package:todolist_app/main.dart';
 
@@ -55,11 +56,15 @@ class _BugReportScreenState extends State<BugReportScreen> {
     });
   }
 
-  void submitForm() {
-    Application.debug('Email: ${emailController.text}');
-    Application.debug('Title: ${titleController.text}');
-    Application.debug('Category: ${categoryController.text}');
-    Application.debug('Text: ${textController.text}');
+  void submitForm(BuildContext context) {
+    BugReporter(context: context).send(
+      ReportPayload(
+        email: emailController.text,
+        title: titleController.text,
+        category: categoryController.text,
+        content: textController.text,
+      ),
+    );
   }
 
   @override
@@ -114,7 +119,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: isButtonDisabled ? null : submitForm,
+              onPressed: isButtonDisabled ? null : (() => submitForm(context)),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.blue.shade500, // 设置按钮文本颜色

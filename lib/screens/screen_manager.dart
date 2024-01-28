@@ -56,7 +56,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     ),
     NavigationRailDestination(
       icon: Icon(Icons.cruelty_free),
-      label: Text('Widget Test'),
+      label: Text(isDebugMode ? 'Widget Test' : 'Rabbit :)'),
     ),
   ];
 

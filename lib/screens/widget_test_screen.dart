@@ -49,7 +49,7 @@ class _WidgetTestState extends State<WidgetTestScreen> {
             ),
           )
         : const Center(
-            child: Text('Nothing to do :)'),
+            child: Text('Nothing to do :) ~OwO~'),
           );
   }
 }
