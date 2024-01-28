@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-27 02:59:20
+ * @LastEditTime : 2024-01-28 03:35:29
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,17 +20,19 @@
 /// core/update_checker.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:todolist_app/main.dart';
 
 class UpdateChecker {
   static const String _serverUrl =
-      'http://rdp.owoserver.com:19999/api/check-update';
+      'https://owoblog.com/todolist/api/check-update';
 
   Future<void> checkForUpdates(
-      BuildContext context, String currentVersion) async {
+    BuildContext context,
+    String currentVersion,
+  ) async {
     try {
       final response = await http.get(Uri.parse(_serverUrl));
 
@@ -93,7 +95,7 @@ class UpdateChecker {
           TextButton(
             onPressed: () {
               Application.openExternalLink(context, downloadUrl);
-              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
             },
             child: const Text('Update Now!'),
           ),

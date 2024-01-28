@@ -26,7 +26,7 @@ class JsonDriver {
   late String _fileName;
   late String _savePath;
   late String _filePath;
-  late Map<dynamic, dynamic> _data;
+  late Map<String, dynamic> _data;
 
   JsonDriver(String fileName, {String savePath = '', bool useDefault = true}) {
     String _ = useDefault ? Directory.current.path : '';
@@ -56,7 +56,7 @@ class JsonDriver {
     }
   }
 
-  Map<dynamic, dynamic> get data {
+  Map<String, dynamic> get data {
     return _data;
   }
 
@@ -82,19 +82,19 @@ class JsonDriver {
     return _data.isEmpty;
   }
 
-  void writeData(Map<dynamic, dynamic> data) {
+  void writeData(Map<String, dynamic> data) {
     _loadData();
     _data = data;
     _saveData();
   }
 
-  void setData(dynamic index, dynamic newData) {
+  void setData(String index, dynamic newData) {
     _loadData();
     _data[index] = newData;
     _saveData();
   }
 
-  void updateData(dynamic index, dynamic updatedData) {
+  void updateData(String index, dynamic updatedData) {
     _loadData();
 
     if (_data.containsKey(index)) {
@@ -105,26 +105,17 @@ class JsonDriver {
     }
   }
 
-  void deleteData(dynamic index) {
+  void deleteData(String index) {
     _loadData();
 
-    if (index >= 0 && index < _data.length) {
-      _data.remove(index);
-      _saveData();
-    } else {
-      mainLogger.warning('Index {$index} out of bounds.');
-    }
+    _data.remove(index);
+    _saveData();
   }
 
-  dynamic getData(dynamic index) {
+  dynamic getData(String index) {
     _loadData();
 
-    if (index >= 0 && index < _data.length) {
-      return _data[index];
-    } else {
-      mainLogger.warning('Index out of bounds.');
-      return null;
-    }
+    return _data[index];
   }
 
   static void generateMockData() {
@@ -145,7 +136,7 @@ class JsonDriver {
     mainLogger.info('Retrieved Data: $retrievedData');
 
     // 删除数据
-    myJsonDriver.deleteData(0);
+    myJsonDriver.deleteData('age');
 
     // 静态调用，从本地 json 文件读取数据并返回实例化 JSON 对象
     JsonDriver newJsonDriver = JsonDriver.fromFile('myData');

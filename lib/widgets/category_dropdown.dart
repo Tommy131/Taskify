@@ -24,8 +24,8 @@ import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/providers/todo_provider.dart';
 
 class CategoryDropdown extends StatelessWidget {
-  static const triggerNormal = 0;
-  static const triggerChangeTaskCategory = 1;
+  static const int triggerNormal = 0;
+  static const int triggerChangeTaskCategory = 1;
 
   final int triggerMode;
   final Task? task;

@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:23:01
+ * @LastEditTime : 2024-01-28 04:24:04
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -37,15 +37,15 @@ class TaskList extends StatelessWidget {
       return const Center(
         child: Text('Here is nothing to do :)'),
       );
-    } else {
-      return ListView.builder(
-        itemCount: todoProvider.filteredTasks.length,
-        itemBuilder: (context, index) {
-          Task task = todoProvider.filteredTasks[index];
-          return TaskListItem(task: task);
-        },
-      );
     }
+
+    return ListView.builder(
+      itemCount: todoProvider.filteredTasks.length,
+      itemBuilder: (context, index) {
+        Task task = todoProvider.filteredTasks[index];
+        return TaskListItem(task: task);
+      },
+    );
   }
 }
 
@@ -56,77 +56,90 @@ class TaskListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      UI.decoratedContainer(
-        Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-            horizontal: 18.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Stack(
+        children: [
+          UI.decoratedContainer(
+            _buildTaskContainer(context),
+            onTapCall: () {
+              TaskActions.showEditTaskDialog(context, task);
+            },
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.title,
-                      style: TextStyle(
-                        fontWeight: task.isImportant
-                            ? FontWeight.bold
-                            : FontWeight.w500,
-                        color: task.isCompleted
-                            ? Colors.grey
-                            : (task.isImportant ? Colors.red : Colors.black),
-                        decoration: task.isCompleted
-                            ? TextDecoration.lineThrough
-                            : null,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      task.remark!,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.normal,
-                        color: task.isCompleted
-                            ? Colors.grey
-                            : (task.isImportant ? Colors.red : Colors.black54),
-                        decoration: task.isCompleted
-                            ? TextDecoration.lineThrough
-                            : null,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Created on: ${DateFormat('yyyy-MM-dd').format(task.creationDate)}',
-                      style: TextStyle(
-                        color: task.isCompleted
-                            ? Colors.grey
-                            : (task.isImportant ? Colors.red : Colors.black54),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              TaskActions(task: task),
-            ],
-          ),
-        ),
-        onTapCall: () {
-          TaskActions.showEditTaskDialog(context, task);
-        },
-      ),
-      task.isImportant
-          ? Positioned(
+          if (task.isImportant)
+            Positioned(
               left: 0,
               top: 2.0,
               child: ImportantLabel.put(
                 color: !task.isCompleted ? Colors.red : Colors.grey,
               ),
-            )
-          : Container(),
-    ]);
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskContainer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: 12.0,
+        horizontal: 18.0,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTextStyle(task.title,
+                    fontWeight:
+                        task.isImportant ? FontWeight.bold : FontWeight.w500,
+                    color: task.isCompleted
+                        ? Colors.grey
+                        : (task.isImportant ? Colors.red : Colors.black),
+                    decoration:
+                        task.isCompleted ? TextDecoration.lineThrough : null),
+                const SizedBox(height: 4.0),
+                _buildTextStyle(task.remark,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.normal,
+                    color: task.isCompleted
+                        ? Colors.grey
+                        : (task.isImportant ? Colors.red : Colors.black54),
+                    decoration:
+                        task.isCompleted ? TextDecoration.lineThrough : null),
+                const SizedBox(height: 4.0),
+                _buildTextStyle(
+                  'Created on: ${DateFormat('yyyy-MM-dd').format(task.creationDate)}',
+                  color: task.isCompleted
+                      ? Colors.grey
+                      : (task.isImportant ? Colors.red : Colors.black54),
+                ),
+              ],
+            ),
+          ),
+          TaskActions(task: task),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextStyle(
+    String text, {
+    FontWeight? fontWeight,
+    Color? color,
+    FontStyle? fontStyle,
+    TextDecoration? decoration,
+  }) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontWeight: fontWeight,
+        color: color,
+        fontStyle: fontStyle,
+        decoration: decoration,
+      ),
+    );
   }
 }
 
@@ -141,11 +154,11 @@ class TaskActions extends StatelessWidget {
     double maxWidth = UI.getMaxWidth(context);
 
     return maxWidth >= 500
-        ? buildActions(context, todoProvider, task)
-        : buildPopupMenuButton(context, todoProvider, task);
+        ? _buildActionsRow(context, todoProvider, task)
+        : _buildPopupMenuButton(context, todoProvider, task);
   }
 
-  Widget buildActions(
+  Widget _buildActionsRow(
       BuildContext context, TodoProvider todoProvider, Task task) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -167,7 +180,7 @@ class TaskActions extends StatelessWidget {
     );
   }
 
-  Widget buildPopupMenuButton(
+  Widget _buildPopupMenuButton(
       BuildContext context, TodoProvider todoProvider, Task task) {
     return PopupMenuButton<int>(
       itemBuilder: (context) => [

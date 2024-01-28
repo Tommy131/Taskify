@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 23:29:05
+ * @LastEditTime : 2024-01-28 01:22:06
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -83,8 +83,9 @@ class Application {
         onDeclinedCallback: () {
           debug('获取读写权限失败!');
           UI.showBottomSheet(
-              message: 'Unable to access system storage path! Program exit.');
-          if (!isDebugMode) exit(0);
+              message:
+                  'Unable to access system storage path! Please grant it.');
+          // if (isDebugMode) exit(0);
         },
       );
 
@@ -356,7 +357,7 @@ class UI {
               BoxShadow(
                 color: Colors.black.withOpacity(0.5),
                 spreadRadius: 3,
-                blurRadius: 7,
+                blurRadius: 3,
                 blurStyle: BlurStyle.outer,
               ),
             ],

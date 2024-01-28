@@ -20,7 +20,7 @@
 // screens/about_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:todolist_app/core/update_checker.dart';
 import 'package:todolist_app/main.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class AboutScreen extends StatelessWidget {
   static const EdgeInsets defaultMargin =
       EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0);
 
-  const AboutScreen({super.key});
+  const AboutScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,103 +39,132 @@ class AboutScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10.0),
-          Container(
-            margin: defaultMargin,
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 2.0, color: Colors.black26),
-              ),
+          _buildSection('App Information', [
+            const Text(
+              'Version: v${Application.version}',
+              style: TextStyle(fontSize: 16.0),
             ),
-            child: const Text(
-              'Application Information',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 5.0),
+            ElevatedButton(
+              onPressed: () {
+                UI.showBottomSheet(
+                  context: context,
+                  message: 'Sending request to Server...',
+                );
+                UpdateChecker().checkForUpdates(context, Application.version);
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue.shade500,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
+              child: const Text('Check Update'),
             ),
-          ),
-          Container(
-            margin: defaultMargin,
-            child: const Text('Version: v${Application.version}'),
-          ),
+          ]),
           const SizedBox(height: 20.0),
-          Container(
-            margin: defaultMargin,
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 2.0, color: Colors.black26),
+          _buildSection('Developer Information', [
+            Card(
+              color: Colors.white.withOpacity(0.5),
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
               ),
-            ),
-            child: const Text(
-              'Developer Information',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Card(
-            color: Colors.white.withOpacity(0.5),
-            elevation: 2.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            margin: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 10.0),
-                ListTile(
-                  leading: Image.asset(
-                    'assets/images/hanskijay.jpg',
-                    width: 64.0,
-                    height: 64.0,
-                  ),
-                  title: const Text(
-                    'Jay Hanski',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+              // margin: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10.0),
+                  ListTile(
+                    leading: Image.asset(
+                      'assets/images/hanskijay.jpg',
+                      width: 64.0,
+                      height: 64.0,
+                    ),
+                    title: const Text(
+                      'Jay Hanski',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: const Text(
+                      'Student',
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
-                  subtitle: const Text(
-                    'Student',
-                    style: TextStyle(fontSize: 16.0),
+                  const Divider(color: Colors.black38),
+                  _buildListTile(
+                    Icon(
+                      Icons.email,
+                      color: labelColor,
+                    ),
+                    'hanskijay@owoblog.com',
                   ),
-                ),
-                const Divider(color: Colors.black38),
-                ListTile(
-                  leading: Icon(Icons.email, color: labelColor),
-                  title: const Text('hanskijay@owoblog.com'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.public, color: labelColor),
-                  title: const Text('https://owoblog.com/blog'),
-                ),
-                ListTile(
-                  leading: SvgPicture.asset(
-                    'assets/images/github_mark.svg',
-                    width: 24.0,
-                    height: 24.0,
-                    color: labelColor,
+                  _buildListTile(
+                    Icon(
+                      Icons.public,
+                      color: labelColor,
+                    ),
+                    'https://owoblog.com/blog',
                   ),
-                  title: const Text('Tommy131 (HanskiJay)'),
-                ),
-                ListTile(
-                  leading: SvgPicture.asset(
-                    'assets/images/instagram_icon.svg',
-                    width: 24.0,
-                    height: 24.0,
-                    color: labelColor,
+                  _buildListTile(
+                    SvgPicture.asset(
+                      'assets/images/github_mark.svg',
+                      width: 24.0,
+                      height: 24.0,
+                      color: labelColor,
+                    ),
+                    'Tommy131 (HanskiJay)',
                   ),
-                  title: const Text('jay.jay2045'),
-                ),
-                const SizedBox(height: 16.0),
-              ],
+                  _buildListTile(
+                    SvgPicture.asset(
+                      'assets/images/instagram_icon.svg',
+                      width: 24.0,
+                      height: 24.0,
+                      color: labelColor,
+                    ),
+                    'jay.jay2045',
+                  ),
+                  const SizedBox(height: 16.0),
+                ],
+              ),
             ),
-          ),
+          ]),
         ],
       ),
+    );
+  }
+
+  Widget _buildSection(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: defaultMargin,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 2.0, color: Colors.black26),
+            ),
+          ),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(margin: defaultMargin, child: Column(children: children)),
+      ],
+    );
+  }
+
+  Widget _buildListTile(Widget leading, String title) {
+    return ListTile(
+      leading: leading,
+      title: Text(title),
     );
   }
 }

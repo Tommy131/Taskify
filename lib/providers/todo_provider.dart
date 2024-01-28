@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 16:28:48
+ * @LastEditTime : 2024-01-28 01:40:44
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -153,7 +153,7 @@ class TodoProvider extends ChangeNotifier {
   void _loadTodoList() {
     try {
       Application.debug('加载分类中...');
-      Map<String, dynamic> list = Application.settings['categories']['list'];
+      Map list = Application.settings['categories']['list'];
 
       _categories.addAll(Map.fromEntries(
         list.entries
@@ -193,7 +193,7 @@ class TodoProvider extends ChangeNotifier {
   void _saveData() {
     Application.debug('正在保存分类数据...');
     JsonDriver settings = Application.userSettings();
-    Map<String, dynamic> list = Application.settings['categories']['list'];
+    Map list = Application.settings['categories']['list'];
 
     list = Map.fromEntries(
       _categories.entries

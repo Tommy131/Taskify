@@ -17,9 +17,7 @@
  */
 // widgets/function_buttons.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:todolist_app/providers/todo_provider.dart';
 import 'package:todolist_app/widgets/task_dialogs.dart';
 
 class FunctionButtons extends StatelessWidget {
@@ -27,57 +25,43 @@ class FunctionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todoProvider = Provider.of<TodoProvider>(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FloatingActionButton(
-          onPressed: () {
-            _showAddCategoryDialog(context);
-          },
-          child: const Icon(Icons.playlist_add),
+        _buildFloatingActionButton(
+          context,
+          Icons.playlist_add,
+          const AddCategoryDialog(),
         ),
         const SizedBox(height: 10),
-        FloatingActionButton(
-          onPressed: () {
-            _showDeleteCategoryDialog(context);
-          },
-          child: const Icon(Icons.delete_sweep),
+        _buildFloatingActionButton(
+          context,
+          Icons.delete_sweep,
+          const DeleteCategoryDialog(),
         ),
         const SizedBox(height: 10),
-        FloatingActionButton(
-          onPressed: () {
-            _showAddTaskDialog(context, todoProvider);
-          },
-          child: const Icon(Icons.add),
+        _buildFloatingActionButton(
+          context,
+          Icons.add,
+          const AddTaskDialog(),
         ),
       ],
     );
   }
 
-  void _showAddTaskDialog(BuildContext context, TodoProvider todoProvider) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const AddTaskDialog();
-      },
+  FloatingActionButton _buildFloatingActionButton(
+      BuildContext context, IconData icon, Widget dialog) {
+    return FloatingActionButton(
+      onPressed: () => _showDialog(context, dialog),
+      child: Icon(icon),
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context) {
+  void _showDialog(BuildContext context, Widget widget) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const AddCategoryDialog();
-      },
-    );
-  }
-
-  void _showDeleteCategoryDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const DeleteCategoryDialog();
+        return widget;
       },
     );
   }
