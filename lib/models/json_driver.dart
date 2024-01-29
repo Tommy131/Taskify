@@ -60,6 +60,10 @@ class JsonDriver {
     return _data;
   }
 
+  String get savePath {
+    return _savePath;
+  }
+
   void _loadData() {
     String contents = File(_filePath).readAsStringSync();
     _data = json.decode(contents);
