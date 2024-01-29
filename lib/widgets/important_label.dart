@@ -26,7 +26,7 @@ class ImportantLabel {
           // 左侧三角形
           Positioned(
             left: 0,
-            top: 30,
+            top: 28,
             child: Transform.rotate(
               angle: -90 * 3.1415926535 / 180, // 旋转90度
               child: Container(

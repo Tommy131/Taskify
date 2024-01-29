@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 03:35:29
+ * @LastEditTime : 2024-01-29 14:33:32
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,8 +20,8 @@
 /// core/update_checker.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-// import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import 'package:todolist_app/main.dart';
 
@@ -29,54 +29,54 @@ class UpdateChecker {
   static const String _serverUrl =
       'https://owoblog.com/todolist/api/check-update';
 
-  Future<void> checkForUpdates(
-    BuildContext context,
-    String currentVersion,
-  ) async {
+  static Future<Map<String, dynamic>> getRawData() async {
     try {
       final response = await http.get(Uri.parse(_serverUrl));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to fetch version information');
+      }
+    } catch (e) {
+      throw Exception('Error during version check: $e');
+    }
+  }
 
-        final int latestVersionCode = data['versionCode'];
-        final String latestVersionName = data['versionName'];
-        final String updateMessage = data['updateMessage'];
-        final String downloadUrl = data['downloadUrl'];
+  static void checkForUpdates(BuildContext context,
+      {bool unnecessaryInfo = false}) async {
+    try {
+      final data = await getRawData();
 
-        if (latestVersionCode > getVersionCode(currentVersion)) {
-          showUpdateDialog(
-              context, latestVersionName, updateMessage, downloadUrl);
-        } else {
+      final String latestVersionName = data['versionName'];
+      final String updateMessage = data['updateMessage'];
+      final String downloadUrl = data['downloadUrl'];
+
+      Version appVersion = Version.parse(Application.version);
+      Version remoteVersion = Version.parse(latestVersionName);
+
+      if (appVersion > remoteVersion) {
+        showUpdateDialog(
+            context, latestVersionName, updateMessage, downloadUrl);
+      } else {
+        if (unnecessaryInfo) {
           UI.showStandardDialog(
             context,
             title: 'Update Checker',
             content: 'No available update.',
           );
         }
-      } else {
-        UI.showBottomSheet(
-          context: context,
-          message: 'Failed to fetch version information',
-        );
       }
     } catch (e) {
       UI.showBottomSheet(
         context: context,
-        message: 'Error during version check: $e',
+        message: e.toString(),
       );
     }
   }
 
-  int getVersionCode(String versionName) {
-    final parts = versionName.split('.');
-    if (parts.length >= 2) {
-      return int.parse(parts[0]) * 100 + int.parse(parts[1]);
-    }
-    return 0;
-  }
-
-  void showUpdateDialog(
+  static void showUpdateDialog(
     BuildContext context,
     String latestVersionName,
     String updateMessage,
@@ -95,7 +95,6 @@ class UpdateChecker {
           TextButton(
             onPressed: () {
               Application.openExternalLink(context, downloadUrl);
-              // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
             },
             child: const Text('Update Now!'),
           ),

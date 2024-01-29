@@ -10,16 +10,18 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 20:52:43
+ * @LastEditTime : 2024-01-29 16:18:24
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // screens/screen_manager.dart
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:todolist_app/main.dart';
+import 'package:todolist_app/core/update_checker.dart';
 import 'package:todolist_app/screens/about_screen.dart';
 import 'package:todolist_app/screens/bug_report_screen.dart';
 import 'package:todolist_app/screens/todolist_screen.dart';
@@ -43,9 +45,9 @@ class _ScreenManagerState extends State<ScreenManager> {
   ];
 
   static const List<String> _pageTitles = [
-    'Todo List',
+    'To-Do List',
     'Bug Report',
-    'About',
+    'About this App',
     isDebugMode ? 'Widget Test' : 'Rabbit :)',
   ];
 
@@ -55,6 +57,16 @@ class _ScreenManagerState extends State<ScreenManager> {
     Icon(Icons.help),
     Icon(Icons.cruelty_free),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    Timer.periodic(const Duration(hours: 1), (Timer timer) {
+      UpdateChecker.checkForUpdates(context);
+    });
+    Application.debug('成功初始化更新检测服务.');
+  }
 
   @override
   Widget build(BuildContext context) {

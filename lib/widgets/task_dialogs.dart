@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-29 00:12:21
+ * @LastEditTime : 2024-01-29 13:32:16
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -19,8 +19,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
-import 'package:todolist_app/main.dart';
 
+import 'package:todolist_app/main.dart';
 import 'package:todolist_app/models/category.dart';
 import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/models/custom_dialog.dart';
@@ -79,7 +79,7 @@ class AddTaskDialog extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         TextField(
-          maxLines: 2,
+          maxLines: 5,
           controller: remarkController,
           decoration: UI.input('Add a Remark...'),
         ),
@@ -134,6 +134,7 @@ class EditTaskDialog extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         TextField(
+          maxLines: 5,
           controller: remarkController,
           decoration: UI.input('Edit remark'),
         ),

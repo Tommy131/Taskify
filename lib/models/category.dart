@@ -21,14 +21,19 @@ import 'dart:ui';
 class Category {
   final String name;
   final Color color;
+  final int priority;
 
-  Category({required this.name, required this.color});
+  Category({required this.name, required this.color, this.priority = 0});
 
   factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(name: json['name'], color: Color(json['color']));
+    return Category(
+      name: json['name'],
+      color: Color(json['color']),
+      priority: 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'color': color.value};
+    return {'name': name, 'color': color.value, 'priority': 0};
   }
 }

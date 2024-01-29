@@ -23,12 +23,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todolist_app/core/update_checker.dart';
 import 'package:todolist_app/main.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
+  const AboutScreen({super.key});
+
+  @override
+  AboutScreenState createState() => AboutScreenState();
+}
+
+class AboutScreenState extends State<AboutScreen> {
   static Color labelColor = Colors.blue.shade700;
   static const EdgeInsets defaultMargin =
       EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0);
-
-  const AboutScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +55,7 @@ class AboutScreen extends StatelessWidget {
                   context: context,
                   message: 'Sending request to Server...',
                 );
-                UpdateChecker().checkForUpdates(context, Application.version);
+                UpdateChecker.checkForUpdates(context, unnecessaryInfo: true);
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue.shade500,

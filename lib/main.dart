@@ -368,18 +368,16 @@ class UI {
     );
   }
 
-  static Ink decoratedContainer(Widget widget, {Function? onTapCall}) {
+  static Ink decoratedContainer(Widget widget,
+      {Function? onLongPressCall, Function? onTapCall}) {
     return Ink(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       ),
       child: InkWell(
-        onTap: () {
-          if (onTapCall != null) {
-            onTapCall();
-          }
-        },
+        onLongPress: () => (onLongPressCall != null) ? onLongPressCall() : null,
+        onTap: () => (onTapCall != null) ? onTapCall() : null,
         borderRadius: BorderRadius.circular(5),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
