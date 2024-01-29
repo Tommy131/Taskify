@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 import 'package:todolist_app/main.dart';
 import 'package:todolist_app/models/category.dart';
 import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/models/custom_dialog.dart';
+import 'package:todolist_app/widgets/custom_dialog.dart';
 import 'package:todolist_app/providers/todo_provider.dart';
 import 'package:todolist_app/widgets/category_dropdown.dart';
 

@@ -45,8 +45,10 @@ class CategoryDropdown extends StatelessWidget {
             todoProvider.changeCategory(newCategoryName);
 
             if (triggerMode == triggerChangeTaskCategory) {
-              todoProvider.updateTaskDetails(task!,
-                  category: todoProvider.getCategoryByName(newCategoryName));
+              todoProvider.updateTaskDetails(
+                task!,
+                category: todoProvider.getCategoryByName(newCategoryName),
+              );
             }
           }
         },

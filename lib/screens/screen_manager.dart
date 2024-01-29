@@ -54,7 +54,7 @@ class _ScreenManagerState extends State<ScreenManager> {
   static const List<Icon> _pageIcons = [
     Icon(Icons.home),
     Icon(Icons.bug_report),
-    Icon(Icons.help),
+    Icon(Icons.info),
     Icon(Icons.cruelty_free),
   ];
 

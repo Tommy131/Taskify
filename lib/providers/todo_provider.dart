@@ -174,6 +174,7 @@ class TodoProvider extends ChangeNotifier {
           _tasks.add(
             Task(
               title: taskData['title'],
+              remark: taskData['remark'],
               category: _categories[taskData['category']]!,
               creationDate: DateTime.parse(
                 taskData['creationDate'],
