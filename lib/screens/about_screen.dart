@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-29 22:30:07
+ * @LastEditTime : 2024-01-30 02:28:49
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -79,7 +79,7 @@ class AboutScreenState extends State<AboutScreen> {
                   Row(
                     children: [
                       const CapsuleTag(
-                          text: 'v${Application.version}', fontSize: 14),
+                          text: 'v${Application.versionName}', fontSize: 14),
                       const SizedBox(width: 10.0),
                       ElevatedButton(
                         onPressed: () => _checkForUpdates(context),

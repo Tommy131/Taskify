@@ -49,14 +49,16 @@ class UpdateChecker {
     try {
       final data = await getRawData();
 
+      final int latestVersionCode = data['versionCode'];
       final String latestVersionName = data['versionName'];
       final String updateMessage = data['updateMessage'];
       final String downloadUrl = data['downloadUrl'];
 
-      Version appVersion = Version.parse(Application.version);
+      Version appVersion = Version.parse(Application.versionName);
       Version remoteVersion = Version.parse(latestVersionName);
 
-      if (appVersion > remoteVersion) {
+      if ((appVersion < remoteVersion) ||
+          (Application.versionCode < latestVersionCode)) {
         showUpdateDialog(
             context, latestVersionName, updateMessage, downloadUrl);
       } else {
@@ -85,7 +87,7 @@ class UpdateChecker {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Found new version: $latestVersionName!'),
+        title: Text('Found new version: v$latestVersionName!'),
         content: Text(updateMessage),
         actions: [
           TextButton(
