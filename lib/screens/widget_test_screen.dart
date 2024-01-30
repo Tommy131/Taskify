@@ -36,7 +36,7 @@ class _WidgetTestState extends State<WidgetTestScreen> {
         ? Center(
             child: ElevatedButton(
               onPressed: () {
-                UpdateChecker().checkForUpdates(context, Application.version);
+                UpdateChecker.checkForUpdates(context);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

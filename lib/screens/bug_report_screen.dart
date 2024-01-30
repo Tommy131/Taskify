@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 /*
  *        _____   _          __  _____   _____   _       _____   _____
  *      /  _  \ | |        / / /  _  \ |  _  \ | |     /  _  \ /  ___|
@@ -18,32 +20,31 @@
 // screens/bug_report_screen.dart
 import 'package:flutter/material.dart';
 import 'package:todolist_app/core/bug_reporter.dart';
-
 import 'package:todolist_app/main.dart';
 
 class BugReportScreen extends StatefulWidget {
-  const BugReportScreen({super.key});
+  const BugReportScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _BugReportScreenState createState() => _BugReportScreenState();
 }
 
 class _BugReportScreenState extends State<BugReportScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController textController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController titleController;
+  late TextEditingController categoryController;
+  late TextEditingController textController;
 
   bool isButtonDisabled = true;
 
   @override
   void initState() {
     super.initState();
-    emailController.addListener(updateButtonState);
-    titleController.addListener(updateButtonState);
-    categoryController.addListener(updateButtonState);
-    textController.addListener(updateButtonState);
+    emailController = TextEditingController()..addListener(updateButtonState);
+    titleController = TextEditingController()..addListener(updateButtonState);
+    categoryController = TextEditingController()
+      ..addListener(updateButtonState);
+    textController = TextEditingController()..addListener(updateButtonState);
   }
 
   void updateButtonState() {
@@ -83,53 +84,49 @@ class _BugReportScreenState extends State<BugReportScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'E-Mail',
-                icon: Icon(Icons.email),
+            Card(
+              child: Column(
+                children: [
+                  _buildTextField('E-Mail', Icons.email, emailController),
+                  _buildTextField('Title', Icons.title, titleController),
+                  _buildTextField(
+                      'Bug Category', Icons.category, categoryController),
+                  _buildTextField('Write something here...', Icons.text_fields,
+                      textController,
+                      maxLines: 3),
+                ],
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                icon: Icon(Icons.title),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Bug Category',
-                icon: Icon(Icons.category),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: textController,
-              decoration: const InputDecoration(
-                  labelText: 'Write something here...',
-                  icon: Icon(
-                    Icons.text_fields,
-                  )),
-              maxLines: 3,
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: isButtonDisabled ? null : (() => submitForm(context)),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue.shade500, // 设置按钮文本颜色
+                backgroundColor: Colors.blue.shade500,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0), // 设置按钮圆角
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               child: const Text('Submit'),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      String labelText, IconData icon, TextEditingController controller,
+      {int maxLines = 1}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          icon: Icon(icon),
+        ),
+        maxLines: maxLines,
       ),
     );
   }
