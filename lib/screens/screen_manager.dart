@@ -24,6 +24,7 @@ import 'package:todolist_app/main.dart';
 import 'package:todolist_app/core/update_checker.dart';
 import 'package:todolist_app/screens/about_screen.dart';
 import 'package:todolist_app/screens/bug_report_screen.dart';
+import 'package:todolist_app/screens/json_import_export_screen.dart';
 import 'package:todolist_app/screens/todolist_screen.dart';
 import 'package:todolist_app/screens/widget_test_screen.dart';
 
@@ -39,6 +40,7 @@ class _ScreenManagerState extends State<ScreenManager> {
 
   static const List<Widget> _pages = [
     TodolistScreen(),
+    JsonImportExportScreen(),
     BugReportScreen(),
     AboutScreen(),
     WidgetTestScreen(),
@@ -46,6 +48,7 @@ class _ScreenManagerState extends State<ScreenManager> {
 
   static const List<String> _pageTitles = [
     'To-Do List',
+    'Import/Export Data',
     'Bug Report',
     'About this App',
     isDebugMode ? 'Widget Test' : 'Rabbit :)',
@@ -53,6 +56,7 @@ class _ScreenManagerState extends State<ScreenManager> {
 
   static const List<Icon> _pageIcons = [
     Icon(Icons.home),
+    Icon(Icons.import_export),
     Icon(Icons.bug_report),
     Icon(Icons.info),
     Icon(Icons.cruelty_free),
