@@ -25,13 +25,20 @@ class CustomDialog {
     required List<Widget> content,
     required List<Widget> actions,
   }) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return AlertDialog(
       title: Text(title),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: content,
+      content: SingleChildScrollView(
+        physics: screenHeight < 200
+            ? const ClampingScrollPhysics()
+            : const BouncingScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: content,
+        ),
       ),
       actions: actions,
+      actionsOverflowDirection: VerticalDirection.up,
     );
   }
 }

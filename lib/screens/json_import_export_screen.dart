@@ -75,7 +75,8 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
     final todoProvider = Provider.of<TodoProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white30,
-      body: Padding(
+      body: Container(
+        margin: const EdgeInsets.all(16.0),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -229,8 +230,8 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
               _sendBottomMessage(
                   message: 'JSON data exported to file: $filePath');
             }
-          _sendBottomMessage(
-              message: 'An error may have occurred during your operation.');
+            _sendBottomMessage(
+                message: 'An error may have occurred during your operation.');
           }
         } else {
           _sendBottomMessage(
