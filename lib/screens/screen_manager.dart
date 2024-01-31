@@ -26,7 +26,7 @@ import 'package:todolist_app/screens/about_screen.dart';
 import 'package:todolist_app/screens/bug_report_screen.dart';
 import 'package:todolist_app/screens/json_import_export_screen.dart';
 import 'package:todolist_app/screens/todolist_screen.dart';
-import 'package:todolist_app/screens/widget_test_screen.dart';
+import 'package:todolist_app/screens/ester_egg_screen.dart';
 
 class ScreenManager extends StatefulWidget {
   const ScreenManager({super.key});
@@ -43,7 +43,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     JsonImportExportScreen(),
     BugReportScreen(),
     AboutScreen(),
-    WidgetTestScreen(),
+    EsterEggScreen(),
   ];
 
   static const List<String> _pageTitles = [
@@ -51,7 +51,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     'Import/Export Data',
     'Bug Report',
     'About this App',
-    isDebugMode ? 'Widget Test' : 'Rabbit :)',
+    isDebugMode ? 'Debug' : 'Rabbit :)',
   ];
 
   static const List<Icon> _pageIcons = [

@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-31 21:02:28
+ * @LastEditTime : 2024-01-31 23:01:10
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -73,7 +73,7 @@ void main() {
 /// 主程序类
 class Application {
   static const String appName = 'TodoList App';
-  static const int versionCode = 20240131;
+  static const int versionCode = 20240201;
   static const String versionName = '0.0.3';
   static const String author = 'Jay Hanski';
 
@@ -273,7 +273,9 @@ class UI {
   }
 
   static void showStandardDialog(BuildContext context,
-      {String title = 'Success', String content = 'Action done.'}) {
+      {String title = 'Success',
+      String content = 'Action done.',
+      Function(BuildContext?)? actionCall}) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -281,7 +283,12 @@ class UI {
         content: Text(content),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              Navigator.of(context).pop();
+              if (actionCall != null) {
+                actionCall(context);
+              }
+            },
             child: const Text('OK'),
           )
         ],
