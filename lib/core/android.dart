@@ -23,13 +23,13 @@ import 'package:todolist_app/main.dart';
 class Android {
   static const MethodChannel _channel = MethodChannel('android_version');
 
-  static Future<int?> getAndroidVersion() async {
+  static Future<int> getAndroidVersion() async {
     try {
       final int version = await _channel.invokeMethod('getAndroidVersion');
       return version;
     } on PlatformException catch (e) {
       Application.debug('Error: ${e.message}');
-      return null;
+      return -1;
     }
   }
 
@@ -37,8 +37,6 @@ class Android {
     Function? onGrantedCallback,
     Function? onDeclinedCallback,
   }) async {
-    final int? androidVersion = await getAndroidVersion();
-
     var status1 = await Permission.storage.status;
     var status2 = await Permission.manageExternalStorage.status;
 
@@ -47,18 +45,21 @@ class Android {
       await Permission.manageExternalStorage.request();
     }
 
-    if (androidVersion! < 13) {
-      if (status1.isGranted && status2.isGranted) {
-        if (onGrantedCallback != null) {
-          onGrantedCallback();
+    final int androidVersion = await getAndroidVersion();
+    if ((androidVersion == -1) || (androidVersion >= 13)) {
+      return;
+    }
+
+    if (status1.isGranted && status2.isGranted) {
+      if (onGrantedCallback != null) {
+        onGrantedCallback();
+      }
+    } else {
+      if (onDeclinedCallback != null) {
+        if (status1.isDenied || status2.isGranted) {
+          await openAppSettings();
         }
-      } else {
-        if (onDeclinedCallback != null) {
-          if (status1.isDenied || status2.isGranted) {
-            await openAppSettings();
-          }
-          onDeclinedCallback();
-        }
+        onDeclinedCallback();
       }
     }
   }

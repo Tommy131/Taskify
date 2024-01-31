@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-30 02:28:49
+ * @LastEditTime : 2024-01-31 16:12:18
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -51,9 +51,11 @@ class AboutScreenState extends State<AboutScreen> {
     } catch (e) {
       storageInfo = 'Failed to fetch storage info';
     } finally {
-      setState(() {
-        storageInfo = storageInfo;
-      });
+      if (mounted) {
+        setState(() {
+          storageInfo = storageInfo;
+        });
+      }
     }
   }
 
@@ -71,8 +73,8 @@ class AboutScreenState extends State<AboutScreen> {
               createCard([
                 _buildInfoListTile(Icons.translate, Platform.localeName),
                 _buildInfoListTile(
-                    Icons.folder, Application.userSettings().savePath),
-                _buildInfoListTile(Icons.api, Platform.version),
+                    Icons.folder, Application.userSettingsJson().savePath),
+                _buildInfoListTile(Icons.api, Platform.operatingSystemVersion),
                 _buildInfoListTile(Icons.storage, storageInfo),
                 _buildCustomListTile(
                   Icons.update,

@@ -279,7 +279,7 @@ class DeleteCategoryDialog extends StatelessWidget {
                 context,
                 confirmMessage:
                     'Delete Category: "${todoProvider.selectedCategory}"',
-                onCall: () {
+                onConfirmed: () {
                   todoProvider
                       .deleteCategoryWithName(todoProvider.selectedCategory);
                 },

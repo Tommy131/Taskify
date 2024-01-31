@@ -36,7 +36,7 @@ class JsonDriver {
     _data = {};
 
     Application.createDirectory(_savePath);
-    _initializeFile();
+    initializeFile();
   }
 
   /// 静态调用方法
@@ -46,7 +46,7 @@ class JsonDriver {
     return jsonDriver;
   }
 
-  void _initializeFile() {
+  void initializeFile() {
     File file = File(_filePath);
 
     if (!file.existsSync()) {

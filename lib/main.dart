@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-30 02:36:58
+ * @LastEditTime : 2024-01-31 21:02:28
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -42,6 +42,8 @@ final Logger mainLogger = Logger('MainLogger');
 /// 全局常量: 文件夹名称
 const savePathName = 'userData';
 
+final List<String> jsonFileNames = ['userSettings', 'todoList'];
+
 /// 主函数
 void main() {
   Logger.root.level = Level.ALL;
@@ -71,7 +73,7 @@ void main() {
 /// 主程序类
 class Application {
   static const String appName = 'TodoList App';
-  static const int versionCode = 20240129;
+  static const int versionCode = 20240131;
   static const String versionName = '0.0.3';
   static const String author = 'Jay Hanski';
 
@@ -95,22 +97,22 @@ class Application {
       );
 
       getApplicationDocumentsDirectory().then((Directory directory) {
-        generateConfiguration(savePath: '${directory.path}/$savePathName');
+        generateConfigurations(savePath: '${directory.path}/$savePathName');
       });
     } else {
-      generateConfiguration();
+      generateConfigurations();
     }
   }
 
-  static void generateConfiguration({String savePath = savePathName}) {
+  static void generateConfigurations({String savePath = savePathName}) {
     _settings = JsonDriver(
-      'userSettings',
+      jsonFileNames[0],
       savePath: savePath,
       useDefault: !Platform.isAndroid,
     );
 
     _todoList = JsonDriver(
-      'todoList',
+      jsonFileNames[1],
       savePath: savePath,
       useDefault: !Platform.isAndroid,
     );
@@ -137,19 +139,24 @@ class Application {
     );
   }
 
+  static void reloadConfigurations() {
+    _settings.initializeFile();
+    _todoList.initializeFile();
+  }
+
   static Category get defaultCategory {
     return _defaultCategory;
   }
 
-  static Map get settings {
+  static Map<String, dynamic> get settings {
     return _settings.data;
   }
 
-  static Map get todoList {
+  static Map<String, dynamic> get todoList {
     return _todoList.data;
   }
 
-  static JsonDriver userSettings() {
+  static JsonDriver userSettingsJson() {
     return _settings;
   }
 
@@ -225,10 +232,7 @@ class Application {
 
   static void openExternalLink(BuildContext context, String url) async {
     // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
-    } else {
+    if (!await launchUrl(Uri.parse(url))) {
       // ignore: use_build_context_synchronously
       UI.showBottomSheet(
         context: context,
@@ -286,7 +290,9 @@ class UI {
   }
 
   static void showConfirmationDialog(BuildContext context,
-      {String confirmMessage = '', Function? onCall}) {
+      {String confirmMessage = '',
+      Function? onCancelled,
+      Function? onConfirmed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -303,14 +309,17 @@ class UI {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                if (onCancelled != null) {
+                  onCancelled();
+                }
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                if (onCall != null) {
-                  onCall();
+                if (onConfirmed != null) {
+                  onConfirmed();
                 }
                 showStandardDialog(context);
               },
@@ -329,7 +338,8 @@ class UI {
   }) {
     Color backgroundColor = color ?? Colors.black.withOpacity(0.7);
 
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
+        (context != null)) {
       final snackBar = SnackBar(
         content: Text(message!),
         backgroundColor: backgroundColor,
@@ -340,7 +350,7 @@ class UI {
           borderRadius: BorderRadius.circular(10.0),
         ),
       );
-      ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       Fluttertoast.showToast(
         msg: message!,

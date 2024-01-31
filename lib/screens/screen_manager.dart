@@ -65,7 +65,8 @@ class _ScreenManagerState extends State<ScreenManager> {
   @override
   void initState() {
     super.initState();
-
+    // 先调用一次更新检测API, 以实现开启App后的第一次更新检测
+    UpdateChecker.checkForUpdates(context);
     Timer.periodic(const Duration(hours: 1), (Timer timer) {
       UpdateChecker.checkForUpdates(context);
     });

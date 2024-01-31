@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 03:34:32
+ * @LastEditTime : 2024-01-31 20:55:26
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -24,6 +24,7 @@ class Task {
   String remark;
   Category category;
   DateTime creationDate;
+  DateTime? endDate;
   bool isCompleted;
   bool isImportant;
 
@@ -31,6 +32,7 @@ class Task {
     required this.title,
     required this.category,
     required this.creationDate,
+    this.endDate,
     this.remark = 'No Remark',
     this.isCompleted = false,
     this.isImportant = false,
@@ -42,6 +44,7 @@ class Task {
       remark: json['remark'],
       category: Category.fromJson(json),
       creationDate: DateTime.parse(json['creationDate']),
+      endDate: DateTime.parse(json['endDate']),
       isCompleted: json['isCompleted'],
       isImportant: json['isImportant'],
     );
@@ -53,6 +56,7 @@ class Task {
       'remark': remark,
       'category': category.name,
       'creationDate': creationDate.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
       'isCompleted': isCompleted,
       'isImportant': isImportant,
     };
@@ -61,12 +65,14 @@ class Task {
   void updateTaskDetails({
     String? title,
     String? remark,
+    DateTime? endDate,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
   }) {
     this.title = title ?? this.title;
     this.remark = remark ?? this.remark;
+    this.endDate = endDate ?? this.endDate;
     this.isCompleted = isCompleted ?? this.isCompleted;
     this.isImportant = isImportant ?? this.isImportant;
     this.category = category ?? this.category;

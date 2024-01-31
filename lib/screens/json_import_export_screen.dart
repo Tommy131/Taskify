@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-30 01:08:27
+ * @LastEditTime : 2024-01-31 19:47:14
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -22,11 +22,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
+import 'package:provider/provider.dart';
+
 import 'package:todolist_app/main.dart';
+import 'package:todolist_app/providers/todo_provider.dart';
 
 class JsonImportExportScreen extends StatefulWidget {
   const JsonImportExportScreen({Key? key}) : super(key: key);
@@ -36,7 +40,7 @@ class JsonImportExportScreen extends StatefulWidget {
 }
 
 class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
-  static final String savePath = Application.userSettings().savePath;
+  static final String savePath = Application.userSettingsJson().savePath;
 
   TextEditingController jsonController = TextEditingController();
   bool isJsonValid = true;
@@ -68,6 +72,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final todoProvider = Provider.of<TodoProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white30,
       body: Padding(
@@ -77,7 +82,10 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
           children: [
             _buildDropdownButton(),
             const SizedBox(height: 10),
-            _buildElevatedButton('Import JSON', _importJson),
+            ElevatedButton(
+              onPressed: () => _importJson(todoProvider),
+              child: const Text('Import JSON'),
+            ),
             const SizedBox(height: 10),
             _buildElevatedButton('Export JSON', _exportJson),
             const SizedBox(height: 20),
@@ -135,7 +143,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
     }
   }
 
-  void _importJson() async {
+  void _importJson(TodoProvider todoProvider) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -160,8 +168,9 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
         UI.showConfirmationDialog(
           context,
           confirmMessage: 'Overwrite the file : $selectedFilePath?',
-          onCall: () async {
+          onConfirmed: () async {
             await File(selectedFilePath!).writeAsString(jsonContent);
+            todoProvider.loadTodoList(reload: true);
             _sendBottomMessage(
                 message: 'JSON data imported to file: ${file.toString()}');
           },
@@ -184,20 +193,45 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
         }
         if (selectedFilePath != null) {
           String basename = path.basename(selectedFilePath!);
-          String? result = await FilePicker.platform.saveFile(
-            dialogTitle: 'Save file to:',
-            fileName: 'exported_$basename.json',
-            type: FileType.custom,
-            allowedExtensions: ['json'],
-          );
 
-          if (result == null) {
-            _sendBottomMessage();
-            return;
+          if (!Platform.isAndroid && !Platform.isIOS) {
+            String? result = await FilePicker.platform.saveFile(
+              dialogTitle: 'Save file to:',
+              fileName: 'exported_$basename',
+              type: FileType.custom,
+              allowedExtensions: ['json'],
+            );
+
+            if (result == null) {
+              _sendBottomMessage();
+              return;
+            }
+
+            await File(result).writeAsString(jsonString);
+            _sendBottomMessage(message: 'JSON data exported to file: $result');
+          } else {
+            if (!await FlutterFileDialog.isPickDirectorySupported()) {
+              _sendBottomMessage(message: 'Picking directory not supported!');
+              return;
+            }
+
+            final pickedDirectory = await FlutterFileDialog.pickDirectory();
+            File file = File(selectedFilePath!);
+
+            if (pickedDirectory != null) {
+              final filePath = await FlutterFileDialog.saveFileToDirectory(
+                directory: pickedDirectory,
+                data: file.readAsBytesSync(),
+                mimeType: 'application/json',
+                fileName: 'exported_$basename',
+                replace: true,
+              );
+              _sendBottomMessage(
+                  message: 'JSON data exported to file: $filePath');
+            }
+          _sendBottomMessage(
+              message: 'An error may have occurred during your operation.');
           }
-
-          await File(result).writeAsString(jsonString);
-          _sendBottomMessage(message: 'JSON data exported to file: $result');
         } else {
           _sendBottomMessage(
               message: 'Please at least pick one file to export!');

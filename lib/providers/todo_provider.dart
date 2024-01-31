@@ -25,7 +25,11 @@ import 'package:todolist_app/models/category.dart';
 import 'package:todolist_app/models/json_driver.dart';
 
 class TodoProvider extends ChangeNotifier {
-  late String selectedCategory = Application.defaultCategory.name;
+  /// 定义常量: 默认分类名称
+  late String defaultCategoryName = Application.defaultCategory.name;
+
+  /// 定义变量: 选中的分类名称
+  late String selectedCategory = defaultCategoryName;
 
   // ignore: prefer_final_fields
   Map<String, Category> _categories = {};
@@ -35,9 +39,9 @@ class TodoProvider extends ChangeNotifier {
   /// Load categories before tasks during initialization
   TodoProvider() {
     Application.debug('创建默认分类中...');
-    _categories[Application.defaultCategory.name] = Application.defaultCategory;
+    _categories[defaultCategoryName] = Application.defaultCategory;
     Application.debug('默认分类创建完成.');
-    _loadTodoList();
+    loadTodoList();
   }
 
   List<Task> get filteredTasks {
@@ -84,6 +88,7 @@ class TodoProvider extends ChangeNotifier {
     Task task, {
     String? title,
     String? remark,
+    DateTime? endDate,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
@@ -91,6 +96,7 @@ class TodoProvider extends ChangeNotifier {
     task.updateTaskDetails(
       title: title,
       remark: remark,
+      endDate: endDate,
       isCompleted: isCompleted,
       isImportant: isImportant,
       category: category,
@@ -119,7 +125,7 @@ class TodoProvider extends ChangeNotifier {
 
   void deleteCategoryWithName(String categoryName) {
     categoryName = categoryName;
-    if (categoryName != Application.defaultCategory.name &&
+    if (categoryName != defaultCategoryName &&
         _categories.containsKey(categoryName)) {
       // 删除分类
       _categories.remove(categoryName);
@@ -136,7 +142,7 @@ class TodoProvider extends ChangeNotifier {
 
       // 修复默认选中分类
       if (selectedCategory == categoryName) {
-        changeCategory(Application.defaultCategory.name);
+        changeCategory(defaultCategoryName);
       }
 
       // 保存数据并通知监听器
@@ -150,15 +156,24 @@ class TodoProvider extends ChangeNotifier {
     deleteCategoryWithName(category.name);
   }
 
-  void _loadTodoList() {
+  void loadTodoList({bool reload = false}) {
     try {
+      if (reload) {
+        _categories = {};
+        _tasks = [];
+        Application.debug('正在重载配置文件...');
+        Application.reloadConfigurations();
+        defaultCategoryName = Application.defaultCategory.name;
+        selectedCategory = defaultCategoryName;
+        _categories[defaultCategoryName] = Application.defaultCategory;
+      }
       Application.debug('加载分类中...');
       Map list = Application.settings['categories']['list'];
 
       _categories.addAll(Map.fromEntries(
         list.entries
             .where(
-              (entry) => entry.key != Application.defaultCategory.name,
+              (entry) => entry.key != defaultCategoryName,
             )
             .map(
               (entry) => MapEntry(entry.key, Category.fromJson(entry.value)),
@@ -193,13 +208,13 @@ class TodoProvider extends ChangeNotifier {
 
   void _saveData() {
     Application.debug('正在保存分类数据...');
-    JsonDriver settings = Application.userSettings();
+    JsonDriver settings = Application.userSettingsJson();
     Map list = Application.settings['categories']['list'];
 
     list = Map.fromEntries(
       _categories.entries
           .where(
-            (entry) => entry.key != Application.defaultCategory.name,
+            (entry) => entry.key != defaultCategoryName,
           )
           .map(
             (entry) => MapEntry(entry.key, entry.value.toJson()),
@@ -211,7 +226,7 @@ class TodoProvider extends ChangeNotifier {
 
     Application.debug('正在保存待办清单数据...');
     Map<String, dynamic> saveList = {};
-    for (var key in {Application.defaultCategory.name, ...list.keys}) {
+    for (var key in {defaultCategoryName, ...list.keys}) {
       saveList[key] = _tasks
           .where((Task task) => key == task.category.name)
           .map((Task task) => task.toJson())
