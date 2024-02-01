@@ -229,6 +229,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
               );
               _sendBottomMessage(
                   message: 'JSON data exported to file: $filePath');
+              return;
             }
             _sendBottomMessage(
                 message: 'An error may have occurred during your operation.');

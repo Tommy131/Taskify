@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 class CapsuleTag extends StatelessWidget {
   final String text;
   final double fontSize;
+  final FontWeight fontWeight;
   final Color backgroundColor;
   final Color textColor;
 
@@ -30,6 +31,7 @@ class CapsuleTag extends StatelessWidget {
     Key? key,
     required this.text,
     this.fontSize = 12.0,
+    this.fontWeight = FontWeight.normal,
     this.backgroundColor = Colors.blue,
     this.textColor = Colors.white,
   }) : super(key: key);
@@ -47,6 +49,7 @@ class CapsuleTag extends StatelessWidget {
         style: TextStyle(
           color: textColor,
           fontSize: fontSize,
+          fontWeight: fontWeight,
         ),
       ),
     );
