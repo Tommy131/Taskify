@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 01:40:44
+ * @LastEditTime : 2024-02-01 01:09:39
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -45,9 +45,23 @@ class TodoProvider extends ChangeNotifier {
   }
 
   List<Task> get filteredTasks {
-    return _tasks
-        .where((task) => task.category.name == selectedCategory)
-        .toList();
+    List<Task> filtered =
+        _tasks.where((task) => task.category.name == selectedCategory).toList();
+
+    // Sort the filtered tasks based on completion and importance
+    filtered.sort((a, b) {
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1; // Uncompleted tasks come first
+      } else if (a.isImportant != b.isImportant) {
+        return a.isImportant ? -1 : 1; // Important tasks come first
+      } else {
+        // Compare due dates
+        int dateComparison = a.dueDate.compareTo(b.dueDate);
+        return dateComparison != 0 ? dateComparison : 0;
+      }
+    });
+
+    return filtered;
   }
 
   List<Task> get tasks {
@@ -88,7 +102,7 @@ class TodoProvider extends ChangeNotifier {
     Task task, {
     String? title,
     String? remark,
-    DateTime? endDate,
+    DateTime? dueDate,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
@@ -96,7 +110,7 @@ class TodoProvider extends ChangeNotifier {
     task.updateTaskDetails(
       title: title,
       remark: remark,
-      endDate: endDate,
+      dueDate: dueDate,
       isCompleted: isCompleted,
       isImportant: isImportant,
       category: category,
@@ -183,10 +197,11 @@ class TodoProvider extends ChangeNotifier {
 
       Application.debug('加载待办清单中...');
 
+      List<Task> loadedTasks = [];
       for (var category in Application.todoList.entries) {
         for (int i = 0; i < category.value.length; i++) {
           dynamic taskData = category.value[i];
-          _tasks.add(
+          loadedTasks.add(
             Task(
               title: taskData['title'],
               remark: taskData['remark'],
@@ -194,12 +209,28 @@ class TodoProvider extends ChangeNotifier {
               creationDate: DateTime.parse(
                 taskData['creationDate'],
               ),
+              dueDate: DateTime.parse(
+                taskData['dueDate'],
+              ),
               isCompleted: taskData['isCompleted'],
               isImportant: taskData['isImportant'],
             ),
           );
         }
       }
+
+      // Sort tasks based on completion and importance
+      loadedTasks.sort((a, b) {
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1; // Uncompleted tasks come first
+        } else if (a.isImportant != b.isImportant) {
+          return a.isImportant ? -1 : 1; // Important tasks come first
+        } else {
+          return 0;
+        }
+      });
+
+      _tasks.addAll(loadedTasks);
       Application.debug('待办清单加载完成.');
     } catch (e) {
       mainLogger.warning('[ERROR] 初始化待办清单时出错: $e');

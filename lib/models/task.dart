@@ -20,11 +20,12 @@
 import 'package:todolist_app/models/category.dart';
 
 class Task {
+  static final DateTime defaultDate = DateTime(1990, 1, 1);
   String title;
   String remark;
   Category category;
   DateTime creationDate;
-  DateTime? endDate;
+  DateTime dueDate;
   bool isCompleted;
   bool isImportant;
 
@@ -32,7 +33,7 @@ class Task {
     required this.title,
     required this.category,
     required this.creationDate,
-    this.endDate,
+    required this.dueDate,
     this.remark = 'No Remark',
     this.isCompleted = false,
     this.isImportant = false,
@@ -44,7 +45,7 @@ class Task {
       remark: json['remark'],
       category: Category.fromJson(json),
       creationDate: DateTime.parse(json['creationDate']),
-      endDate: DateTime.parse(json['endDate']),
+      dueDate: DateTime.parse(json['dueDate']),
       isCompleted: json['isCompleted'],
       isImportant: json['isImportant'],
     );
@@ -56,7 +57,7 @@ class Task {
       'remark': remark,
       'category': category.name,
       'creationDate': creationDate.toIso8601String(),
-      'endDate': endDate?.toIso8601String(),
+      'dueDate': dueDate.toIso8601String(),
       'isCompleted': isCompleted,
       'isImportant': isImportant,
     };
@@ -65,14 +66,14 @@ class Task {
   void updateTaskDetails({
     String? title,
     String? remark,
-    DateTime? endDate,
+    DateTime? dueDate,
     bool? isCompleted,
     bool? isImportant,
     Category? category,
   }) {
     this.title = title ?? this.title;
     this.remark = remark ?? this.remark;
-    this.endDate = endDate ?? this.endDate;
+    this.dueDate = dueDate ?? this.dueDate;
     this.isCompleted = isCompleted ?? this.isCompleted;
     this.isImportant = isImportant ?? this.isImportant;
     this.category = category ?? this.category;

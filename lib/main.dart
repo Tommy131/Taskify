@@ -424,4 +424,28 @@ class UI {
       hintStyle: TextStyle(color: color),
     );
   }
+
+  static Future<DateTime?> selectDate(
+      BuildContext context, DateTime selectedDate) async {
+    return await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+  }
+
+  static addPickDateButton(BuildContext context, DateTime selectedDate,
+      {Function(DateTime?)? onResult}) {
+    return ElevatedButton(
+      onPressed: () {
+        selectDate(context, selectedDate).then((value) {
+          if (onResult != null) {
+            onResult(value);
+          }
+        });
+      },
+      child: const Text('Pick Date'),
+    );
+  }
 }

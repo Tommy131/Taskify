@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-29 13:32:16
+ * @LastEditTime : 2024-02-01 02:07:28
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -69,6 +69,11 @@ class AddTaskDialog extends StatelessWidget {
     final todoProvider = Provider.of<TodoProvider>(context);
     TextEditingController titleController = TextEditingController();
     TextEditingController remarkController = TextEditingController();
+    TextEditingController dueDateController = TextEditingController();
+
+    remarkController.text = 'No Remark';
+    DateTime dueDate = DateTime.now().add(const Duration(days: 2));
+    dueDateController.text = dueDate.toString();
 
     return TaskDialog(
       title: 'Add Task',
@@ -83,6 +88,18 @@ class AddTaskDialog extends StatelessWidget {
           controller: remarkController,
           decoration: UI.input('Add a Remark...'),
         ),
+        const SizedBox(height: 10),
+        const Text('Due to Date:'),
+        const SizedBox(height: 5),
+        TextField(
+          controller: dueDateController,
+          decoration: UI.input('Pick a due date...'),
+        ),
+        const SizedBox(height: 10),
+        UI.addPickDateButton(context, dueDate, onResult: (pickedDate) {
+          dueDate = pickedDate ?? dueDate;
+          dueDateController.text = pickedDate.toString();
+        }),
       ],
       onPressed: () {
         String taskTitle = titleController.text;
@@ -92,6 +109,7 @@ class AddTaskDialog extends StatelessWidget {
             remark: remarkController.text,
             category: todoProvider.getCurrentCategory(),
             creationDate: DateTime.now(),
+            dueDate: dueDate,
           );
           todoProvider.addTask(newTask);
           Navigator.of(context).pop();
@@ -109,12 +127,19 @@ class EditTaskDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todoProvider = Provider.of<TodoProvider>(context);
-    TextEditingController titleController =
-        TextEditingController(text: task.title);
-    TextEditingController remarkController =
-        TextEditingController(text: task.remark);
     double maxWidth = UI.getMaxWidth(context);
+    final todoProvider = Provider.of<TodoProvider>(context);
+
+    TextEditingController titleController = TextEditingController(
+      text: task.title,
+    );
+    TextEditingController remarkController = TextEditingController(
+      text: task.remark,
+    );
+    TextEditingController dueDateController = TextEditingController(
+      text: (task.dueDate).toString(),
+    );
+    DateTime dueDate = DateTime.now().add(const Duration(days: 2));
 
     List<Widget> children = [
       const Text('Change Category to: '),
@@ -144,6 +169,17 @@ class EditTaskDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [const SizedBox(height: 10), ...children],
               ),
+        const Text('Due to Date:'),
+        const SizedBox(height: 5),
+        TextField(
+          controller: dueDateController,
+          decoration: UI.input('Pick a due date...'),
+        ),
+        const SizedBox(height: 10),
+        UI.addPickDateButton(context, dueDate, onResult: (pickedDate) {
+          dueDate = pickedDate ?? dueDate;
+          dueDateController.text = pickedDate.toString();
+        }),
       ],
       onPressed: () {
         String newTitle = titleController.text;
@@ -153,6 +189,7 @@ class EditTaskDialog extends StatelessWidget {
             task,
             title: newTitle,
             remark: remark,
+            dueDate: dueDate,
           );
           UI.showBottomSheet(context: context, message: 'Success.');
         }
