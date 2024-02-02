@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-01 01:28:38
+ * @LastEditTime : 2024-02-02 16:09:36
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -19,13 +19,6 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog {
-  late MainAxisAlignment mainAxisAlignment;
-  late MainAxisSize mainAxisSize;
-  late CrossAxisAlignment crossAxisAlignment;
-  late TextDirection? textDirection;
-  late VerticalDirection verticalDirection;
-  late TextBaseline? textBaseline;
-
   static Widget buildAlertDialog({
     required BuildContext context,
     required String title,

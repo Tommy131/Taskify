@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-02 00:51:16
+ * @LastEditTime : 2024-02-02 21:19:54
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -68,7 +68,7 @@ class TodoProvider extends ChangeNotifier {
     return _tasks;
   }
 
-  Task? getUpcomingTask({bool getFromImportant = false}) {
+  List<Task>? getUpcomingTasks({bool getFromImportant = false}) {
     List<Task> upcomingTasks = _tasks
         .where((task) =>
             !task.isCompleted && (getFromImportant ? task.isImportant : true))
@@ -80,14 +80,17 @@ class TodoProvider extends ChangeNotifier {
           : a.dueDate == b.dueDate
               ? 0
               : 1);
-
-      return upcomingTasks.first;
+      return upcomingTasks;
     } else {
       return null;
     }
   }
 
-  Task? getUpcomingImportantTask() {
+  Task? getUpcomingTask({bool getFromImportant = false}) {
+    return getUpcomingTasks(getFromImportant: getFromImportant)?.first;
+  }
+
+  List<Task>? getUpcomingImportantTasks() {
     List<Task> upcomingImportantTasks =
         _tasks.where((task) => !task.isCompleted && task.isImportant).toList();
 
@@ -98,10 +101,43 @@ class TodoProvider extends ChangeNotifier {
               ? 0
               : 1);
 
-      return upcomingImportantTasks.first;
+      return upcomingImportantTasks;
     } else {
       return null;
     }
+  }
+
+  Task? getUpcomingImportantTask() {
+    return getUpcomingImportantTasks()?.first;
+  }
+
+  List<Task> reorderTasks() {
+    List<Task> importantUnfinishedTasks = _tasks
+        .where((element) => (element.isImportant && !element.isCompleted))
+        .toList()
+      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+
+    List<Task> normalUnfinishedTasks = _tasks
+        .where((element) => (!element.isImportant && !element.isCompleted))
+        .toList()
+      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+
+    List<Task> importantFinishedTasks = _tasks
+        .where((element) => (element.isImportant && element.isCompleted))
+        .toList()
+      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+
+    List<Task> normalFinishedTasks = _tasks
+        .where((element) => (!element.isImportant && element.isCompleted))
+        .toList()
+      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+
+    return [
+      ...importantUnfinishedTasks,
+      ...normalUnfinishedTasks,
+      ...importantFinishedTasks,
+      ...normalFinishedTasks,
+    ];
   }
 
   Map<String, Category> get categories {
