@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-01 01:09:39
+ * @LastEditTime : 2024-02-02 00:51:16
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -66,6 +66,42 @@ class TodoProvider extends ChangeNotifier {
 
   List<Task> get tasks {
     return _tasks;
+  }
+
+  Task? getUpcomingTask({bool getFromImportant = false}) {
+    List<Task> upcomingTasks = _tasks
+        .where((task) =>
+            !task.isCompleted && (getFromImportant ? task.isImportant : true))
+        .toList();
+
+    if (upcomingTasks.isNotEmpty) {
+      upcomingTasks.sort((a, b) => a.dueDate.isBefore(b.dueDate)
+          ? -1
+          : a.dueDate == b.dueDate
+              ? 0
+              : 1);
+
+      return upcomingTasks.first;
+    } else {
+      return null;
+    }
+  }
+
+  Task? getUpcomingImportantTask() {
+    List<Task> upcomingImportantTasks =
+        _tasks.where((task) => !task.isCompleted && task.isImportant).toList();
+
+    if (upcomingImportantTasks.isNotEmpty) {
+      upcomingImportantTasks.sort((a, b) => a.dueDate.isBefore(b.dueDate)
+          ? -1
+          : a.dueDate == b.dueDate
+              ? 0
+              : 1);
+
+      return upcomingImportantTasks.first;
+    } else {
+      return null;
+    }
   }
 
   Map<String, Category> get categories {
