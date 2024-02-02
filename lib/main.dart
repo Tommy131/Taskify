@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-31 23:01:10
+ * @LastEditTime : 2024-02-02 22:48:32
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -430,12 +430,22 @@ class UI {
     return await showDatePicker(
       context: context,
       initialDate: selectedDate,
+      currentDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
   }
 
-  static addPickDateButton(BuildContext context, DateTime selectedDate,
+  static Future<TimeOfDay?> selectTime(
+      BuildContext context, TimeOfDay selectedTime) async {
+    return await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+  }
+
+  static ElevatedButton addPickDateButton(
+      BuildContext context, DateTime selectedDate,
       {Function(DateTime?)? onResult}) {
     return ElevatedButton(
       onPressed: () {
@@ -446,6 +456,64 @@ class UI {
         });
       },
       child: const Text('Pick Date'),
+    );
+  }
+
+  static ElevatedButton addPickTimeButton(
+      BuildContext context, TimeOfDay selectedTime,
+      {Function(TimeOfDay?)? onResult}) {
+    return ElevatedButton(
+      onPressed: () {
+        selectTime(context, selectedTime).then((value) {
+          if (onResult != null) {
+            onResult(value);
+          }
+        });
+      },
+      child: const Text('Pick Time'),
+    );
+  }
+
+  static ElevatedButton addPickDateTimeButton(
+      BuildContext context, DateTime selectedDateTime,
+      {Function(DateTime?)? onResult}) {
+    return ElevatedButton(
+      onPressed: () async {
+        await selectDate(context, selectedDateTime).then(
+          (date) async {
+            // ignore: use_build_context_synchronously
+            await selectTime(context, TimeOfDay.now()).then(
+              (time) {
+                DateTime pickedDate = DateTime(
+                  date!.year,
+                  date.month,
+                  date.day,
+                  time!.hour,
+                  time.minute,
+                );
+
+                if (onResult != null) {
+                  onResult(pickedDate);
+                }
+              },
+            );
+            return null;
+          },
+        );
+      },
+      child: const Text('Pick Time'),
+    );
+  }
+
+  static DateTime dateMerger(DateTime? pickedDate, TimeOfDay? pickedTime) {
+    pickedDate ??= DateTime.now();
+    pickedTime ??= TimeOfDay.fromDateTime(DateTime.now());
+    return DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
     );
   }
 }

@@ -31,6 +31,7 @@ class TaskDialog extends StatelessWidget {
   final String title;
   final List<Widget> content;
   final void Function()? onPressed;
+  final CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center;
 
   const TaskDialog({
     Key? key,
@@ -45,6 +46,7 @@ class TaskDialog extends StatelessWidget {
       context: context,
       title: title,
       content: content,
+      crossAxisAlignment: crossAxisAlignment,
       actions: [
         TextButton(
           onPressed: () {
@@ -96,9 +98,9 @@ class AddTaskDialog extends StatelessWidget {
           decoration: UI.input('Pick a due date...'),
         ),
         const SizedBox(height: 10),
-        UI.addPickDateButton(context, dueDate, onResult: (pickedDate) {
-          dueDate = pickedDate ?? dueDate;
-          dueDateController.text = pickedDate.toString();
+        UI.addPickDateTimeButton(context, dueDate, onResult: (value) {
+          dueDate = value ?? dueDate;
+          dueDateController.text = dueDate.toString();
         }),
       ],
       onPressed: () {
