@@ -20,7 +20,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:todolist_app/main.dart';
+import 'package:taskify/main.dart';
 
 class JsonDriver {
   late String _fileName;

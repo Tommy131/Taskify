@@ -20,9 +20,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/tests/test_widget.dart';
-import 'package:todolist_app/tests/tic_tac_toe_game.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/tests/test_widget.dart';
+import 'package:taskify/tests/tic_tac_toe_game.dart';
 
 class EsterEggScreen extends StatefulWidget {
   const EsterEggScreen({super.key});
@@ -47,13 +47,13 @@ class _EsterEggState extends State<EsterEggScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildInstructionText(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 20.0),
                 _buildMathProblemText(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 20.0),
                 _buildPromptWordText(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 20.0),
                 _buildAnswerTextField(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 20.0),
                 _buildUnlockButton(context),
               ],
             ),

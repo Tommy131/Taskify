@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-03 23:30:49
+ * @LastEditTime : 2024-02-03 23:52:39
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -28,10 +28,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_size/window_size.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:todolist_app/app.dart';
-import 'package:todolist_app/models/category.dart';
-import 'package:todolist_app/models/json_driver.dart';
-import 'package:todolist_app/core/android.dart';
+import 'package:taskify/app.dart';
+import 'package:taskify/models/category.dart';
+import 'package:taskify/models/json_driver.dart';
+import 'package:taskify/core/android.dart';
 
 /// 全局常量: DEBUG状态
 const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;

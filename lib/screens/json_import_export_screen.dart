@@ -29,8 +29,8 @@ import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/providers/todo_provider.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/providers/todo_provider.dart';
 
 class JsonImportExportScreen extends StatefulWidget {
   const JsonImportExportScreen({Key? key}) : super(key: key);
@@ -94,23 +94,23 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
                 fontSize: 14.0,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             _buildDropdownButton(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () => _importJson(todoProvider),
               child: const Text('Import JSON'),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             _buildElevatedButton('Export JSON', _exportJson),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             _buildElevatedButton('Clean Choose', () {
               setState(() {
                 selectedFilePath = null;
                 jsonController.text = '';
               });
             }),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20.0),
             Flexible(
               child: SingleChildScrollView(
                 child: isJsonValid

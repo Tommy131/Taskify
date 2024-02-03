@@ -19,10 +19,10 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/models/category.dart';
-import 'package:todolist_app/models/json_driver.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/models/category.dart';
+import 'package:taskify/models/json_driver.dart';
 
 class TodoProvider extends ChangeNotifier {
   /// 定义常量: 默认分类名称

@@ -18,10 +18,10 @@
 // app.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todolist_app/main.dart';
+import 'package:taskify/main.dart';
 
-import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/screens/screen_manager.dart';
+import 'package:taskify/providers/todo_provider.dart';
+import 'package:taskify/screens/screen_manager.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

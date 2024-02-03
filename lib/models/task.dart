@@ -17,7 +17,7 @@
  */
 // models/task.dart
 
-import 'package:todolist_app/models/category.dart';
+import 'package:taskify/models/category.dart';
 
 class Task {
   static final DateTime defaultDate = DateTime(1990, 1, 1);

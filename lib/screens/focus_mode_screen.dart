@@ -21,10 +21,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/widgets/color_transition.dart';
-import 'package:todolist_app/widgets/task_tile_builder.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/providers/todo_provider.dart';
+import 'package:taskify/widgets/color_transition.dart';
+import 'package:taskify/widgets/task_tile_builder.dart';
 
 class FocusModeScreen extends StatefulWidget {
   const FocusModeScreen({super.key});

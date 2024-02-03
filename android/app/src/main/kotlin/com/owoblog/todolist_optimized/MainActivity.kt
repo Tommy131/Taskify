@@ -1,4 +1,4 @@
-package com.owoblog.todolist_app
+package com.owoblog.taskify
 
 import android.os.Build
 import io.flutter.embedding.android.FlutterActivity

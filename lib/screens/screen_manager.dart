@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-29 16:18:24
+ * @LastEditTime : 2024-02-03 23:57:33
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,16 +20,16 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/core/update_checker.dart';
-import 'package:todolist_app/screens/donation_screen.dart';
-import 'package:todolist_app/screens/todolist_screen.dart';
-import 'package:todolist_app/screens/task_overview.dart';
-import 'package:todolist_app/screens/focus_mode_screen.dart';
-import 'package:todolist_app/screens/json_import_export_screen.dart';
-import 'package:todolist_app/screens/bug_report_screen.dart';
-import 'package:todolist_app/screens/about_screen.dart';
-import 'package:todolist_app/screens/ester_egg_screen.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/core/update_checker.dart';
+import 'package:taskify/screens/donation_screen.dart';
+import 'package:taskify/screens/todolist_screen.dart';
+import 'package:taskify/screens/task_overview.dart';
+import 'package:taskify/screens/focus_mode_screen.dart';
+import 'package:taskify/screens/json_import_export_screen.dart';
+import 'package:taskify/screens/bug_report_screen.dart';
+import 'package:taskify/screens/about_screen.dart';
+import 'package:taskify/screens/ester_egg_screen.dart';
 
 class ScreenManager extends StatefulWidget {
   const ScreenManager({super.key});
@@ -53,13 +53,13 @@ class _ScreenManagerState extends State<ScreenManager> {
   ];
 
   static const List<String> _pageTitles = [
-    'To-Do List',
+    'Tasks',
     'Task Overview',
     'Focus Mode',
     'Import/Export Data',
     'Bug Report',
     'Donate HanskiJay :)',
-    'About this App',
+    'About ${Application.appName}',
     isDebugMode ? 'Debug' : 'Rabbit :)',
   ];
 
@@ -152,14 +152,15 @@ class _ScreenManagerState extends State<ScreenManager> {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 20.0),
         Text(
-          'TodoList App',
+          Application.appName,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.0),
         Text(
           'A free app developed by HanskiJay',
           style: TextStyle(

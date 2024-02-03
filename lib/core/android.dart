@@ -18,7 +18,7 @@
 // core/android.dart
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:todolist_app/main.dart';
+import 'package:taskify/main.dart';
 
 class Android {
   static const MethodChannel _channel = MethodChannel('android_version');

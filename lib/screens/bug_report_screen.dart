@@ -19,8 +19,8 @@
  */
 // screens/bug_report_screen.dart
 import 'package:flutter/material.dart';
-import 'package:todolist_app/core/bug_reporter.dart';
-import 'package:todolist_app/main.dart';
+import 'package:taskify/core/bug_reporter.dart';
+import 'package:taskify/main.dart';
 
 class BugReportScreen extends StatefulWidget {
   const BugReportScreen({Key? key}) : super(key: key);
@@ -83,7 +83,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             Card(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -107,7 +107,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: isButtonDisabled ? null : (() => submitForm(context)),
               style: ElevatedButton.styleFrom(

@@ -18,8 +18,8 @@
 /// widgets/task_tile_builder.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/widgets/capsule_tag.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/widgets/capsule_tag.dart';
 
 class TaskTileBuilder {
   static Container buildTaskTile(BuildContext context, Task task,

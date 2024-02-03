@@ -23,10 +23,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:todolist_app/core/update_checker.dart';
-import 'package:todolist_app/core/utils.dart';
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/widgets/capsule_tag.dart';
+import 'package:taskify/core/update_checker.dart';
+import 'package:taskify/core/utils.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/widgets/capsule_tag.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);

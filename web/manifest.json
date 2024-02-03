@@ -1,6 +1,6 @@
 {
-    "name": "todolist_app",
-    "short_name": "todolist_app",
+    "name": "taskify",
+    "short_name": "taskify",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

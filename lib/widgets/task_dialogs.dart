@@ -20,12 +20,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/models/category.dart';
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/widgets/custom_dialog.dart';
-import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/widgets/category_dropdown.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/models/category.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/widgets/custom_dialog.dart';
+import 'package:taskify/providers/todo_provider.dart';
+import 'package:taskify/widgets/category_dropdown.dart';
 
 class TaskDialog extends StatelessWidget {
   final String title;
@@ -84,20 +84,20 @@ class AddTaskDialog extends StatelessWidget {
           controller: titleController,
           decoration: UI.input('Enter task title'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         TextField(
           maxLines: 5,
           controller: remarkController,
           decoration: UI.input('Add a Remark...'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         const Text('Due to Date:'),
-        const SizedBox(height: 5),
+        const SizedBox(height: 5.0),
         TextField(
           controller: dueDateController,
           decoration: UI.input('Pick a due date...'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         UI.addPickDateTimeButton(context, dueDate, onResult: (value) {
           dueDate = value ?? dueDate;
           dueDateController.text = dueDate.toString();
@@ -159,7 +159,7 @@ class EditTaskDialog extends StatelessWidget {
           controller: titleController,
           decoration: UI.input('Edit title'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         TextField(
           maxLines: 5,
           controller: remarkController,
@@ -169,15 +169,15 @@ class EditTaskDialog extends StatelessWidget {
             ? Row(children: children)
             : Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [const SizedBox(height: 10), ...children],
+                children: [const SizedBox(height: 10.0), ...children],
               ),
         const Text('Due to Date:'),
-        const SizedBox(height: 5),
+        const SizedBox(height: 5.0),
         TextField(
           controller: dueDateController,
           decoration: UI.input('Pick a due date...'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         UI.addPickDateTimeButton(context, dueDate, onResult: (value) {
           dueDate = value ?? dueDate;
           dueDateController.text = dueDate.toString();
@@ -240,7 +240,7 @@ class AddCategoryDialog extends StatelessWidget {
           controller: controller,
           decoration: UI.input('Enter category name'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         BlockPicker(
           pickerColor: selectedColor,
           onColorChanged: (color) {
@@ -275,7 +275,7 @@ class DeleteCategoryDialog extends StatelessWidget {
       title: 'Delete Category',
       content: [
         const Text('Select a category to delete:'),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         DropdownButton<String>(
           value:
               todoProvider.selectedCategory == Application.defaultCategory.name
@@ -297,10 +297,10 @@ class DeleteCategoryDialog extends StatelessWidget {
                   children: [
                     Container(
                       width: 20,
-                      height: 20,
+                      height: 20.0,
                       color: element.value.color,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 8.0),
                     Text(element.key),
                   ],
                 ),

@@ -20,11 +20,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/widgets/task_dialogs.dart';
-import 'package:todolist_app/widgets/important_label.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/providers/todo_provider.dart';
+import 'package:taskify/widgets/task_dialogs.dart';
+import 'package:taskify/widgets/important_label.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({super.key});

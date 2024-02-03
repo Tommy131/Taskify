@@ -21,8 +21,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/app.dart';
-import 'package:todolist_app/widgets/animated_app_bar.dart';
+import 'package:taskify/app.dart';
+import 'package:taskify/widgets/animated_app_bar.dart';
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -108,9 +108,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildScorePanel('Player X', playerXScore),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20.0),
             for (int i = 0; i < boardSize; i++) buildRow(i),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20.0),
             buildScorePanel('Player O', playerOScore, angle: 0.0),
           ],
         ),

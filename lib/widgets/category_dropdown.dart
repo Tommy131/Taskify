@@ -19,9 +19,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:todolist_app/models/category.dart';
-import 'package:todolist_app/models/task.dart';
-import 'package:todolist_app/providers/todo_provider.dart';
+import 'package:taskify/models/category.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/providers/todo_provider.dart';
 
 class CategoryDropdown extends StatelessWidget {
   static const int triggerNormal = 0;
@@ -63,7 +63,7 @@ class CategoryDropdown extends StatelessWidget {
                     height: 20,
                     color: category.color,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 8.0),
                   Text(category.name),
                 ],
               ),

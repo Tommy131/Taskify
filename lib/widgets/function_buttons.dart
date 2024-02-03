@@ -18,7 +18,7 @@
 // widgets/function_buttons.dart
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/widgets/task_dialogs.dart';
+import 'package:taskify/widgets/task_dialogs.dart';
 
 class FunctionButtons {
   static const List<String> functionLabels = [

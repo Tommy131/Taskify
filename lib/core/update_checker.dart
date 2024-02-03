@@ -23,7 +23,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import 'package:todolist_app/main.dart';
+import 'package:taskify/main.dart';
 
 class UpdateChecker {
   static const String _serverUrl =

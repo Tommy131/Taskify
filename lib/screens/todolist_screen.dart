@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-28 23:28:34
+ * @LastEditTime : 2024-02-03 23:59:29
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -18,10 +18,10 @@
 // screens/home_screen.dart
 import 'package:flutter/material.dart';
 
-import 'package:todolist_app/main.dart';
-import 'package:todolist_app/widgets/category_dropdown.dart';
-import 'package:todolist_app/widgets/function_buttons.dart';
-import 'package:todolist_app/widgets/task_list.dart';
+import 'package:taskify/main.dart';
+import 'package:taskify/widgets/category_dropdown.dart';
+import 'package:taskify/widgets/function_buttons.dart';
+import 'package:taskify/widgets/task_list.dart';
 
 class TodolistScreen extends StatefulWidget {
   const TodolistScreen({super.key});
@@ -55,14 +55,14 @@ class _TodolistScreenState extends State<TodolistScreen> {
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            height: isListVisible ? 200 : 0,
+            height: isListVisible ? 200.0 : 0.0,
             curve: Curves.easeInOut,
             child: Visibility(
               visible: isListVisible,
               child: FunctionButtons.build(context),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 10.0),
           FloatingActionButton(
             onPressed: () {
               setState(() {
