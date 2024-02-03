@@ -96,7 +96,11 @@ class TaskTileBuilder {
     }
   }
 
-  static TextStyle getTextStyle(Task task) {
+  static TextStyle getTextStyle(
+    Task task, {
+    double? fontSize,
+    FontStyle? fontStyle,
+  }) {
     Color textColor =
         task.isCompleted ? Colors.black.withOpacity(0.6) : Colors.white;
     FontWeight fontWeight =
@@ -106,6 +110,8 @@ class TaskTileBuilder {
 
     return TextStyle(
       color: textColor,
+      fontSize: fontSize,
+      fontStyle: fontStyle,
       fontWeight: fontWeight,
       decoration: decoration,
     );

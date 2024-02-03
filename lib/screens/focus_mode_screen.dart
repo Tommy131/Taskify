@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-02 00:58:55
+ * @LastEditTime : 2024-02-03 01:00:36
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,13 +20,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:todolist_app/models/task.dart';
 import 'package:todolist_app/providers/todo_provider.dart';
-import 'package:todolist_app/widgets/capsule_tag.dart';
 import 'package:todolist_app/widgets/color_transition.dart';
+import 'package:todolist_app/widgets/task_tile_builder.dart';
 
 class FocusModeScreen extends StatefulWidget {
-  const FocusModeScreen({Key? key}) : super(key: key);
+  const FocusModeScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,223 +37,13 @@ class FocusModeScreen extends StatefulWidget {
 class _FocusModeScreenState extends State<FocusModeScreen>
     with TickerProviderStateMixin {
   late Timer _timer;
-  late DateTime? _dueDate;
-  late Duration? _timeUntilExpiry;
   late ColorTransition _colorTransition;
-  late String _countdownText;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), _updateTime);
+    _timer = Timer.periodic(const Duration(seconds: 1), _updateTimer);
     _colorTransition = ColorTransition(this);
-  }
-
-  void _updateTime(Timer timer) {
-    if (_dueDate == null || _timeUntilExpiry == null) {
-      return;
-    }
-
-    DateTime now = DateTime.now();
-    if (now.isBefore(_dueDate!)) {
-      _timeUntilExpiry = _dueDate?.difference(now);
-    } else {
-      _timeUntilExpiry = Duration.zero;
-      _timer.cancel();
-    }
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TodoProvider>(
-      builder: (context, todoProvider, child) {
-        Task? importantTask = todoProvider.getUpcomingImportantTask();
-        Task? normalTask = todoProvider.getUpcomingTask();
-        return (importantTask == null)
-            ? _buildWellDoneContainer()
-            : _buildTaskContainer(importantTask, normalTask);
-      },
-    );
-  }
-
-  Widget _buildWellDoneContainer() {
-    return _buildContainer(
-      Colors.green,
-      icon: Icons.task_alt,
-      text: 'Perfect! You have completed all your tasks~',
-    );
-  }
-
-  Widget _buildTaskContainer(Task task, Task? normalTask) {
-    _dueDate = task.dueDate;
-    _timeUntilExpiry = _dueDate?.difference(DateTime.now());
-
-    int days = _timeUntilExpiry?.inDays ?? 0;
-    int hours = (_timeUntilExpiry?.inHours ?? 0) % 24;
-    int minutes = (_timeUntilExpiry?.inMinutes ?? 0) % 60;
-    int seconds = (_timeUntilExpiry?.inSeconds ?? 0) % 60;
-
-    _countdownText =
-        '$days Day(s) ${hours.toString().padLeft(2, '0')} hour(s) ${minutes.toString().padLeft(2, '0')} minute(s) ${seconds.toString().padLeft(2, '0')} seconds';
-
-    bool closeToDeadline = (days == 0) && (hours == 0) && (minutes <= 30);
-    _colorTransition.colorTween = ColorTween(
-      begin: closeToDeadline
-          ? Colors.red[900]
-          : _timer.isActive
-              ? Colors.blue
-              : Colors.amber[900],
-      end: closeToDeadline
-          ? Colors.red[400]
-          : _timer.isActive
-              ? Colors.yellow
-              : Colors.yellow[700],
-    );
-
-    return _buildContainer(task.category.color,
-        widget: buildTaskWidget(task, normalTask, closeToDeadline));
-  }
-
-  Widget buildTaskWidget(Task task, Task? normalTask, bool closeToDeadline) {
-    List<Widget> buildNormalTask() {
-      if (normalTask == null) {
-        return [Container()];
-      }
-      return [
-        const Divider(
-          thickness: 2.0,
-          color: Colors.white,
-        ),
-        const SizedBox(height: 20.0),
-        _buildTagAndTitleRow(normalTask, fontWeight: FontWeight.normal),
-        _buildTextContent('Due to date: ${normalTask.dueDate}', fontSize: 12.0),
-      ];
-    }
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildTagAndTitleRow(task),
-        _buildTextContent('Due to date: ${task.dueDate}', fontSize: 12.0),
-        const SizedBox(height: 10.0),
-        _buildAnimatedContainer(closeToDeadline, _timer, _colorTransition),
-        const SizedBox(height: 20.0),
-        ...buildNormalTask(),
-      ],
-    );
-  }
-
-  Widget _buildTagAndTitleRow(Task task,
-      {FontWeight fontWeight = FontWeight.bold}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 0,
-          child: CapsuleTag(
-            text: task.isImportant ? 'Important' : 'Normal',
-            backgroundColor: Colors.white,
-            textColor: task.isImportant ? Colors.red : Colors.blue,
-            fontWeight: fontWeight,
-          ),
-        ),
-        Expanded(
-          child: _buildTextContent(
-            '${task.category.name}: ${task.title}',
-            fontWeight: fontWeight,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAnimatedContainer(
-      bool closeToDeadline, Timer timer, ColorTransition colorTransition) {
-    return AnimatedBuilder(
-      animation: colorTransition.colorAnimation,
-      builder: (context, child) {
-        return Container(
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: colorTransition.colorAnimation.value,
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: (closeToDeadline ? Colors.red : Colors.grey)
-                    .withOpacity(0.5),
-                offset: const Offset(1.0, 2.0),
-              ),
-            ],
-          ),
-          child: _buildTextContent(
-            timer.isActive
-                ? _countdownText
-                : 'Is your mission accomplished? ? ?',
-            color: Colors.white,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildContainer(
-    Color color, {
-    IconData? icon,
-    String? text,
-    Widget? widget,
-  }) {
-    double height = MediaQuery.of(context).size.height;
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(16.0),
-      color: color,
-      child: Center(
-        child: ListView(
-          children: [
-            SizedBox(height: (height <= 600) ? 0 : (height / 4)),
-            widget ??
-                (text != null
-                    ? icon != null
-                        ? _buildIconContent(icon, text)
-                        : _buildTextContent(text)
-                    : Container()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIconContent(IconData icon, String text) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: Colors.white,
-          size: 100.0,
-        ),
-        const SizedBox(height: 20.0),
-        _buildTextContent(text),
-      ],
-    );
-  }
-
-  Widget _buildTextContent(
-    String text, {
-    Color color = Colors.white,
-    double fontSize = 30.0,
-    FontWeight fontWeight = FontWeight.bold,
-  }) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-      ),
-    );
   }
 
   @override
@@ -260,5 +51,225 @@ class _FocusModeScreenState extends State<FocusModeScreen>
     _timer.cancel();
     _colorTransition.dispose();
     super.dispose();
+  }
+
+  void _updateTimer(Timer timer) {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TodoProvider todoProvider = context.read<TodoProvider>();
+    List<Task?> sortedTasks = [
+      todoProvider.getUpcomingImportantTask(),
+      todoProvider.getUpcomingTask(),
+    ].where((element) => element != null).toList();
+
+    return _buildFocusModeContainer(sortedTasks);
+  }
+
+  Widget _buildFocusModeContainer(List<Task?> tasks) {
+    double height = MediaQuery.of(context).size.height;
+    return tasks.isEmpty
+        ? _buildWellDoneContainer()
+        : _buildTaskListView(tasks, height);
+  }
+
+  Widget _buildTaskListView(List<Task?> tasks, double height) {
+    return ListView.builder(
+      itemCount: tasks.length,
+      itemExtent: _calculateItemExtent(height),
+      itemBuilder: (context, index) {
+        Task task = tasks[index]!;
+        Duration remainingTime = task.dueDate.difference(DateTime.now());
+        _colorTransition.colorTween = _getColorTween();
+
+        return _buildTaskContainer(task, remainingTime);
+      },
+    );
+  }
+
+  double _calculateItemExtent(double height) {
+    // print(height);
+    return height /
+        (height > 730 ? 2 : (height > 550 ? 1.5 : (height > 275 ? 0.75 : 0.5)));
+  }
+
+  Widget _buildTaskContainer(Task task, Duration remainingTime) {
+    return Container(
+      color: task.category.color,
+      padding: const EdgeInsets.all(10.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              ),
+              child: Icon(
+                _isMissionFailed(remainingTime)
+                    ? Icons.sentiment_very_dissatisfied
+                    : Icons.work_history,
+                color: task.category.color,
+                size: 48.0,
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            TaskTileBuilder.buildCapsuleTag(
+              task.isImportant ? 'Important' : 'primary',
+              task.category.color,
+            ),
+            const SizedBox(height: 10.0),
+            _buildTaskText(task, fontSize: 14.0, text: task.category.name),
+            _buildTaskText(task, fontSize: 30.0),
+            const SizedBox(height: 20.0),
+            _buildTaskText(task, fontSize: 20.0, text: task.remark),
+            const SizedBox(height: 10.0),
+            _buildTaskText(
+              task,
+              fontSize: 12.0,
+              text: 'Due to: ${task.dueDate.toString()}',
+              fontStyle: FontStyle.italic,
+            ),
+            const SizedBox(height: 10.0),
+            _buildAnimatedContainer(remainingTime),
+            (remainingTime.inMinutes <= 30)
+                ? const SizedBox(height: 10.0)
+                : const SizedBox(height: 0.0),
+            _isMissionFailed(remainingTime)
+                ? _buildTaskText(
+                    task,
+                    text: '👆 Have you finished your task?👆',
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool _isMissionFailed(Duration remainingTime) {
+    return remainingTime.inMinutes <= 0;
+  }
+
+  Widget _buildTaskText(
+    Task task, {
+    String? text,
+    double fontSize = 14.0,
+    TextStyle? textStyle,
+    FontStyle? fontStyle,
+  }) {
+    return Text(
+      text ?? task.title,
+      textAlign: TextAlign.center,
+      style: textStyle ??
+          TaskTileBuilder.getTextStyle(
+            task,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+          ),
+    );
+  }
+
+  Widget _buildAnimatedContainer(Duration remainingTime) {
+    return AnimatedBuilder(
+      animation: _colorTransition.colorAnimation,
+      builder: (context, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 5.0,
+            horizontal: 10.0,
+          ),
+          decoration: BoxDecoration(
+            color: _colorTransition.colorAnimation.value,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: _calculateBoxShadowColor(remainingTime),
+                offset: const Offset(1.0, 2.0),
+              ),
+            ],
+          ),
+          child: Text(
+            _formatDuration(remainingTime),
+            style: TextStyle(
+              color: _calculateTextColor(remainingTime),
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Color _calculateBoxShadowColor(Duration remainingTime) {
+    return (remainingTime.inMinutes <= 30 ? Colors.red : Colors.grey)
+        .withOpacity(0.5);
+  }
+
+  Color _calculateTextColor(Duration remainingTime) {
+    return remainingTime.inMinutes <= 30 ? Colors.red : Colors.cyan;
+  }
+
+  ColorTween _getColorTween() {
+    return ColorTween(
+      begin: Colors.white,
+      end: Colors.white70,
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    int minutes = duration.inMinutes % 60;
+    int hours = duration.inHours % 24;
+    int days = duration.inDays;
+    int secs = duration.inSeconds % 60;
+
+    _(int num) => [0, 1].contains(num);
+    String dayCorrective = _(days) ? 'day' : 'days';
+    String hourCorrective = _(hours) ? 'hour' : 'hours';
+    String minuteCorrective = _(minutes) ? 'minute' : 'minutes';
+    String secsCorrective = _(secs) ? 'second' : 'seconds';
+
+    return '$days $dayCorrective, $hours $hourCorrective, $minutes $minuteCorrective $secs $secsCorrective';
+  }
+
+  Widget _buildWellDoneContainer() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16.0),
+      color: Colors.green,
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.task_alt,
+              color: Colors.white,
+              size: 100.0,
+            ),
+            SizedBox(height: 20.0),
+            Text(
+              'Perfect! You have completed all your tasks~',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
