@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-31 19:47:14
+ * @LastEditTime : 2024-02-03 01:10:54
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -81,6 +81,20 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const Text(
+              'Please select a file to import / export data.',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'File Path: ${savePath.toString()}',
+              style: const TextStyle(
+                fontSize: 14.0,
+              ),
+            ),
+            const SizedBox(height: 10),
             _buildDropdownButton(),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -89,6 +103,13 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
             ),
             const SizedBox(height: 10),
             _buildElevatedButton('Export JSON', _exportJson),
+            const SizedBox(height: 10),
+            _buildElevatedButton('Clean Choose', () {
+              setState(() {
+                selectedFilePath = null;
+                jsonController.text = '';
+              });
+            }),
             const SizedBox(height: 20),
             Flexible(
               child: SingleChildScrollView(
@@ -119,7 +140,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
       items: jsonFiles.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(path.basename(value)),
         );
       }).toList(),
     );

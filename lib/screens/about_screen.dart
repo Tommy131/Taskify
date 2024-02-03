@@ -81,7 +81,9 @@ class AboutScreenState extends State<AboutScreen> {
                   Row(
                     children: [
                       const CapsuleTag(
-                          text: 'v${Application.versionName}', fontSize: 14),
+                          text:
+                              'v${Application.versionName} - (Build Version ${Application.versionCode})',
+                          fontSize: 14),
                       const SizedBox(width: 10.0),
                       ElevatedButton(
                         onPressed: () => _checkForUpdates(context),

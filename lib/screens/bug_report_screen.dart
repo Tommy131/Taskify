@@ -85,16 +85,26 @@ class _BugReportScreenState extends State<BugReportScreen> {
             ),
             const SizedBox(height: 10),
             Card(
-              child: Column(
-                children: [
-                  _buildTextField('E-Mail', Icons.email, emailController),
-                  _buildTextField('Title', Icons.title, titleController),
-                  _buildTextField(
-                      'Bug Category', Icons.category, categoryController),
-                  _buildTextField('Write something here...', Icons.text_fields,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 15.0),
+                child: Column(
+                  children: [
+                    _buildTextField('E-Mail', Icons.email, emailController),
+                    _buildTextField('Title', Icons.title, titleController),
+                    _buildTextField(
+                      'Bug Category',
+                      Icons.category,
+                      categoryController,
+                    ),
+                    _buildTextField(
+                      'Write something here...',
+                      Icons.text_fields,
                       textController,
-                      maxLines: 3),
-                ],
+                      maxLines: 3,
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 10),

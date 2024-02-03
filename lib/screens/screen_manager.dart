@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 
 import 'package:todolist_app/main.dart';
 import 'package:todolist_app/core/update_checker.dart';
+import 'package:todolist_app/screens/donation_screen.dart';
 import 'package:todolist_app/screens/todolist_screen.dart';
 import 'package:todolist_app/screens/task_overview.dart';
 import 'package:todolist_app/screens/focus_mode_screen.dart';
@@ -46,6 +47,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     FocusModeScreen(),
     JsonImportExportScreen(),
     BugReportScreen(),
+    DonationScreen(),
     AboutScreen(),
     EsterEggScreen(),
   ];
@@ -56,6 +58,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     'Focus Mode',
     'Import/Export Data',
     'Bug Report',
+    'Donate HanskiJay :)',
     'About this App',
     isDebugMode ? 'Debug' : 'Rabbit :)',
   ];
@@ -66,6 +69,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     Icon(Icons.filter_center_focus),
     Icon(Icons.import_export),
     Icon(Icons.bug_report),
+    Icon(Icons.volunteer_activism),
     Icon(Icons.info),
     Icon(Icons.cruelty_free),
   ];

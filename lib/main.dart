@@ -73,7 +73,7 @@ void main() {
 /// 主程序类
 class Application {
   static const String appName = 'TodoList App';
-  static const int versionCode = 20240201;
+  static const int versionCode = 20240203;
   static const String versionName = '0.0.3';
   static const String author = 'Jay Hanski';
 
