@@ -178,9 +178,9 @@ class EditTaskDialog extends StatelessWidget {
           decoration: UI.input('Pick a due date...'),
         ),
         const SizedBox(height: 10),
-        UI.addPickDateButton(context, dueDate, onResult: (pickedDate) {
-          dueDate = pickedDate ?? dueDate;
-          dueDateController.text = pickedDate.toString();
+        UI.addPickDateTimeButton(context, dueDate, onResult: (value) {
+          dueDate = value ?? dueDate;
+          dueDateController.text = dueDate.toString();
         }),
       ],
       onPressed: () {

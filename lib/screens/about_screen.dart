@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-31 16:12:18
+ * @LastEditTime : 2024-02-03 23:15:20
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -61,6 +61,19 @@ class AboutScreenState extends State<AboutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      const CapsuleTag(
+          text:
+              'v${Application.versionName} - (Build Version ${Application.versionCode})',
+          fontSize: 14),
+      const SizedBox(width: 10.0, height: 10.0),
+      ElevatedButton(
+        onPressed: () => _checkForUpdates(context),
+        style: ElevatedButton.styleFrom(primary: Colors.blue[100]),
+        child: const Text('Check Update'),
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white30,
       body: SingleChildScrollView(
@@ -78,21 +91,12 @@ class AboutScreenState extends State<AboutScreen> {
                 _buildInfoListTile(Icons.storage, storageInfo),
                 _buildCustomListTile(
                   Icons.update,
-                  Row(
-                    children: [
-                      const CapsuleTag(
-                          text:
-                              'v${Application.versionName} - (Build Version ${Application.versionCode})',
-                          fontSize: 14),
-                      const SizedBox(width: 10.0),
-                      ElevatedButton(
-                        onPressed: () => _checkForUpdates(context),
-                        style:
-                            ElevatedButton.styleFrom(primary: Colors.blue[100]),
-                        child: const Text('Check Update'),
-                      ),
-                    ],
-                  ),
+                  MediaQuery.of(context).size.width > 580.0
+                      ? Row(children: children)
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: children),
                 ),
               ]),
             ]),

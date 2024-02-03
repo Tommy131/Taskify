@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-03 01:00:36
+ * @LastEditTime : 2024-02-03 23:18:44
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -119,7 +119,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
             ),
             const SizedBox(height: 10.0),
             TaskTileBuilder.buildCapsuleTag(
-              task.isImportant ? 'Important' : 'primary',
+              task.isImportant ? 'Important' : 'Primary',
               task.category.color,
             ),
             const SizedBox(height: 10.0),

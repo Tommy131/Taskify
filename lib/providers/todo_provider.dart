@@ -71,7 +71,8 @@ class TodoProvider extends ChangeNotifier {
   List<Task>? getUpcomingTasks({bool getFromImportant = false}) {
     List<Task> upcomingTasks = _tasks
         .where((task) =>
-            !task.isCompleted && (getFromImportant ? task.isImportant : true))
+            !task.isCompleted &&
+            (getFromImportant ? task.isImportant : !task.isImportant))
         .toList();
 
     if (upcomingTasks.isNotEmpty) {

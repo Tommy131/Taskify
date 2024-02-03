@@ -44,11 +44,17 @@ class TaskTileBuilder {
     bool isSmallScreen = MediaQuery.of(context).size.width < 300;
 
     List<Widget> importantTag = [
-      if (task.isImportant) buildCapsuleTag('Important', Colors.red),
+      if (task.isImportant)
+        buildCapsuleTag(
+          'Important',
+          task.isCompleted ? Colors.grey : Colors.red,
+        ),
       if (task.isImportant && !isSmallScreen) const SizedBox(width: 10.0),
     ];
-    CapsuleTag categoryTag =
-        buildCapsuleTag(task.category.name, task.category.color);
+    CapsuleTag categoryTag = buildCapsuleTag(
+      task.category.name,
+      task.isCompleted ? Colors.grey : task.category.color,
+    );
     Text text = Text(
       task.title,
       style: getTextStyle(task),

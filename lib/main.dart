@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-02 22:48:32
+ * @LastEditTime : 2024-02-03 23:30:49
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -58,7 +58,8 @@ void main() {
         '${Application.appName} v${Application.versionName} By HanskiJay');
   }
 
-  mainLogger.info('正在启动TodoList程序 v${Application.versionName} By HanskiJay...');
+  mainLogger.info(
+      '正在启动 ${Application.appName} v${Application.versionName} By HanskiJay...');
   Application();
 
   Timer(const Duration(seconds: 2), () {
@@ -72,8 +73,8 @@ void main() {
 
 /// 主程序类
 class Application {
-  static const String appName = 'TodoList App';
-  static const int versionCode = 20240203;
+  static const String appName = 'Taskify';
+  static const int versionCode = 20240204;
   static const String versionName = '0.0.3';
   static const String author = 'Jay Hanski';
 
@@ -481,14 +482,20 @@ class UI {
       onPressed: () async {
         await selectDate(context, selectedDateTime).then(
           (date) async {
+            if (date == null) {
+              return;
+            }
             // ignore: use_build_context_synchronously
             await selectTime(context, TimeOfDay.now()).then(
               (time) {
+                if (time == null) {
+                  return;
+                }
                 DateTime pickedDate = DateTime(
-                  date!.year,
+                  date.year,
                   date.month,
                   date.day,
-                  time!.hour,
+                  time.hour,
                   time.minute,
                 );
 
