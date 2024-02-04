@@ -27,7 +27,7 @@ import 'package:taskify/main.dart';
 
 class UpdateChecker {
   static const String _serverUrl =
-      'https://owoblog.com/todolist/api/check-update';
+      'https://owoblog.com/taskify/api/check-update';
 
   static Future<Map<String, dynamic>> getRawData() async {
     try {
