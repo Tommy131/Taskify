@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 15:45:01
+ * @LastEditTime : 2024-02-06 21:21:55
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -23,7 +23,7 @@ import 'package:taskify/core/bug_reporter.dart';
 import 'package:taskify/main.dart';
 
 class BugReportScreen extends StatefulWidget {
-  const BugReportScreen({Key? key}) : super(key: key);
+  const BugReportScreen({super.key});
 
   @override
   _BugReportScreenState createState() => _BugReportScreenState();
@@ -42,18 +42,14 @@ class _BugReportScreenState extends State<BugReportScreen> {
     super.initState();
     emailController = TextEditingController()..addListener(updateButtonState);
     titleController = TextEditingController()..addListener(updateButtonState);
-    categoryController = TextEditingController()
-      ..addListener(updateButtonState);
+    categoryController = TextEditingController()..addListener(updateButtonState);
     textController = TextEditingController()..addListener(updateButtonState);
   }
 
   void updateButtonState() {
     setState(() {
-      isButtonDisabled = emailController.text.isEmpty ||
-          titleController.text.isEmpty ||
-          categoryController.text.isEmpty ||
-          textController.text.isEmpty ||
-          !Application.isValidEmail(emailController.text);
+      isButtonDisabled =
+          emailController.text.isEmpty || titleController.text.isEmpty || categoryController.text.isEmpty || textController.text.isEmpty || !Application.isValidEmail(emailController.text);
     });
   }
 
@@ -109,9 +105,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
                         ),
                         const SizedBox(height: 20.0),
                         ElevatedButton(
-                          onPressed: isButtonDisabled
-                              ? null
-                              : (() => submitForm(context)),
+                          onPressed: isButtonDisabled ? null : (() => submitForm(context)),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue.shade500,
@@ -133,9 +127,7 @@ class _BugReportScreenState extends State<BugReportScreen> {
     );
   }
 
-  Widget _buildTextField(
-      String labelText, IconData icon, TextEditingController controller,
-      {int maxLines = 1}) {
+  Widget _buildTextField(String labelText, IconData icon, TextEditingController controller, {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       child: TextField(

@@ -17,7 +17,7 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-/// core/update_checker.dart
+// core/update_checker.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';

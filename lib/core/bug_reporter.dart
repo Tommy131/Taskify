@@ -15,7 +15,7 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-/// core/bug_reporter.dart
+// core/bug_reporter.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

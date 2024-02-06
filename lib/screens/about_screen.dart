@@ -30,7 +30,7 @@ import 'package:taskify/main.dart';
 import 'package:taskify/widgets/capsule_tag.dart';
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
 
   @override
   AboutScreenState createState() => AboutScreenState();

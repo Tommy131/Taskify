@@ -29,14 +29,14 @@ class CapsuleTag extends StatelessWidget {
   final Color textColor;
 
   const CapsuleTag({
-    Key? key,
+    super.key,
     required this.text,
     this.textAlign,
     this.fontSize = 12.0,
     this.fontWeight = FontWeight.normal,
     this.backgroundColor = Colors.blue,
     this.textColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

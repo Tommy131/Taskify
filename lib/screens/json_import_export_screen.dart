@@ -33,7 +33,7 @@ import 'package:taskify/main.dart';
 import 'package:taskify/providers/todo_provider.dart';
 
 class JsonImportExportScreen extends StatefulWidget {
-  const JsonImportExportScreen({Key? key}) : super(key: key);
+  const JsonImportExportScreen({super.key});
 
   @override
   _JsonImportExportScreenState createState() => _JsonImportExportScreenState();

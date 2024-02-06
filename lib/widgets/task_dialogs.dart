@@ -34,11 +34,11 @@ class TaskDialog extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center;
 
   const TaskDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

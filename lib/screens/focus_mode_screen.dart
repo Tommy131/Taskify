@@ -10,12 +10,12 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 16:22:33
+ * @LastEditTime : 2024-02-06 21:24:51
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-/// screens/focus_mode_screen.dart
+// screens/focus_mode_screen.dart
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -34,8 +34,7 @@ class FocusModeScreen extends StatefulWidget {
   _FocusModeScreenState createState() => _FocusModeScreenState();
 }
 
-class _FocusModeScreenState extends State<FocusModeScreen>
-    with TickerProviderStateMixin {
+class _FocusModeScreenState extends State<FocusModeScreen> with TickerProviderStateMixin {
   late Timer _timer;
   late ColorTransition _colorTransition;
   late ScrollController _scrollController;
@@ -80,8 +79,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
       floatingActionButton: sortedTasks.length > 1
           ? FloatingActionButton(
               onPressed: () {
-                double targetPosition =
-                    _isAtTop ? _scrollController.position.maxScrollExtent : 0.0;
+                double targetPosition = _isAtTop ? _scrollController.position.maxScrollExtent : 0.0;
 
                 _scrollController.animateTo(
                   targetPosition,
@@ -97,9 +95,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
 
   Widget _buildFocusModeContainer(List<Task?> tasks) {
     double height = MediaQuery.of(context).size.height;
-    return tasks.isEmpty
-        ? _buildWellDoneContainer()
-        : _buildTaskListView(tasks, height);
+    return tasks.isEmpty ? _buildWellDoneContainer() : _buildTaskListView(tasks, height);
   }
 
   Widget _buildTaskListView(List<Task?> tasks, double height) {
@@ -138,9 +134,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
               ),
               child: Icon(
-                _isMissionFailed(remainingTime)
-                    ? Icons.sentiment_very_dissatisfied
-                    : Icons.work_history,
+                _isMissionFailed(remainingTime) ? Icons.sentiment_very_dissatisfied : Icons.work_history,
                 color: _getBackgroundCOlor(task),
                 size: 48.0,
               ),
@@ -164,9 +158,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
             ),
             const SizedBox(height: 10.0),
             _buildAnimatedContainer(remainingTime),
-            (remainingTime.inMinutes <= 30)
-                ? const SizedBox(height: 10.0)
-                : const SizedBox(height: 0.0),
+            (remainingTime.inMinutes <= 30) ? const SizedBox(height: 10.0) : const SizedBox(height: 0.0),
             _isMissionFailed(remainingTime)
                 ? _buildTaskText(
                     task,
@@ -246,8 +238,7 @@ class _FocusModeScreenState extends State<FocusModeScreen>
   }
 
   Color _calculateBoxShadowColor(Duration remainingTime) {
-    return (remainingTime.inMinutes <= 30 ? Colors.red : Colors.grey)
-        .withOpacity(0.5);
+    return (remainingTime.inMinutes <= 30 ? Colors.red : Colors.grey).withOpacity(0.5);
   }
 
   Color _calculateTextColor(Duration remainingTime) {
