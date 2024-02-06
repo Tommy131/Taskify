@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 18:55:04
+ * @LastEditTime : 2024-02-06 18:51:01
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -48,23 +48,17 @@ final List<String> jsonFileNames = ['userSettings', 'todoList'];
 void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((LogRecord rec) {
-    developer.log(
-        '[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
+    developer.log('[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 
+  String title = '${Application.appName} v${Application.versionName} By HanskiJay';
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
-    setWindowTitle(
-        '${Application.appName} v${Application.versionName} By HanskiJay');
+    setWindowTitle(title);
   }
 
-  mainLogger.info(
-      '正在启动 ${Application.appName} v${Application.versionName} By HanskiJay...');
-  Application();
-
-  Timer(const Duration(seconds: 2), () {
-    MyApp.run();
-  });
+  mainLogger.info('正在启动 $title...');
+  Application.initApplication();
 
   mainLogger.info('所有组件全部启动成功, 正在系统 ${Platform.operatingSystem} 上运行.');
   mainLogger.info('当前系统版本: ${Platform.operatingSystemVersion}');
@@ -82,7 +76,7 @@ class Application {
   static late JsonDriver _todoList;
   static late Category _defaultCategory;
 
-  Application() {
+  static initApplication() async {
     if (Platform.isAndroid) {
       Android.checkStoragePermission(
         onGrantedCallback: () {
@@ -97,11 +91,12 @@ class Application {
         },
       );
 
-      getApplicationDocumentsDirectory().then((Directory directory) {
+      await getApplicationDocumentsDirectory().then((Directory directory) {
         generateConfigurations(savePath: '${directory.path}/$savePathName');
-      });
+      }).then((value) => MyApp.run());
     } else {
       generateConfigurations();
+      MyApp.run();
     }
   }
 
@@ -173,8 +168,7 @@ class Application {
 
   static bool isValidEmail(String email) {
     // 使用正则表达式验证邮箱格式
-    final RegExp emailRegex =
-        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    final RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
 
@@ -214,13 +208,11 @@ class Application {
       File sourceFile = File(sourcePath);
 
       if (sourceFile.existsSync()) {
-        String destinationPath =
-            '$destinationDirectory${sourceFile.uri.pathSegments.last}';
+        String destinationPath = '$destinationDirectory${sourceFile.uri.pathSegments.last}';
 
         sourceFile.renameSync(destinationPath);
 
-        Application.debug(
-            'File moved successfully from $sourcePath to $destinationPath');
+        Application.debug('File moved successfully from $sourcePath to $destinationPath');
         return true;
       } else {
         Application.debug('WARN >> Source file does not exist.');
@@ -273,10 +265,7 @@ class UI {
     );
   }
 
-  static void showStandardDialog(BuildContext context,
-      {String title = 'Success',
-      String content = 'Action done.',
-      Function(BuildContext?)? actionCall}) {
+  static void showStandardDialog(BuildContext context, {String title = 'Success', String content = 'Action done.', Function(BuildContext?)? actionCall}) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -297,10 +286,7 @@ class UI {
     );
   }
 
-  static void showConfirmationDialog(BuildContext context,
-      {String confirmMessage = '',
-      Function? onCancelled,
-      Function? onConfirmed}) {
+  static void showConfirmationDialog(BuildContext context, {String confirmMessage = '', Function? onCancelled, Function? onConfirmed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -346,8 +332,7 @@ class UI {
   }) {
     Color backgroundColor = color ?? Colors.black.withOpacity(0.7);
 
-    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
-        (context != null)) {
+    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) && (context != null)) {
       final snackBar = SnackBar(
         content: Text(message!),
         backgroundColor: backgroundColor,
@@ -387,8 +372,7 @@ class UI {
     );
   }
 
-  static Ink decoratedContainer(Widget widget,
-      {Function? onLongPressCall, Function? onTapCall}) {
+  static Ink decoratedContainer(Widget widget, {Function? onLongPressCall, Function? onTapCall}) {
     return Ink(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
@@ -418,16 +402,14 @@ class UI {
     );
   }
 
-  static InputDecoration input(String hintText,
-      {Color color = Colors.black45}) {
+  static InputDecoration input(String hintText, {Color color = Colors.black45}) {
     return InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: color),
     );
   }
 
-  static Future<DateTime?> selectDate(
-      BuildContext context, DateTime selectedDate) async {
+  static Future<DateTime?> selectDate(BuildContext context, DateTime selectedDate) async {
     return await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -437,17 +419,14 @@ class UI {
     );
   }
 
-  static Future<TimeOfDay?> selectTime(
-      BuildContext context, TimeOfDay selectedTime) async {
+  static Future<TimeOfDay?> selectTime(BuildContext context, TimeOfDay selectedTime) async {
     return await showTimePicker(
       context: context,
       initialTime: selectedTime,
     );
   }
 
-  static ElevatedButton addPickDateButton(
-      BuildContext context, DateTime selectedDate,
-      {Function(DateTime?)? onResult}) {
+  static ElevatedButton addPickDateButton(BuildContext context, DateTime selectedDate, {Function(DateTime?)? onResult}) {
     return ElevatedButton(
       onPressed: () {
         selectDate(context, selectedDate).then((value) {
@@ -460,9 +439,7 @@ class UI {
     );
   }
 
-  static ElevatedButton addPickTimeButton(
-      BuildContext context, TimeOfDay selectedTime,
-      {Function(TimeOfDay?)? onResult}) {
+  static ElevatedButton addPickTimeButton(BuildContext context, TimeOfDay selectedTime, {Function(TimeOfDay?)? onResult}) {
     return ElevatedButton(
       onPressed: () {
         selectTime(context, selectedTime).then((value) {
@@ -475,9 +452,7 @@ class UI {
     );
   }
 
-  static ElevatedButton addPickDateTimeButton(
-      BuildContext context, DateTime selectedDateTime,
-      {Function(DateTime?)? onResult}) {
+  static ElevatedButton addPickDateTimeButton(BuildContext context, DateTime selectedDateTime, {Function(DateTime?)? onResult}) {
     return ElevatedButton(
       onPressed: () async {
         await selectDate(context, selectedDateTime).then(

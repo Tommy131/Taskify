@@ -10,12 +10,14 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:49:35
+ * @LastEditTime : 2024-02-05 22:27:21
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // app.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:taskify/main.dart';
@@ -23,11 +25,25 @@ import 'package:taskify/main.dart';
 import 'package:taskify/providers/todo_provider.dart';
 import 'package:taskify/screens/screen_manager.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _MyAppState createState() => _MyAppState();
 
   static void run() {
     runApp(const MyApp());
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _canPop = false;
+
+  void _togglePopState() {
+    setState(() {
+      _canPop = !_canPop;
+    });
   }
 
   @override
@@ -55,7 +71,27 @@ class MyApp extends StatelessWidget {
             contentPadding: EdgeInsets.all(12),
           ),
         ),
-        home: const ScreenManager(),
+        home: PopScope(
+          canPop: _canPop,
+          onPopInvoked: (didPop) async {
+            if (didPop) {
+              return;
+            }
+
+            if (_canPop) {
+              Navigator.of(context).pop(true);
+            } else {
+              UI.showBottomSheet(
+                context: context,
+                message: 'Please confirm your process once again to exit the app.',
+              );
+            }
+            _togglePopState();
+            // 如果用户2秒后没有进行同样的操作, 触发该规则
+            Timer(const Duration(seconds: 2), () => _togglePopState());
+          },
+          child: const ScreenManager(),
+        ),
       ),
     );
   }
