@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 03:41:22
+ * @LastEditTime : 2024-02-07 15:16:07
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -34,7 +34,7 @@ import 'package:taskify/screens/json_import_export_screen.dart';
 import 'package:taskify/screens/bug_report_screen.dart';
 import 'package:taskify/screens/about_screen.dart';
 import 'package:taskify/screens/ester_egg_screen.dart';
-import 'package:taskify/core/phone/phone.dart';
+import 'package:taskify/core/phone/notification_service.dart';
 import 'package:taskify/screens/user_settings_screen.dart';
 
 class ScreenManager extends StatefulWidget {
@@ -96,35 +96,37 @@ class _ScreenManagerState extends State<ScreenManager> {
     // 初始化任务临期通知
     if (Platform.isAndroid || Platform.isIOS) {
       Map<String, dynamic> settings = Application.settings['notification']['settings'];
-      Phone.notification.addNotification(
-        'notificationTimer',
-        timer: Timer.periodic(
-          Duration(
-            minutes: settings['frequencyInMinutes'] ?? 10,
-            seconds: settings['frequencyInSeconds'] ?? 10,
-          ),
-          (Timer timer) {
-            TodoProvider todoProvider = context.read<TodoProvider>();
-            List<Task?> sortedTasks = [
-              todoProvider.getUpcomingImportantTask(),
-              todoProvider.getUpcomingTask(),
-            ].where((element) => element != null).toList();
-            if (sortedTasks.isNotEmpty) {
-              if (Platform.isAndroid || Platform.isIOS) {
-                for (Task? task in sortedTasks) {
-                  if (task == null) return;
-                  Phone.notification.showBigTextWithActionNotification(
-                    title: 'Task "${task.title}" will expired soon!',
-                    body: 'Click me to check more details.',
-                    summary: '${task.category.name}\'s task will expired',
-                    payload: {'navigate': 'true', 'taskInfo': jsonEncode(task.toJson())},
-                  );
+      NotificationService.checkNotificationPermission(context).then((value) {
+        NotificationService.addNotification(
+          'notificationTimer',
+          timer: Timer.periodic(
+            Duration(
+              minutes: settings['frequencyInMinutes'] ?? 10,
+              seconds: settings['frequencyInSeconds'] ?? 10,
+            ),
+            (Timer timer) {
+              TodoProvider todoProvider = context.read<TodoProvider>();
+              List<Task?> sortedTasks = [
+                todoProvider.getUpcomingImportantTask(),
+                todoProvider.getUpcomingTask(),
+              ].where((element) => element != null).toList();
+              if (sortedTasks.isNotEmpty) {
+                if (Platform.isAndroid || Platform.isIOS) {
+                  for (Task? task in sortedTasks) {
+                    if (task == null) return;
+                    NotificationService.showBigTextWithActionNotification(
+                      title: 'Task "${task.title}" will expired soon!',
+                      body: 'Click me to check more details.',
+                      summary: '${task.category.name}\'s task will expired',
+                      payload: {'navigate': 'true', 'taskInfo': jsonEncode(task.toJson())},
+                    );
+                  }
                 }
               }
-            }
-          },
-        ),
-      );
+            },
+          ),
+        );
+      });
       mainLogger.info('成功初始化任务临期通知.');
     }
   }
@@ -182,16 +184,18 @@ class _ScreenManagerState extends State<ScreenManager> {
       children: [
         const SizedBox(height: 20.0),
         UI.getTaskifyLogo(),
+        const SizedBox(height: 10.0),
         const Text(
           Application.appName,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 10.0),
         const Text(
-          'A free app developed by HanskiJay',
+          Application.description,
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,

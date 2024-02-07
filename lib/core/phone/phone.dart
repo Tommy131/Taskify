@@ -18,13 +18,10 @@
 // core/phone.dart
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:taskify/core/phone/notification.dart';
 
 import 'package:taskify/main.dart';
 
 class Phone {
-  static final Notification notification = Notification();
-
   static Future<int> get version async {
     try {
       final int version = await const MethodChannel('android_version').invokeMethod('getAndroidVersion');

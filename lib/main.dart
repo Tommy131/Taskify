@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 04:35:19
+ * @LastEditTime : 2024-02-07 14:12:02
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -32,7 +32,8 @@ import 'package:taskify/app.dart';
 import 'package:taskify/models/category.dart';
 import 'package:taskify/models/json_driver.dart';
 import 'package:taskify/core/phone/phone.dart';
-import 'package:taskify/widgets/task_details_widget.dart';
+import 'package:taskify/core/phone/notification_service.dart';
+import 'package:taskify/ui/task_details_window.dart';
 
 /// 全局常量: DEBUG状态
 const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;
@@ -72,6 +73,7 @@ class Application {
   static const int buildVersion = 20240207;
   static const String versionName = '0.0.4';
   static const String author = 'Jay Hanski';
+  static const String description = 'A free app developed by HanskiJay';
 
   static late JsonDriver _settings;
   static late JsonDriver _todoList;
@@ -96,9 +98,9 @@ class Application {
         generateConfigurations(savePath: '${directory.path}/$savePathName');
       }).then((value) => MyApp.run());
 
-      // 初始化安卓通知服务
-      await Phone.notification.initializeNotifications();
-      Phone.notification.addMethodHandler(
+      // 初始化安卓/iOS通知服务
+      await NotificationService.initializeNotifications();
+      NotificationService.addMethodHandler(
         'onActionReceivedMethod',
         'navigator',
         (receivedAction) async {
@@ -108,7 +110,7 @@ class Application {
           if (payload['navigate'] == 'true') {
             MyApp.navigatorKey.currentState?.push(
               MaterialPageRoute(builder: (_) {
-                return TaskDetailsWidget(taskString: payload['taskInfo'] ?? '');
+                return TaskDetailsWindow(taskString: payload['taskInfo'] ?? '');
               }),
             );
           }

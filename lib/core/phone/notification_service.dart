@@ -15,7 +15,7 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// core/notification.dart
+// core/notification_service.dart
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -23,13 +23,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:taskify/main.dart';
 
-class Notification {
+class NotificationService {
   static const owoChannel = 'com.owoblog.taskify';
 
-  final AwesomeNotifications _notification = AwesomeNotifications();
+  static final AwesomeNotifications _notification = AwesomeNotifications();
 
   // ignore: prefer_final_fields
-  Map<String, Map<String, Function(ReceivedNotification)?>> _methodHandlers = {
+  static Map<String, Map<String, Function(ReceivedNotification)?>> _methodHandlers = {
     'onActionReceivedMethod': {},
     'onNotificationCreatedMethod': {},
     'onNotificationDisplayedMethod': {},
@@ -37,9 +37,9 @@ class Notification {
   };
 
   // ignore: prefer_final_fields
-  Map<String, Timer> _notificationList = {};
+  static Map<String, Timer> _notificationList = {};
 
-  void addNotification(String notificationId, {Timer? timer, Duration? duration, Function? callback}) {
+  static void addNotification(String notificationId, {Timer? timer, Duration? duration, Function? callback}) {
     if (_notificationList.containsKey(notificationId)) {
       _notificationList[notificationId]!.cancel();
     }
@@ -57,7 +57,7 @@ class Notification {
     }
   }
 
-  void removeNotification(String notificationId) {
+  static void removeNotification(String notificationId) {
     if (_notificationList.containsKey(notificationId)) {
       _notificationList[notificationId]!.cancel();
       _notificationList.remove(notificationId);
@@ -65,30 +65,30 @@ class Notification {
     }
   }
 
-  Map<String, Map<String, Function(ReceivedNotification)?>> get methodHandler {
+  static Map<String, Map<String, Function(ReceivedNotification)?>> get methodHandler {
     return _methodHandlers;
   }
 
-  void cleanMethodHandlers(String method) {
+  static void cleanMethodHandlers(String method) {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method] = {};
     }
   }
 
-  void addMethodHandler(String method, String tagName, Function(ReceivedNotification) handler) {
+  static void addMethodHandler(String method, String tagName, Function(ReceivedNotification) handler) {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method]![tagName] = handler;
       Application.debug('Added Handler "$tagName" to "$method".');
     }
   }
 
-  void removeMethodHandler(String method, String tagName) {
+  static void removeMethodHandler(String method, String tagName) {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method]!.remove(tagName);
     }
   }
 
-  void handleMethods(String method, ReceivedNotification _) {
+  static void handleMethods(String method, ReceivedNotification _) {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method]!.forEach((
         String tagName,
@@ -99,7 +99,7 @@ class Notification {
     }
   }
 
-  dynamic handleMethod(String method, String tagName, ReceivedNotification _) {
+  static dynamic handleMethod(String method, String tagName, ReceivedNotification _) {
     if (_methodHandlers.containsKey(method)) {
       Map<String, Function(ReceivedNotification)?> map = _methodHandlers[method]!;
       if (map.containsKey(tagName)) {
@@ -109,31 +109,31 @@ class Notification {
     return null;
   }
 
-  Future<void> _onActionReceivedMethod(ReceivedAction receivedAction) async {
+  static Future<void> _onActionReceivedMethod(ReceivedAction receivedAction) async {
     // print('onActionReceivedMethod');
     // print(receivedAction);
     handleMethods('onActionReceivedMethod', receivedAction);
   }
 
-  Future<void> _onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
+  static Future<void> _onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
     // print('onNotificationCreatedMethod');
     // print(receivedNotification);
     handleMethods('onNotificationCreatedMethod', receivedNotification);
   }
 
-  Future<void> _onNotificationDisplayedMethod(ReceivedNotification receivedNotification) async {
+  static Future<void> _onNotificationDisplayedMethod(ReceivedNotification receivedNotification) async {
     // print('onNotificationDisplayedMethod');
     // print(receivedNotification);
     handleMethods('onNotificationDisplayedMethod', receivedNotification);
   }
 
-  Future<void> _onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
+  static Future<void> _onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
     // print('onDismissActionReceivedMethod');
     // print(receivedAction);
     handleMethods('onDismissActionReceivedMethod', receivedAction);
   }
 
-  Future<void> initializeNotifications({
+  static Future<void> initializeNotifications({
     String? appIconString,
     bool debug = isDebugMode,
   }) async {
@@ -176,7 +176,7 @@ class Notification {
     ).then((value) => Application.debug('Notification Service initialized.'));
   }
 
-  Future<bool> checkNotificationPermission(BuildContext context) async {
+  static Future<bool> checkNotificationPermission(BuildContext context) async {
     return await _notification.isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         UI.showConfirmationDialog(
@@ -208,7 +208,7 @@ class Notification {
     });
   }
 
-  Future<bool> showNotification({
+  static Future<bool> showNotification({
     NotificationContent? notificationContent,
     int id = 0,
     ActionType actionType = ActionType.KeepOnTop,
@@ -249,7 +249,7 @@ class Notification {
     );
   }
 
-  Future<bool> showInboxNotification({
+  static Future<bool> showInboxNotification({
     int id = 0,
     String? title,
     String? body,
@@ -264,7 +264,7 @@ class Notification {
     );
   }
 
-  Future<bool> showBigTextNotification({
+  static Future<bool> showBigTextNotification({
     int id = 0,
     String? title,
     String? body,
@@ -279,7 +279,7 @@ class Notification {
     );
   }
 
-  Future<bool> showBigTextWithActionNotification({
+  static Future<bool> showBigTextWithActionNotification({
     int id = 0,
     String? title,
     String? body,
@@ -304,7 +304,7 @@ class Notification {
     );
   }
 
-  Future<bool> showBigPictureNotification({
+  static Future<bool> showBigPictureNotification({
     int id = 0,
     String? title,
     String? body,
@@ -321,7 +321,7 @@ class Notification {
     );
   }
 
-  Future<bool> showDownloadingStateNotification(
+  static Future<bool> showDownloadingStateNotification(
     double value, {
     int id = 0,
     String title = 'Downloading...',
