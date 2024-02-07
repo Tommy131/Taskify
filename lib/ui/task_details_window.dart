@@ -10,7 +10,7 @@
  * @Date         : 2024-02-07 03:35:05
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 04:06:29
+ * @LastEditTime : 2024-02-07 22:53:50
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -27,15 +27,21 @@ import 'package:taskify/providers/todo_provider.dart';
 import 'package:taskify/widgets/custom_dialog_widget.dart';
 
 class TaskDetailsWindow extends StatelessWidget {
+  final int notificationId;
   final String taskString;
 
-  const TaskDetailsWindow({super.key, required this.taskString});
+  const TaskDetailsWindow({
+    super.key,
+    required this.taskString,
+    required this.notificationId,
+  });
 
   @override
   Widget build(BuildContext context) {
     TodoProvider todoProvider = Provider.of<TodoProvider>(context);
     Map<String, dynamic> json = jsonDecode(taskString);
     Category? category = todoProvider.categories[json['category']];
+
     return Scaffold(
       backgroundColor: Colors.blue.withOpacity(0.5),
       body: CustomDialogWidget.build(
@@ -74,7 +80,8 @@ class TaskDetailsWindow extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              NotificationService.removeNotification('notificationTimer');
+              // NotificationService.removeTimer('notificationTimer');
+              NotificationService.dismiss(notificationId);
             },
             child: const Text('Do not show me again'),
           ),

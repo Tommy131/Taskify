@@ -10,14 +10,16 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 15:27:54
+ * @LastEditTime : 2024-02-07 22:21:26
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // screens/user_settings_screen.dart
 import 'package:flutter/material.dart';
+
 import 'package:taskify/main.dart';
+import 'package:taskify/core/phone/notification_service.dart';
 import 'package:taskify/widgets/card_builder_widget.dart';
 
 class UserSettingsScreen extends StatefulWidget {
@@ -91,6 +93,19 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         CardBuilderWidget.buildWithNumberPicker(
+          title: 'Minimum dismiss in days:',
+          currentValue: _notificationSettings['minimumDismissDay'],
+          minValue: 1,
+          maxValue: 30,
+          onNumberChanged: (value) {
+            setState(() {
+              _notificationSettings['minimumDismissDay'] = value;
+            });
+          },
+          onDataSave: () => _updateSettings(),
+        ),
+        const SizedBox(height: 5),
+        CardBuilderWidget.buildWithNumberPicker(
           title: 'Frequency (in minutes):',
           currentValue: _notificationSettings['frequencyInMinutes'],
           onNumberChanged: (value) {
@@ -110,6 +125,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             });
           },
           onDataSave: () => _updateSettings(),
+        ),
+        const SizedBox(height: 5),
+        CardBuilderWidget.buildStandard(
+          title: 'Reset Notification Counter [BETA]',
+          widget: ElevatedButton(
+            onPressed: () {
+              NotificationService.instance.resetGlobalBadge();
+              UI.showBottomSheet(
+                context: context,
+                message: 'Operation completed successfully.',
+              );
+            },
+            child: const Text('Clear'),
+          ),
         ),
       ],
     );

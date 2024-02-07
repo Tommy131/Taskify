@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 14:12:02
+ * @LastEditTime : 2024-02-07 22:39:29
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -48,12 +48,12 @@ final List<String> jsonFileNames = ['userSettings', 'todoList'];
 
 /// 主函数
 void main() async {
+  String title = '${Application.appName} v${Application.versionName} By HanskiJay';
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((LogRecord rec) {
     developer.log('[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 
-  String title = '${Application.appName} v${Application.versionName} By HanskiJay';
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
     setWindowTitle(title);
@@ -81,7 +81,7 @@ class Application {
 
   static initApplication() async {
     if (Platform.isAndroid || Platform.isIOS) {
-      Phone.checkStoragePermission(
+      await Phone.checkStoragePermission(
         onGrantedCallback: () {
           debug('获取读写权限成功.');
         },
@@ -100,19 +100,34 @@ class Application {
 
       // 初始化安卓/iOS通知服务
       await NotificationService.initializeNotifications();
+      await NotificationService.instance.resetGlobalBadge();
       NotificationService.addMethodHandler(
         'onActionReceivedMethod',
-        'navigator',
+        'buttonBehaviour',
         (receivedAction) async {
           debug('Notification action received!');
+          NotificationService.instance.decrementGlobalBadgeCounter();
+
+          switch (receivedAction.buttonKeyPressed) {
+            case 'dismiss':
+              NotificationService.dismiss(receivedAction.id);
+              // print(await NotificationService.instance.getGlobalBadgeCounter());
+              // await NotificationService.instance.resetGlobalBadge();
+              // print(await NotificationService.instance.getGlobalBadgeCounter());
+              return;
+          }
 
           final payload = receivedAction.payload ?? {};
-          if (payload['navigate'] == 'true') {
+          if (payload.containsKey('taskInfo')) {
             MyApp.navigatorKey.currentState?.push(
               MaterialPageRoute(builder: (_) {
-                return TaskDetailsWindow(taskString: payload['taskInfo'] ?? '');
+                return TaskDetailsWindow(
+                  taskString: payload['taskInfo'] ?? '',
+                  notificationId: receivedAction.id!,
+                );
               }),
             );
+            return;
           }
         },
       );
@@ -139,6 +154,7 @@ class Application {
       ...{
         'notification': {
           'settings': {
+            'minimumDismissDay': 1,
             'frequencyInMinutes': 10,
             'frequencyInSeconds': 10,
           }
@@ -297,6 +313,7 @@ class UI {
     BuildContext context, {
     String title = 'Success',
     String content = 'Action done.',
+    String buttonText = 'OK',
     Function(BuildContext?)? actionCall,
   }) {
     showDialog(
@@ -312,7 +329,7 @@ class UI {
                 actionCall(context);
               }
             },
-            child: const Text('OK'),
+            child: Text(buttonText),
           )
         ],
       ),
@@ -354,7 +371,10 @@ class UI {
                 if (onConfirmed != null) {
                   onConfirmed();
                 }
-                showStandardDialog(context);
+                UI.showBottomSheet(
+                  context: context,
+                  message: 'Success.',
+                );
               },
               child: const Text('Confirm'),
             ),

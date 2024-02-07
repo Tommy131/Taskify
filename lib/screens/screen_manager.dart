@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 15:16:07
+ * @LastEditTime : 2024-02-07 21:00:22
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -96,9 +96,11 @@ class _ScreenManagerState extends State<ScreenManager> {
     // 初始化任务临期通知
     if (Platform.isAndroid || Platform.isIOS) {
       Map<String, dynamic> settings = Application.settings['notification']['settings'];
-      NotificationService.checkNotificationPermission(context).then((value) {
-        NotificationService.addNotification(
-          'notificationTimer',
+      NotificationService.checkNotificationPermission(context).then((bool isGranted) {
+        if (!isGranted) return;
+
+        NotificationService.addTimer(
+          'taskNotification',
           timer: Timer.periodic(
             Duration(
               minutes: settings['frequencyInMinutes'] ?? 10,
@@ -110,15 +112,21 @@ class _ScreenManagerState extends State<ScreenManager> {
                 todoProvider.getUpcomingImportantTask(),
                 todoProvider.getUpcomingTask(),
               ].where((element) => element != null).toList();
-              if (sortedTasks.isNotEmpty) {
-                if (Platform.isAndroid || Platform.isIOS) {
-                  for (Task? task in sortedTasks) {
-                    if (task == null) return;
+
+              if (sortedTasks.isEmpty) return;
+
+              if (Platform.isAndroid || Platform.isIOS) {
+                int id = 0;
+                for (Task? task in sortedTasks) {
+                  if (task == null) return;
+
+                  if (task.dueDate.difference(DateTime.now()).inDays <= (settings['minimumNoticeDay'] ?? 1)) {
                     NotificationService.showBigTextWithActionNotification(
+                      id: id++,
                       title: 'Task "${task.title}" will expired soon!',
                       body: 'Click me to check more details.',
                       summary: '${task.category.name}\'s task will expired',
-                      payload: {'navigate': 'true', 'taskInfo': jsonEncode(task.toJson())},
+                      payload: {'taskInfo': jsonEncode(task.toJson())},
                     );
                   }
                 }

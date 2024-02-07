@@ -27,26 +27,21 @@ class NotificationService {
   static const owoChannel = 'com.owoblog.taskify';
   static final AwesomeNotifications _notification = AwesomeNotifications();
 
-  // ignore: prefer_final_fields
-  static Map<String, Map<String, Function>> _methodHandlers = {
+  static final Map<String, Map<String, Function>> _methodHandlers = {
     'onActionReceivedMethod': {},
     'onNotificationCreatedMethod': {},
     'onNotificationDisplayedMethod': {},
     'onDismissActionReceivedMethod': {},
   };
 
-  // ignore: prefer_final_fields
-  static Map<String, Timer> _timerList = {};
+  static final Map<String, Timer> _timerList = {};
+
+  static List<int> _dismissList = [];
+  static List<int> get resetDismissList => _dismissList = [];
 
   static int _notificationId = 0;
-
-  static int get resetNotificationId {
-    return _notificationId = 0;
-  }
-
-  static int get nextNotificationId {
-    return _notificationId++;
-  }
+  static int get nextNotificationId => _notificationId++;
+  static int get resetNotificationId => _notificationId = 0;
 
   static AwesomeNotifications get instance {
     return _notification;
@@ -207,7 +202,7 @@ class NotificationService {
                 isAllowed = true;
                 UI.showBottomSheet(
                   context: context,
-                  message: 'Success.',
+                  message: 'Operation completed successfully.',
                 );
               } else {
                 UI.showBottomSheet(
@@ -243,6 +238,8 @@ class NotificationService {
     bool scheduled = false,
     int? interval,
   }) async {
+    if (NotificationService.inDismissList(id)) return false;
+
     return await _notification.isNotificationAllowed().then((isAllowed) async {
       if (isAllowed) {
         return _notification.createNotification(
@@ -326,18 +323,14 @@ class NotificationService {
       summary: summary,
       notificationLayout: NotificationLayout.BigText,
       payload: payload,
-      actionButtons: actionButtons ?? [
-        NotificationActionButton(
-          key: 'dismiss',
-          label: 'Dismiss',
-          color: Colors.red,
-        ),
-        NotificationActionButton(
-          key: 'check',
-          label: 'Check it out',
-          color: Colors.yellow,
-        )
-      ],
+      actionButtons: actionButtons ??
+          [
+            NotificationActionButton(
+              key: 'dismiss',
+              label: 'Dismiss',
+              color: Colors.red,
+            ),
+          ],
     );
   }
 
@@ -373,5 +366,14 @@ class NotificationService {
       notificationLayout: NotificationLayout.ProgressBar,
       progressValue: value,
     );
+  }
+
+  static Future<void> dismiss(int id) async {
+    _dismissList.add(id);
+    return await _notification.dismiss(id);
+  }
+
+  static bool inDismissList(int id) {
+    return _dismissList.contains(id);
   }
 }
