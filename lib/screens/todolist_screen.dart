@@ -19,9 +19,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:taskify/main.dart';
-import 'package:taskify/widgets/category_dropdown.dart';
-import 'package:taskify/widgets/function_buttons.dart';
-import 'package:taskify/widgets/task_list.dart';
+import 'package:taskify/widgets/category_dropdown_widget.dart';
+import 'package:taskify/ui/function_buttons.dart';
+import 'package:taskify/ui/task_list.dart';
 
 class TodolistScreen extends StatefulWidget {
   const TodolistScreen({super.key});
@@ -43,7 +43,7 @@ class _TodolistScreenState extends State<TodolistScreen> {
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CategoryDropdown(),
+            CategoryDropdownWidget(),
             Expanded(
               child: TaskList(),
             ),

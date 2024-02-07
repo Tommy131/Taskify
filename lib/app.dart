@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 01:54:06
+ * @LastEditTime : 2024-02-07 17:03:11
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
             } else {
               UI.showBottomSheet(
                 context: context,
-                message: 'Please confirm your process once again to exit the app.',
+                message: 'Please do once again to exit the app.',
               );
             }
             _togglePopState();

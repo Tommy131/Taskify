@@ -15,10 +15,10 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/important_label.dart
+// widgets/important_label_widget.dart
 import 'package:flutter/material.dart';
 
-class ImportantLabel {
+class ImportantLabelWidget {
   static Center put({String text = 'Important', Color color = Colors.red}) {
     return Center(
       child: Stack(

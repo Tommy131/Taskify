@@ -15,14 +15,14 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/color_transition.dart
+// widgets/color_transition_widget.dart
 import 'package:flutter/material.dart';
 
-class ColorTransition {
+class ColorTransitionWidget {
   late ColorTween colorTween;
   late AnimationController _controller;
 
-  ColorTransition(TickerProvider vsync) {
+  ColorTransitionWidget(TickerProvider vsync) {
     _controller = AnimationController(
       vsync: vsync,
       duration: const Duration(seconds: 1),

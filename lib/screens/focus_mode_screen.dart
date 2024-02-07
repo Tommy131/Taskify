@@ -23,8 +23,8 @@ import 'package:provider/provider.dart';
 
 import 'package:taskify/models/task.dart';
 import 'package:taskify/providers/todo_provider.dart';
-import 'package:taskify/widgets/color_transition.dart';
-import 'package:taskify/widgets/task_tile_builder.dart';
+import 'package:taskify/widgets/color_transition_widget.dart';
+import 'package:taskify/ui/task_tile_builder.dart';
 
 class FocusModeScreen extends StatefulWidget {
   const FocusModeScreen({super.key});
@@ -36,7 +36,7 @@ class FocusModeScreen extends StatefulWidget {
 
 class _FocusModeScreenState extends State<FocusModeScreen> with TickerProviderStateMixin {
   late Timer _timer;
-  late ColorTransition _colorTransition;
+  late ColorTransitionWidget _colorTransition;
   late ScrollController _scrollController;
   bool _isAtTop = true;
 
@@ -44,7 +44,7 @@ class _FocusModeScreenState extends State<FocusModeScreen> with TickerProviderSt
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), _updateTimer);
-    _colorTransition = ColorTransition(this);
+    _colorTransition = ColorTransitionWidget(this);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       // 判断是否在顶部

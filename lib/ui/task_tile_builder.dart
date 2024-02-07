@@ -15,15 +15,14 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/task_tile_builder.dart
+// ui/task_tile_builder.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taskify/models/task.dart';
-import 'package:taskify/widgets/capsule_tag.dart';
+import 'package:taskify/widgets/capsule_tag_widget.dart';
 
 class TaskTileBuilder {
-  static Container buildTaskTile(BuildContext context, Task task,
-      {bool withIcon = true}) {
+  static Container buildTaskTile(BuildContext context, Task task, {bool withIcon = true}) {
     Color tileColor = task.category.color;
     TextStyle textStyle = getTextStyle(task);
 
@@ -51,7 +50,7 @@ class TaskTileBuilder {
         ),
       if (task.isImportant && !isSmallScreen) const SizedBox(width: 10.0),
     ];
-    CapsuleTag categoryTag = buildCapsuleTag(
+    CapsuleTagWidget categoryTag = buildCapsuleTag(
       task.category.name,
       task.isCompleted ? Colors.grey : task.category.color,
     );
@@ -85,8 +84,8 @@ class TaskTileBuilder {
     );
   }
 
-  static CapsuleTag buildCapsuleTag(String text, Color textColor) {
-    return CapsuleTag(
+  static CapsuleTagWidget buildCapsuleTag(String text, Color textColor) {
+    return CapsuleTagWidget(
       text: text,
       textColor: textColor,
       backgroundColor: Colors.white,
@@ -107,12 +106,9 @@ class TaskTileBuilder {
     double? fontSize,
     FontStyle? fontStyle,
   }) {
-    Color textColor =
-        task.isCompleted ? Colors.black.withOpacity(0.6) : Colors.white;
-    FontWeight fontWeight =
-        task.isImportant ? FontWeight.bold : FontWeight.normal;
-    TextDecoration decoration =
-        task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none;
+    Color textColor = task.isCompleted ? Colors.black.withOpacity(0.6) : Colors.white;
+    FontWeight fontWeight = task.isImportant ? FontWeight.bold : FontWeight.normal;
+    TextDecoration decoration = task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none;
 
     return TextStyle(
       color: textColor,

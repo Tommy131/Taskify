@@ -15,7 +15,7 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/category_dropdown.dart
+// widgets/category_dropdown_widget.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,14 +23,14 @@ import 'package:taskify/models/category.dart';
 import 'package:taskify/models/task.dart';
 import 'package:taskify/providers/todo_provider.dart';
 
-class CategoryDropdown extends StatelessWidget {
+class CategoryDropdownWidget extends StatelessWidget {
   static const int triggerNormal = 0;
   static const int triggerChangeTaskCategory = 1;
 
   final int triggerMode;
   final Task? task;
 
-  const CategoryDropdown({super.key, this.triggerMode = 0, this.task});
+  const CategoryDropdownWidget({super.key, this.triggerMode = 0, this.task});
 
   @override
   Widget build(BuildContext context) {

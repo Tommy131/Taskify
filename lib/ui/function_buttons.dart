@@ -15,10 +15,10 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/function_buttons.dart
+// ui/function_buttons.dart
 import 'package:flutter/material.dart';
 
-import 'package:taskify/widgets/task_dialogs.dart';
+import 'package:taskify/ui/task_dialogs.dart';
 
 class FunctionButtons {
   static const List<String> functionLabels = [
@@ -58,8 +58,7 @@ class FunctionButtons {
     return Column(mainAxisSize: MainAxisSize.min, children: buildList(context));
   }
 
-  static Widget _buildFloatingActionButton(
-      BuildContext context, Icon? icon, Widget? dialog) {
+  static Widget _buildFloatingActionButton(BuildContext context, Icon? icon, Widget? dialog) {
     return (dialog == null)
         ? const SizedBox(height: 10.0, width: 10.0)
         : FloatingActionButton(

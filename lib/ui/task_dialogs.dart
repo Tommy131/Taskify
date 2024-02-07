@@ -10,12 +10,12 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-01 02:07:28
+ * @LastEditTime : 2024-02-07 15:23:24
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/task_dialogs.dart
+// ui/task_dialogs.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
@@ -23,9 +23,9 @@ import 'package:provider/provider.dart';
 import 'package:taskify/main.dart';
 import 'package:taskify/models/category.dart';
 import 'package:taskify/models/task.dart';
-import 'package:taskify/widgets/custom_dialog.dart';
+import 'package:taskify/widgets/custom_dialog_widget.dart';
 import 'package:taskify/providers/todo_provider.dart';
-import 'package:taskify/widgets/category_dropdown.dart';
+import 'package:taskify/widgets/category_dropdown_widget.dart';
 
 class TaskDialog extends StatelessWidget {
   final String title;
@@ -42,7 +42,7 @@ class TaskDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomDialog.buildAlertDialog(
+    return CustomDialogWidget.build(
       context: context,
       title: title,
       content: content,
@@ -146,8 +146,8 @@ class EditTaskDialog extends StatelessWidget {
     List<Widget> children = [
       const Text('Change Category to: '),
       const SizedBox(width: 10),
-      CategoryDropdown(
-        triggerMode: CategoryDropdown.triggerChangeTaskCategory,
+      CategoryDropdownWidget(
+        triggerMode: CategoryDropdownWidget.triggerChangeTaskCategory,
         task: task,
       ),
     ];

@@ -27,7 +27,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:taskify/core/update_checker.dart';
 import 'package:taskify/core/utils.dart';
 import 'package:taskify/main.dart';
-import 'package:taskify/widgets/capsule_tag.dart';
+import 'package:taskify/widgets/capsule_tag_widget.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -62,8 +62,7 @@ class AboutScreenState extends State<AboutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String versionString =
-        'v${Application.versionName} - (Build Version ${Application.buildVersion})';
+    const String versionString = 'v${Application.versionName} - (Build Version ${Application.buildVersion})';
 
     return Scaffold(
       backgroundColor: Colors.white30,
@@ -76,16 +75,12 @@ class AboutScreenState extends State<AboutScreen> {
             _buildSection('App Information', [
               createCard([
                 _buildInfoListTile(Icons.translate, Platform.localeName),
-                _buildInfoListTile(
-                    Icons.folder, Application.userSettingsJson().savePath),
+                _buildInfoListTile(Icons.folder, Application.userSettingsJson().savePath),
                 _buildInfoListTile(Icons.api, Platform.operatingSystemVersion),
                 _buildInfoListTile(Icons.storage, storageInfo),
                 _buildIconListTile(
                   Icons.info_outline,
-                  const CapsuleTag(
-                      text: versionString,
-                      textAlign: TextAlign.center,
-                      fontSize: 14),
+                  const CapsuleTagWidget(text: versionString, textAlign: TextAlign.center, fontSize: 14),
                 ),
                 _buildIconListTile(
                   Icons.update,
@@ -102,8 +97,7 @@ class AboutScreenState extends State<AboutScreen> {
                       if (Platform.isAndroid) {
                         openAppSettings();
                       } else if (Platform.isWindows) {
-                        Process.run('cmd.exe', ['/c', 'start', 'control'])
-                            .then((ProcessResult result) {
+                        Process.run('cmd.exe', ['/c', 'start', 'control']).then((ProcessResult result) {
                           if (result.exitCode == 0) {
                             UI.showBottomSheet(
                               context: context,
@@ -112,8 +106,7 @@ class AboutScreenState extends State<AboutScreen> {
                           } else {
                             UI.showBottomSheet(
                               context: context,
-                              message:
-                                  '${Application.appName} cannot open control panel, reason: ${result.exitCode}',
+                              message: '${Application.appName} cannot open control panel, reason: ${result.exitCode}',
                             );
                           }
                         });
@@ -189,13 +182,11 @@ class AboutScreenState extends State<AboutScreen> {
       _buildStringListTile(Icon(Icons.email, color: labelColor), email),
       _buildStringListTile(Icon(Icons.public, color: labelColor), website),
       _buildStringListTile(
-        SvgPicture.asset(githubIcon,
-            width: 24.0, height: 24.0, color: labelColor),
+        SvgPicture.asset(githubIcon, width: 24.0, height: 24.0, color: labelColor),
         githubUsername,
       ),
       _buildStringListTile(
-        SvgPicture.asset(instagramIcon,
-            width: 24.0, height: 24.0, color: labelColor),
+        SvgPicture.asset(instagramIcon, width: 24.0, height: 24.0, color: labelColor),
         instagramUsername,
       ),
     ]);
@@ -221,8 +212,7 @@ class AboutScreenState extends State<AboutScreen> {
   }
 
   Widget _buildIconListTile(IconData leading, Widget title) {
-    bool alignLeft =
-        MediaQuery.of(context).size.width > UI.minimalWidthForWindows;
+    bool alignLeft = MediaQuery.of(context).size.width > UI.minimalWidthForWindows;
     return _buildCustomListTile(
       Icon(leading, color: labelColor),
       alignLeft

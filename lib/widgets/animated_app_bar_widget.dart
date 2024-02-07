@@ -10,26 +10,27 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-01 00:08:28
+ * @LastEditTime : 2024-02-07 17:14:34
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/animated_app_bar.dart
+// widgets/animated_app_bar_widget.dart
 import 'package:flutter/material.dart';
 
-class AnimatedAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AnimatedAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
   final Color color;
   final Duration duration;
   final Widget? leading;
 
-  const AnimatedAppBar(
-      {super.key,
-      required this.title,
-      required this.color,
-      required this.duration,
-      this.leading});
+  const AnimatedAppBarWidget({
+    super.key,
+    required this.title,
+    required this.color,
+    required this.duration,
+    this.leading,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:taskify/models/task.dart';
 import 'package:taskify/providers/todo_provider.dart';
-import 'package:taskify/widgets/task_tile_builder.dart';
+import 'package:taskify/ui/task_tile_builder.dart';
 
 class TaskOverViewScreen extends StatefulWidget {
   const TaskOverViewScreen({super.key});

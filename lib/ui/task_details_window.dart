@@ -15,21 +15,21 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/task_details_widget.dart
+// ui/task_details_window.dart
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskify/core/phone/phone.dart';
+import 'package:taskify/core/phone/notification_service.dart';
 
 import 'package:taskify/models/category.dart';
 import 'package:taskify/providers/todo_provider.dart';
-import 'package:taskify/widgets/custom_dialog.dart';
+import 'package:taskify/widgets/custom_dialog_widget.dart';
 
-class TaskDetailsWidget extends StatelessWidget {
+class TaskDetailsWindow extends StatelessWidget {
   final String taskString;
 
-  const TaskDetailsWidget({super.key, required this.taskString});
+  const TaskDetailsWindow({super.key, required this.taskString});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class TaskDetailsWidget extends StatelessWidget {
     Category? category = todoProvider.categories[json['category']];
     return Scaffold(
       backgroundColor: Colors.blue.withOpacity(0.5),
-      body: CustomDialog.buildAlertDialog(
+      body: CustomDialogWidget.build(
         context: context,
         title: json['title']!,
         content: [
@@ -74,7 +74,7 @@ class TaskDetailsWidget extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Phone.notification.removeNotification('notificationTimer');
+              NotificationService.removeNotification('notificationTimer');
             },
             child: const Text('Do not show me again'),
           ),

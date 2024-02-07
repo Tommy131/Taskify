@@ -12,15 +12,15 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-26 21:45:10
+ * @LastEditTime : 2024-02-07 15:24:35
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/capsule_tag.dart
+// widgets/capsule_tag_widget.dart
 import 'package:flutter/material.dart';
 
-class CapsuleTag extends StatelessWidget {
+class CapsuleTagWidget extends StatelessWidget {
   final String text;
   final TextAlign? textAlign;
   final double fontSize;
@@ -28,7 +28,7 @@ class CapsuleTag extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
 
-  const CapsuleTag({
+  const CapsuleTagWidget({
     super.key,
     required this.text,
     this.textAlign,

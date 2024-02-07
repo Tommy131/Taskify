@@ -15,11 +15,11 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// models/dialog.dart
+// widgets/custom_dialog_widget.dart
 import 'package:flutter/material.dart';
 
-class CustomDialog {
-  static Widget buildAlertDialog({
+class CustomDialogWidget {
+  static Widget build({
     required BuildContext context,
     required String title,
     required List<Widget> content,

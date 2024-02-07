@@ -15,7 +15,7 @@
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
-// widgets/task_list.dart
+// ui/task_list.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:taskify/main.dart';
 import 'package:taskify/models/task.dart';
 import 'package:taskify/providers/todo_provider.dart';
-import 'package:taskify/widgets/task_dialogs.dart';
-import 'package:taskify/widgets/important_label.dart';
+import 'package:taskify/ui/task_dialogs.dart';
+import 'package:taskify/widgets/important_label_widget.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({super.key});
@@ -70,7 +70,7 @@ class TaskListItem extends StatelessWidget {
             Positioned(
               left: 0,
               top: 2.0,
-              child: ImportantLabel.put(
+              child: ImportantLabelWidget.put(
                 color: !task.isCompleted ? Colors.red : Colors.grey,
               ),
             ),

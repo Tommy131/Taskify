@@ -22,7 +22,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:taskify/app.dart';
-import 'package:taskify/widgets/animated_app_bar.dart';
+import 'package:taskify/widgets/animated_app_bar_widget.dart';
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -84,7 +84,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AnimatedAppBar(
+      appBar: AnimatedAppBarWidget(
         duration: const Duration(seconds: 1),
         color: _randomColor,
         title: const Text(
