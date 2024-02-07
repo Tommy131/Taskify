@@ -70,7 +70,7 @@ void main() async {
 class Application {
   static const String appName = 'Taskify';
   static const int buildVersion = 20240205;
-  static const String versionName = '0.0.3';
+  static const String versionName = '0.0.4';
   static const String author = 'Jay Hanski';
 
   static late JsonDriver _settings;
