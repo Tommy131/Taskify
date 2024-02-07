@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-06 18:51:01
+ * @LastEditTime : 2024-02-07 04:04:37
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -31,7 +31,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:taskify/app.dart';
 import 'package:taskify/models/category.dart';
 import 'package:taskify/models/json_driver.dart';
-import 'package:taskify/core/android.dart';
+import 'package:taskify/core/phone/phone.dart';
+import 'package:taskify/widgets/task_details_widget.dart';
 
 /// 全局常量: DEBUG状态
 const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;
@@ -45,7 +46,7 @@ const savePathName = 'userData';
 final List<String> jsonFileNames = ['userSettings', 'todoList'];
 
 /// 主函数
-void main() {
+void main() async {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((LogRecord rec) {
     developer.log('[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
@@ -58,7 +59,7 @@ void main() {
   }
 
   mainLogger.info('正在启动 $title...');
-  Application.initApplication();
+  await Application.initApplication();
 
   mainLogger.info('所有组件全部启动成功, 正在系统 ${Platform.operatingSystem} 上运行.');
   mainLogger.info('当前系统版本: ${Platform.operatingSystemVersion}');
@@ -77,8 +78,8 @@ class Application {
   static late Category _defaultCategory;
 
   static initApplication() async {
-    if (Platform.isAndroid) {
-      Android.checkStoragePermission(
+    if (Platform.isAndroid || Platform.isIOS) {
+      Phone.checkStoragePermission(
         onGrantedCallback: () {
           debug('获取读写权限成功.');
         },
@@ -94,6 +95,25 @@ class Application {
       await getApplicationDocumentsDirectory().then((Directory directory) {
         generateConfigurations(savePath: '${directory.path}/$savePathName');
       }).then((value) => MyApp.run());
+
+      // 初始化安卓通知服务
+      await Phone.notification.initializeNotifications();
+      Phone.notification.addMethodHandler(
+        'onActionReceivedMethod',
+        'navigator',
+        (receivedAction) async {
+          debug('Notification action received!');
+
+          final payload = receivedAction.payload ?? {};
+          if (payload['navigate'] == 'true') {
+            MyApp.navigatorKey.currentState?.push(
+              MaterialPageRoute(builder: (_) {
+                return TaskDetailsWidget(taskString: payload['taskInfo'] ?? '');
+              }),
+            );
+          }
+        },
+      );
     } else {
       generateConfigurations();
       MyApp.run();
@@ -115,6 +135,12 @@ class Application {
 
     Map<String, dynamic> mergedData = {
       ...{
+        'notification': {
+          'settings': {
+            'frequencyInMinutes': 10,
+            'frequencyInSeconds': 10,
+          }
+        },
         'categories': {
           'settings': {
             'name': 'Default',
@@ -265,7 +291,12 @@ class UI {
     );
   }
 
-  static void showStandardDialog(BuildContext context, {String title = 'Success', String content = 'Action done.', Function(BuildContext?)? actionCall}) {
+  static void showStandardDialog(
+    BuildContext context, {
+    String title = 'Success',
+    String content = 'Action done.',
+    Function(BuildContext?)? actionCall,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -286,14 +317,20 @@ class UI {
     );
   }
 
-  static void showConfirmationDialog(BuildContext context, {String confirmMessage = '', Function? onCancelled, Function? onConfirmed}) {
+  static void showConfirmationDialog(
+    BuildContext context, {
+    String? noticeText,
+    String confirmMessage = '',
+    Function? onCancelled,
+    Function? onConfirmed,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmation'),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Text('Are you sure you want to perform this action?'),
+            Text(noticeText ?? 'Are you sure you want to perform this action?'),
             Text(
               confirmMessage,
               style: const TextStyle(fontWeight: FontWeight.bold),

@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 22:27:21
+ * @LastEditTime : 2024-02-07 01:54:06
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,13 +20,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskify/main.dart';
 
+import 'package:taskify/main.dart';
 import 'package:taskify/providers/todo_provider.dart';
 import 'package:taskify/screens/screen_manager.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   // ignore: library_private_types_in_public_api
@@ -51,6 +52,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider(
       create: (context) => TodoProvider(),
       child: MaterialApp(
+        navigatorKey: MyApp.navigatorKey,
         title: Application.appName,
         theme: ThemeData(
           useMaterial3: true,

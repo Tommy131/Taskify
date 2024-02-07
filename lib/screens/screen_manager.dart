@@ -10,18 +10,22 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 18:47:02
+ * @LastEditTime : 2024-02-07 03:41:22
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
  */
 // screens/screen_manager.dart
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:taskify/main.dart';
 import 'package:taskify/core/update_checker.dart';
+import 'package:taskify/models/task.dart';
+import 'package:taskify/providers/todo_provider.dart';
 import 'package:taskify/screens/donation_screen.dart';
 import 'package:taskify/screens/todolist_screen.dart';
 import 'package:taskify/screens/task_overview.dart';
@@ -30,6 +34,8 @@ import 'package:taskify/screens/json_import_export_screen.dart';
 import 'package:taskify/screens/bug_report_screen.dart';
 import 'package:taskify/screens/about_screen.dart';
 import 'package:taskify/screens/ester_egg_screen.dart';
+import 'package:taskify/core/phone/phone.dart';
+import 'package:taskify/screens/user_settings_screen.dart';
 
 class ScreenManager extends StatefulWidget {
   const ScreenManager({super.key});
@@ -49,6 +55,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     BugReportScreen(),
     DonationScreen(),
     AboutScreen(),
+    UserSettingsScreen(),
     EsterEggScreen(),
   ];
 
@@ -60,6 +67,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     'Bug Report',
     'Donate HanskiJay :)',
     'About ${Application.appName}',
+    'User Settings',
     isDebugMode ? 'Debug' : 'Rabbit :)',
   ];
 
@@ -71,6 +79,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     Icon(Icons.bug_report),
     Icon(Icons.volunteer_activism),
     Icon(Icons.info),
+    Icon(Icons.settings),
     Icon(Icons.cruelty_free),
   ];
 
@@ -82,7 +91,42 @@ class _ScreenManagerState extends State<ScreenManager> {
     Timer.periodic(const Duration(hours: 1), (Timer timer) {
       UpdateChecker.checkForUpdates(context);
     });
-    Application.debug('成功初始化更新检测服务.');
+    mainLogger.info('成功初始化更新检测服务.');
+
+    // 初始化任务临期通知
+    if (Platform.isAndroid || Platform.isIOS) {
+      Map<String, dynamic> settings = Application.settings['notification']['settings'];
+      Phone.notification.addNotification(
+        'notificationTimer',
+        timer: Timer.periodic(
+          Duration(
+            minutes: settings['frequencyInMinutes'] ?? 10,
+            seconds: settings['frequencyInSeconds'] ?? 10,
+          ),
+          (Timer timer) {
+            TodoProvider todoProvider = context.read<TodoProvider>();
+            List<Task?> sortedTasks = [
+              todoProvider.getUpcomingImportantTask(),
+              todoProvider.getUpcomingTask(),
+            ].where((element) => element != null).toList();
+            if (sortedTasks.isNotEmpty) {
+              if (Platform.isAndroid || Platform.isIOS) {
+                for (Task? task in sortedTasks) {
+                  if (task == null) return;
+                  Phone.notification.showBigTextWithActionNotification(
+                    title: 'Task "${task.title}" will expired soon!',
+                    body: 'Click me to check more details.',
+                    summary: '${task.category.name}\'s task will expired',
+                    payload: {'navigate': 'true', 'taskInfo': jsonEncode(task.toJson())},
+                  );
+                }
+              }
+            }
+          },
+        ),
+      );
+      mainLogger.info('成功初始化任务临期通知.');
+    }
   }
 
   @override
@@ -98,8 +142,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     );
   }
 
-  Scaffold _buildScreen(
-      BuildContext context, Function(BuildContext) screenBuilder) {
+  Scaffold _buildScreen(BuildContext context, Function(BuildContext) screenBuilder) {
     return screenBuilder(context) as Scaffold;
   }
 
@@ -219,8 +262,7 @@ class _ScreenManagerState extends State<ScreenManager> {
                 ),
               ),
               elevation: 8.0,
-              extended: MediaQuery.of(context).size.width >=
-                  UI.minimalExpandWidthForNavigation,
+              extended: MediaQuery.of(context).size.width >= UI.minimalExpandWidthForNavigation,
               selectedLabelTextStyle: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -233,8 +275,7 @@ class _ScreenManagerState extends State<ScreenManager> {
                 ),
               ),
               selectedIndex: selectedIndex,
-              onDestinationSelected: (value) =>
-                  setState(() => selectedIndex = value),
+              onDestinationSelected: (value) => setState(() => selectedIndex = value),
             )),
           ),
         );
