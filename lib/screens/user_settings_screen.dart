@@ -1,5 +1,24 @@
+/*
+ *        _____   _          __  _____   _____   _       _____   _____
+ *      /  _  \ | |        / / /  _  \ |  _  \ | |     /  _  \ /  ___|
+ *      | | | | | |  __   / /  | | | | | |_| | | |     | | | | | |
+ *      | | | | | | /  | / /   | | | | |  _  { | |     | | | | | |   _
+ *      | |_| | | |/   |/ /    | |_| | | |_| | | |___  | |_| | | |_| |
+ *      \_____/ |___/|___/     \_____/ |_____/ |_____| \_____/ \_____/
+ *
+ *  Copyright (c) 2023 by OwOTeam-DGMT (OwOBlog).
+ * @Date         : 2024-01-19 00:55:40
+ * @Author       : HanskiJay
+ * @LastEditors  : HanskiJay
+ * @LastEditTime : 2024-02-07 15:27:54
+ * @E-Mail       : support@owoblog.com
+ * @Telegram     : https://t.me/HanskiJay
+ * @GitHub       : https://github.com/Tommy131
+ */
+// screens/user_settings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:taskify/main.dart';
+import 'package:taskify/widgets/card_builder_widget.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -9,17 +28,23 @@ class UserSettingsScreen extends StatefulWidget {
 }
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  static const Map<String, dynamic> _defaultNotificationPayload = {
+    'settings': {
+      'frequencyInMinutes': 10,
+      'frequencyInSeconds': 10,
+    },
+  };
+  late Map<String, dynamic> _userData;
   late final Map<String, dynamic> _notificationSettings;
   late final Map<String, dynamic> _categorySettings;
 
   @override
   void initState() {
     super.initState();
-    _notificationSettings = _userData['notification']['settings'];
-    _categorySettings = _userData['categories']['settings'];
+    _userData = Application.settings;
+    _notificationSettings = Map.from(_userData['notification']['settings'] ?? _defaultNotificationPayload);
+    _categorySettings = Map.from(_userData['categories']['settings']);
   }
-
-  final Map<String, dynamic> _userData = Application.settings;
 
   @override
   Widget build(BuildContext context) {
@@ -65,24 +90,26 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _buildSettingTextField(
-          label: 'Frequency (in minutes):',
-          value: _notificationSettings['frequencyInMinutes'].toString(),
-          onChanged: (value) {
-            _updateSettings(() {
-              _notificationSettings['frequencyInMinutes'] = int.tryParse(value) ?? 10;
+        CardBuilderWidget.buildWithNumberPicker(
+          title: 'Frequency (in minutes):',
+          currentValue: _notificationSettings['frequencyInMinutes'],
+          onNumberChanged: (value) {
+            setState(() {
+              _notificationSettings['frequencyInMinutes'] = value;
             });
           },
+          onDataSave: () => _updateSettings(),
         ),
         const SizedBox(height: 5),
-        _buildSettingTextField(
-          label: 'Frequency (in seconds):',
-          value: _notificationSettings['frequencyInSeconds'].toString(),
-          onChanged: (value) {
-            _updateSettings(() {
-              _notificationSettings['frequencyInSeconds'] = int.tryParse(value) ?? 10;
+        CardBuilderWidget.buildWithNumberPicker(
+          title: 'Frequency (in seconds):',
+          currentValue: _notificationSettings['frequencyInSeconds'],
+          onNumberChanged: (value) {
+            setState(() {
+              _notificationSettings['frequencyInSeconds'] = value;
             });
           },
+          onDataSave: () => _updateSettings(),
         ),
       ],
     );
@@ -92,69 +119,55 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _buildSettingTextField(
-          label: 'Name:',
-          value: _categorySettings['name'],
+        CardBuilderWidget.buildWithField(
+          title: 'Name:',
+          currentValue: _categorySettings['name'],
           onChanged: (value) {
-            _updateSettings(() {
+            setState(() {
               _categorySettings['name'] = value;
             });
           },
-        ),
-        /* const SizedBox(height: 10),
-        _buildSettingTextField(
-          label: 'Color:',
-          value: Color(_categorySettings['color']).toString(),
-          onChanged: (value) {
-            _updateSettings(() {
-              _categorySettings['color'] = Color(int.tryParse(value) ?? Colors.blue.value).value;
-            });
-          },
+          onDataSave: () => _updateSettings(),
         ),
         const SizedBox(height: 10),
-        _buildSettingTextField(
-          label: 'Priority:',
-          value: _categorySettings['priority'].toString(),
-          onChanged: (value) {
-            _updateSettings(() {
-              _categorySettings['priority'] = int.tryParse(value) ?? 0;
+        CardBuilderWidget.buildWithColorPicker(
+          title: 'Color:',
+          subtitle: _categorySettings['color'].toString(),
+          currentColor: Color(_categorySettings['color']),
+          onColorChanged: (color) {
+            setState(() {
+              _categorySettings['color'] = color.value;
             });
           },
-        ), */
-      ],
-    );
-  }
-
-  Widget _buildSettingTextField({
-    required String label,
-    required String value,
-    required ValueChanged<String> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          onDataSave: () => _updateSettings(),
         ),
-        const SizedBox(height: 5),
-        TextFormField(
-          initialValue: value,
-          keyboardType: TextInputType.number,
-          onFieldSubmitted: onChanged,
+        const SizedBox(height: 10),
+        CardBuilderWidget.buildWithNumberPicker(
+          title: 'Priority:',
+          currentValue: _categorySettings['priority'],
+          maxValue: 5,
+          onNumberChanged: (value) {
+            setState(() {
+              _categorySettings['priority'] = value;
+            });
+          },
+          onDataSave: () => _updateSettings(),
         ),
       ],
     );
   }
 
-  void _updateSettings(Function callable) {
+  void _updateSettings({Function? callable}) {
     setState(() {
-      callable();
+      if (callable != null) callable();
       _userData['notification']['settings'] = _notificationSettings;
       _userData['categories']['settings'] = _categorySettings;
       Application.userSettingsJson().writeData(_userData);
       Application.reloadConfigurations();
-      UI.showBottomSheet(context: context, message: 'The update is completed, please restart the App to take effect.');
+      UI.showBottomSheet(
+        context: context,
+        message: 'The update is completed, please restart the App to take effect.',
+      );
     });
   }
 }

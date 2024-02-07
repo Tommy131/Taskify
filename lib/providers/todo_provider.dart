@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-05 09:44:10
+ * @LastEditTime : 2024-02-07 16:18:39
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -45,8 +45,7 @@ class TodoProvider extends ChangeNotifier {
   }
 
   List<Task> get filteredTasks {
-    List<Task> filtered =
-        _tasks.where((task) => task.category.name == selectedCategory).toList();
+    List<Task> filtered = _tasks.where((task) => task.category.name == selectedCategory).toList();
 
     // Sort the filtered tasks based on completion and importance
     filtered.sort((a, b) {
@@ -69,11 +68,7 @@ class TodoProvider extends ChangeNotifier {
   }
 
   List<Task>? getUpcomingTasks({bool getFromImportant = false}) {
-    List<Task> upcomingTasks = _tasks
-        .where((task) =>
-            !task.isCompleted &&
-            (getFromImportant ? task.isImportant : !task.isImportant))
-        .toList();
+    List<Task> upcomingTasks = _tasks.where((task) => !task.isCompleted && (getFromImportant ? task.isImportant : !task.isImportant)).toList();
 
     if (upcomingTasks.isNotEmpty) {
       upcomingTasks.sort((a, b) => a.dueDate.isBefore(b.dueDate)
@@ -92,8 +87,7 @@ class TodoProvider extends ChangeNotifier {
   }
 
   List<Task>? getUpcomingImportantTasks() {
-    List<Task> upcomingImportantTasks =
-        _tasks.where((task) => !task.isCompleted && task.isImportant).toList();
+    List<Task> upcomingImportantTasks = _tasks.where((task) => !task.isCompleted && task.isImportant).toList();
 
     if (upcomingImportantTasks.isNotEmpty) {
       upcomingImportantTasks.sort((a, b) => a.dueDate.isBefore(b.dueDate)
@@ -113,25 +107,13 @@ class TodoProvider extends ChangeNotifier {
   }
 
   List<Task> reorderTasks() {
-    List<Task> importantUnfinishedTasks = _tasks
-        .where((element) => (element.isImportant && !element.isCompleted))
-        .toList()
-      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+    List<Task> importantUnfinishedTasks = _tasks.where((element) => (element.isImportant && !element.isCompleted)).toList()..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
 
-    List<Task> normalUnfinishedTasks = _tasks
-        .where((element) => (!element.isImportant && !element.isCompleted))
-        .toList()
-      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+    List<Task> normalUnfinishedTasks = _tasks.where((element) => (!element.isImportant && !element.isCompleted)).toList()..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
 
-    List<Task> importantFinishedTasks = _tasks
-        .where((element) => (element.isImportant && element.isCompleted))
-        .toList()
-      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+    List<Task> importantFinishedTasks = _tasks.where((element) => (element.isImportant && element.isCompleted)).toList()..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
 
-    List<Task> normalFinishedTasks = _tasks
-        .where((element) => (!element.isImportant && element.isCompleted))
-        .toList()
-      ..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
+    List<Task> normalFinishedTasks = _tasks.where((element) => (!element.isImportant && element.isCompleted)).toList()..sort((a, b) => a.dueDate.isBefore(b.dueDate) ? -1 : 1);
 
     return [
       ...importantUnfinishedTasks,
@@ -213,8 +195,7 @@ class TodoProvider extends ChangeNotifier {
 
   void deleteCategoryWithName(String categoryName) {
     categoryName = categoryName;
-    if (categoryName != defaultCategoryName &&
-        _categories.containsKey(categoryName)) {
+    if (categoryName != defaultCategoryName && _categories.containsKey(categoryName)) {
       // 删除分类
       _categories.remove(categoryName);
 
@@ -246,6 +227,7 @@ class TodoProvider extends ChangeNotifier {
 
   void loadTodoList({bool reload = false}) {
     try {
+      bool saveLater = true;
       if (reload) {
         _categories = {};
         _tasks = [];
@@ -255,6 +237,7 @@ class TodoProvider extends ChangeNotifier {
         selectedCategory = defaultCategoryName;
         _categories[defaultCategoryName] = Application.defaultCategory;
       }
+
       Application.debug('加载分类中...');
       Map list = Application.settings['categories']['list'];
 
@@ -272,14 +255,21 @@ class TodoProvider extends ChangeNotifier {
       Application.debug('加载待办清单中...');
 
       List<Task> loadedTasks = [];
-      for (var category in Application.todoList.entries) {
-        for (int i = 0; i < category.value.length; i++) {
-          dynamic taskData = category.value[i];
+      for (var categoryList in Application.todoList.entries) {
+        for (int i = 0; i < categoryList.value.length; i++) {
+          dynamic taskData = categoryList.value[i];
+
+          Category? category = getCategoryByName(taskData['category']);
+          if (category == null) {
+            category = Application.defaultCategory;
+            saveLater = true;
+          }
+
           loadedTasks.add(
             Task(
               title: taskData['title'],
               remark: taskData['remark'],
-              category: _categories[taskData['category']]!,
+              category: category,
               creationDate: DateTime.parse(
                 taskData['creationDate'],
               ),
@@ -305,6 +295,7 @@ class TodoProvider extends ChangeNotifier {
       });
 
       _tasks.addAll(loadedTasks);
+      if (saveLater) _saveData();
       Application.debug('待办清单加载完成.');
     } catch (e) {
       mainLogger.warning('[ERROR] 初始化待办清单时出错: $e');
@@ -332,10 +323,7 @@ class TodoProvider extends ChangeNotifier {
     Application.debug('正在保存待办清单数据...');
     Map<String, dynamic> saveList = {};
     for (var key in {defaultCategoryName, ...list.keys}) {
-      saveList[key] = _tasks
-          .where((Task task) => key == task.category.name)
-          .map((Task task) => task.toJson())
-          .toList();
+      saveList[key] = _tasks.where((Task task) => key == task.category.name).map((Task task) => task.toJson()).toList();
     }
     Application.todoListJson().writeData(saveList);
     Application.debug('操作成功完成.');
