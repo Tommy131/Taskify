@@ -115,7 +115,7 @@ class AddTaskDialog extends StatelessWidget {
           );
           todoProvider.addTask(newTask);
           Navigator.of(context).pop();
-          UI.showBottomSheet(context: context, message: 'Success.');
+          UI.showBottomSheet(context: context, message: 'Operation completed successfully.');
         }
       },
     );
@@ -193,7 +193,7 @@ class EditTaskDialog extends StatelessWidget {
             remark: remark,
             dueDate: dueDate,
           );
-          UI.showBottomSheet(context: context, message: 'Success.');
+          UI.showBottomSheet(context: context, message: 'Operation completed successfully.');
         }
         Navigator.of(context).pop();
       },
@@ -218,7 +218,7 @@ class DeleteTaskDialog extends StatelessWidget {
       onPressed: () {
         todoProvider.deleteTask(task);
         Navigator.of(context).pop();
-        UI.showBottomSheet(context: context, message: 'Success.');
+        UI.showBottomSheet(context: context, message: 'Operation completed successfully.');
       },
     );
   }
@@ -251,8 +251,7 @@ class AddCategoryDialog extends StatelessWidget {
       onPressed: () {
         String categoryName = controller.text;
         if (categoryName.isNotEmpty) {
-          Category newCategory =
-              Category(name: categoryName, color: selectedColor);
+          Category newCategory = Category(name: categoryName, color: selectedColor);
           todoProvider.addCategory(newCategory);
           todoProvider.changeCategory(categoryName);
           Navigator.of(context).pop();
@@ -277,19 +276,13 @@ class DeleteCategoryDialog extends StatelessWidget {
         const Text('Select a category to delete:'),
         const SizedBox(height: 10.0),
         DropdownButton<String>(
-          value:
-              todoProvider.selectedCategory == Application.defaultCategory.name
-                  ? null
-                  : todoProvider.selectedCategory,
+          value: todoProvider.selectedCategory == Application.defaultCategory.name ? null : todoProvider.selectedCategory,
           onChanged: (String? selectedCategory) {
             if (selectedCategory != null) {
               todoProvider.changeCategory(selectedCategory);
             }
           },
-          items: categories.entries
-              .where(
-                  (element) => element.key != Application.defaultCategory.name)
-              .map<DropdownMenuItem<String>>(
+          items: categories.entries.where((element) => element.key != Application.defaultCategory.name).map<DropdownMenuItem<String>>(
             (MapEntry element) {
               return DropdownMenuItem<String>(
                 value: element.value.name,
@@ -309,18 +302,15 @@ class DeleteCategoryDialog extends StatelessWidget {
           ).toList(),
         ),
       ],
-      onPressed: todoProvider.selectedCategory ==
-              Application.defaultCategory.name
+      onPressed: todoProvider.selectedCategory == Application.defaultCategory.name
           ? null // Disable the button if there is only one category
           : () {
               Navigator.of(context).pop();
               UI.showConfirmationDialog(
                 context,
-                confirmMessage:
-                    'Delete Category: "${todoProvider.selectedCategory}"',
+                confirmMessage: 'Delete Category: "${todoProvider.selectedCategory}"',
                 onConfirmed: () {
-                  todoProvider
-                      .deleteCategoryWithName(todoProvider.selectedCategory);
+                  todoProvider.deleteCategoryWithName(todoProvider.selectedCategory);
                 },
               );
             },

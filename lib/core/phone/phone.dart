@@ -32,7 +32,7 @@ class Phone {
     }
   }
 
-  static void checkStoragePermission({
+  static Future<void> checkStoragePermission({
     Function? onGrantedCallback,
     Function? onDeclinedCallback,
   }) async {

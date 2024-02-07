@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 01:30:28
+ * @LastEditTime : 2024-02-07 21:05:15
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -25,11 +25,10 @@ import 'package:taskify/main.dart';
 
 class NotificationService {
   static const owoChannel = 'com.owoblog.taskify';
-
   static final AwesomeNotifications _notification = AwesomeNotifications();
 
   // ignore: prefer_final_fields
-  static Map<String, Map<String, Function(ReceivedNotification)?>> _methodHandlers = {
+  static Map<String, Map<String, Function>> _methodHandlers = {
     'onActionReceivedMethod': {},
     'onNotificationCreatedMethod': {},
     'onNotificationDisplayedMethod': {},
@@ -37,35 +36,54 @@ class NotificationService {
   };
 
   // ignore: prefer_final_fields
-  static Map<String, Timer> _notificationList = {};
+  static Map<String, Timer> _timerList = {};
 
-  static void addNotification(String notificationId, {Timer? timer, Duration? duration, Function? callback}) {
-    if (_notificationList.containsKey(notificationId)) {
-      _notificationList[notificationId]!.cancel();
+  static int _notificationId = 0;
+
+  static int get resetNotificationId {
+    return _notificationId = 0;
+  }
+
+  static int get nextNotificationId {
+    return _notificationId++;
+  }
+
+  static AwesomeNotifications get instance {
+    return _notification;
+  }
+
+  static void addTimer(
+    String timerId, {
+    Timer? timer,
+    Duration? duration,
+    Function? callback,
+  }) {
+    if (_timerList.containsKey(timerId)) {
+      _timerList[timerId]!.cancel();
     }
 
     if (timer != null) {
-      _notificationList[notificationId] = timer;
+      _timerList[timerId] = timer;
       return;
     }
 
     if ((duration != null) && (callback != null)) {
-      _notificationList[notificationId] = Timer(duration, () {
-        _notificationList.remove(notificationId);
+      _timerList[timerId] = Timer(duration, () {
+        _timerList.remove(timerId);
         callback();
       });
     }
   }
 
-  static void removeNotification(String notificationId) {
-    if (_notificationList.containsKey(notificationId)) {
-      _notificationList[notificationId]!.cancel();
-      _notificationList.remove(notificationId);
-      Application.debug('Removed Timmer: $notificationId');
+  static void removeTimer(String timerId) {
+    if (_timerList.containsKey(timerId)) {
+      _timerList[timerId]!.cancel();
+      _timerList.remove(timerId);
+      Application.debug('Removed Timmer: $timerId');
     }
   }
 
-  static Map<String, Map<String, Function(ReceivedNotification)?>> get methodHandler {
+  static Map<String, Map<String, Function>> get methodHandler {
     return _methodHandlers;
   }
 
@@ -75,7 +93,7 @@ class NotificationService {
     }
   }
 
-  static void addMethodHandler(String method, String tagName, Function(ReceivedNotification) handler) {
+  static void addMethodHandler(String method, String tagName, Function handler) {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method]![tagName] = handler;
       Application.debug('Added Handler "$tagName" to "$method".');
@@ -92,7 +110,7 @@ class NotificationService {
     if (_methodHandlers.containsKey(method)) {
       _methodHandlers[method]!.forEach((
         String tagName,
-        Function(ReceivedNotification)? callable,
+        Function callable,
       ) {
         handleMethod(method, tagName, _);
       });
@@ -101,7 +119,7 @@ class NotificationService {
 
   static dynamic handleMethod(String method, String tagName, ReceivedNotification _) {
     if (_methodHandlers.containsKey(method)) {
-      Map<String, Function(ReceivedNotification)?> map = _methodHandlers[method]!;
+      Map<String, Function> map = _methodHandlers[method]!;
       if (map.containsKey(tagName)) {
         return _methodHandlers[method]![tagName]!(_);
       }
@@ -142,7 +160,7 @@ class NotificationService {
       appIconString,
       [
         NotificationChannel(
-          channelGroupKey: 'com.owoblog.group.taskify',
+          channelGroupKey: 'com.owoblog.taskify.group',
           channelKey: owoChannel,
           channelName: 'Taskify',
           channelDescription: 'Taskify\'s Notification channel',
@@ -158,7 +176,7 @@ class NotificationService {
       // Channel groups are only visual and are not required
       channelGroups: [
         NotificationChannelGroup(
-          channelGroupKey: 'com.owoblog.group.taskify',
+          channelGroupKey: 'com.owoblog.taskify.group',
           channelGroupName: 'Taskify\'s Notification channel Group',
         ),
       ],
@@ -179,15 +197,18 @@ class NotificationService {
   static Future<bool> checkNotificationPermission(BuildContext context) async {
     return await _notification.isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
-        UI.showConfirmationDialog(
+        UI.showStandardDialog(
           context,
-          noticeText: '${Application.appName} wants send you notification.',
-          confirmMessage: 'Please grant this application the required permissions later.',
-          onConfirmed: () {
-            _notification.requestPermissionToSendNotifications().then((bool isGranted) {
+          title: '${Application.appName} wants send you notification.',
+          content: 'Please grant this application the required permissions later.',
+          actionCall: (context) async {
+            await _notification.requestPermissionToSendNotifications().then((bool isGranted) {
               if (isGranted) {
                 isAllowed = true;
-                Navigator.of(context).pop();
+                UI.showBottomSheet(
+                  context: context,
+                  message: 'Success.',
+                );
               } else {
                 UI.showBottomSheet(
                   context: context,
@@ -195,12 +216,6 @@ class NotificationService {
                 );
               }
             });
-          },
-          onCancelled: () {
-            UI.showBottomSheet(
-              context: context,
-              message: 'You denied the pop-up notification permission request.',
-            );
           },
         );
       }
@@ -225,28 +240,44 @@ class NotificationService {
     String? bigPicture,
     double? progressValue,
     List<NotificationActionButton>? actionButtons,
+    bool scheduled = false,
+    int? interval,
   }) async {
-    return await _notification.createNotification(
-      content: notificationContent ??
-          NotificationContent(
-            id: id,
-            channelKey: owoChannel,
-            actionType: actionType,
-            title: title ?? 'Taskify Broadcast Message',
-            body: body ?? 'Hello World! This is a test message.',
-            summary: summary ?? 'Taskify sent you a notification!',
-            icon: icon,
-            largeIcon: largeIcon,
-            color: color,
-            backgroundColor: backgroundColor,
-            notificationLayout: notificationLayout,
-            payload: payload,
-            showWhen: showWhen,
-            bigPicture: bigPicture,
-            progress: progressValue,
-          ),
-      actionButtons: actionButtons,
-    );
+    return await _notification.isNotificationAllowed().then((isAllowed) async {
+      if (isAllowed) {
+        return _notification.createNotification(
+          content: notificationContent ??
+              NotificationContent(
+                id: id,
+                channelKey: owoChannel,
+                actionType: actionType,
+                title: title ?? 'Taskify Broadcast Message',
+                body: body ?? 'Hello World! This is a test message.',
+                summary: summary ?? 'Taskify sent you a notification!',
+                icon: icon,
+                largeIcon: largeIcon,
+                color: color,
+                backgroundColor: backgroundColor,
+                notificationLayout: notificationLayout,
+                payload: payload,
+                showWhen: showWhen,
+                bigPicture: bigPicture,
+                progress: progressValue,
+              ),
+          actionButtons: actionButtons,
+          schedule: scheduled
+              ? NotificationInterval(
+                  interval: interval,
+                  timeZone: await _notification.getLocalTimeZoneIdentifier(),
+                  preciseAlarm: true,
+                )
+              : null,
+        );
+      } else {
+        Application.debug('No Permission to show notification.');
+        return isAllowed;
+      }
+    });
   }
 
   static Future<bool> showInboxNotification({
@@ -284,7 +315,8 @@ class NotificationService {
     String? title,
     String? body,
     String? summary,
-    Map<String, String>? payload = const {'navigate': 'true'},
+    Map<String, String>? payload,
+    List<NotificationActionButton>? actionButtons,
   }) async {
     return await showNotification(
       id: id,
@@ -294,7 +326,12 @@ class NotificationService {
       summary: summary,
       notificationLayout: NotificationLayout.BigText,
       payload: payload,
-      actionButtons: [
+      actionButtons: actionButtons ?? [
+        NotificationActionButton(
+          key: 'dismiss',
+          label: 'Dismiss',
+          color: Colors.red,
+        ),
         NotificationActionButton(
           key: 'check',
           label: 'Check it out',

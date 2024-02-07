@@ -31,9 +31,7 @@ class TodoProvider extends ChangeNotifier {
   /// 定义变量: 选中的分类名称
   late String selectedCategory = defaultCategoryName;
 
-  // ignore: prefer_final_fields
   Map<String, Category> _categories = {};
-  // ignore: prefer_final_fields
   List<Task> _tasks = [];
 
   /// Load categories before tasks during initialization

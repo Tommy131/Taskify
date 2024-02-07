@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-03 01:10:54
+ * @LastEditTime : 2024-02-07 17:57:35
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -176,10 +176,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
       );
 
       if ((result == null) || (selectedFilePath == null)) {
-        _sendBottomMessage(
-            message: selectedFilePath == null
-                ? 'Please at least pick one file to export!'
-                : 'Process cancelled.');
+        _sendBottomMessage(message: selectedFilePath == null ? 'Please at least pick one file to export!' : 'Process cancelled.');
         return;
       }
 
@@ -195,8 +192,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
           onConfirmed: () async {
             await File(selectedFilePath!).writeAsString(jsonContent);
             todoProvider.loadTodoList(reload: true);
-            _sendBottomMessage(
-                message: 'JSON data imported to file: ${file.toString()}');
+            _sendBottomMessage(message: 'JSON data imported from file: ${file.toString()}');
           },
         );
       }
@@ -221,7 +217,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
           if (!Platform.isAndroid && !Platform.isIOS) {
             String? result = await FilePicker.platform.saveFile(
               dialogTitle: 'Save file to:',
-              fileName: 'exported_$basename',
+              fileName: '${basename}_exported_${DateTime.now().toString()}',
               type: FileType.custom,
               allowedExtensions: ['json'],
             );
@@ -250,16 +246,13 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
                 fileName: 'exported_$basename',
                 replace: true,
               );
-              _sendBottomMessage(
-                  message: 'JSON data exported to file: $filePath');
+              _sendBottomMessage(message: 'JSON data exported to file: $filePath');
               return;
             }
-            _sendBottomMessage(
-                message: 'An error may have occurred during your operation.');
+            _sendBottomMessage(message: 'Process cancelled.');
           }
         } else {
-          _sendBottomMessage(
-              message: 'Please at least pick one file to export!');
+          _sendBottomMessage(message: 'Please at least pick one file to export!');
         }
       }
     } catch (e) {
