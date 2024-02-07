@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-06 21:24:51
+ * @LastEditTime : 2024-02-07 04:28:12
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -116,7 +116,7 @@ class _FocusModeScreenState extends State<FocusModeScreen> with TickerProviderSt
   double _calculateItemExtent(double height) {
     // print(height);
     // return height / (height > 730 ? 2 : (height > 550 ? 1.5 : (height > 275 ? 0.75 : 0.5)));
-    return height - 75;
+    return height;
   }
 
   Widget _buildTaskContainer(Task task, Duration remainingTime) {
