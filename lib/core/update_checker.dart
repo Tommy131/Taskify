@@ -22,12 +22,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:taskify/core/phone/notification_service.dart';
 
 import 'package:taskify/main.dart';
 
 class UpdateChecker {
-  static const String _serverUrl =
-      'https://owoblog.com/taskify/api/check-update';
+  static const String _serverUrl = 'https://owoblog.com/taskify/api/check-update';
 
   static Future<Map<String, dynamic>> getRawData() async {
     try {
@@ -44,8 +44,7 @@ class UpdateChecker {
     }
   }
 
-  static void checkForUpdates(BuildContext context,
-      {bool unnecessaryInfo = false}) async {
+  static Future<bool> checkForUpdates(BuildContext context, {bool unnecessaryInfo = false}) async {
     try {
       final data = await getRawData();
 
@@ -57,10 +56,9 @@ class UpdateChecker {
       Version appVersion = Version.parse(Application.versionName);
       Version remoteVersion = Version.parse(latestVersionName);
 
-      if ((appVersion < remoteVersion) ||
-          (Application.buildVersion < latestBuildVersion)) {
-        showUpdateDialog(
-            context, latestVersionName, updateMessage, downloadUrl);
+      if ((appVersion < remoteVersion) || (Application.buildVersion < latestBuildVersion)) {
+        showUpdateDialog(context, latestVersionName, updateMessage, downloadUrl);
+        return true;
       } else {
         if (unnecessaryInfo) {
           UI.showStandardDialog(
@@ -76,6 +74,23 @@ class UpdateChecker {
         message: e.toString(),
       );
     }
+    return false;
+  }
+
+  static Future<void> showAvailableUpdate(BuildContext context) async {
+    await UpdateChecker.checkForUpdates(context).then(
+      (result) {
+        if (result) {
+          DateTime today = DateTime.now();
+          int uniqueId = int.parse("${today.year}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}");
+          NotificationService.showBigTextWithActionNotification(
+            id: uniqueId,
+            title: 'New update available!',
+            body: 'Click me to check details.',
+          );
+        }
+      },
+    );
   }
 
   static void showUpdateDialog(

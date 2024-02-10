@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 21:05:15
+ * @LastEditTime : 2024-02-09 23:24:20
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -20,6 +20,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/services.dart';
 
 import 'package:taskify/main.dart';
 
@@ -123,26 +124,27 @@ class NotificationService {
   }
 
   static Future<void> _onActionReceivedMethod(ReceivedAction receivedAction) async {
-    // print('onActionReceivedMethod');
+    // Application.debug('onActionReceivedMethod');
     // print(receivedAction);
     handleMethods('onActionReceivedMethod', receivedAction);
   }
 
   static Future<void> _onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
-    // print('onNotificationCreatedMethod');
+    // Application.debug('onNotificationCreatedMethod');
     // print(receivedNotification);
     handleMethods('onNotificationCreatedMethod', receivedNotification);
   }
 
   static Future<void> _onNotificationDisplayedMethod(ReceivedNotification receivedNotification) async {
-    // print('onNotificationDisplayedMethod');
+    // Application.debug('onNotificationDisplayedMethod');
     // print(receivedNotification);
     handleMethods('onNotificationDisplayedMethod', receivedNotification);
   }
 
   static Future<void> _onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
-    // print('onDismissActionReceivedMethod');
+    // Application.debug('onDismissActionReceivedMethod');
     // print(receivedAction);
+    _notification.decrementGlobalBadgeCounter();
     handleMethods('onDismissActionReceivedMethod', receivedAction);
   }
 
@@ -150,6 +152,7 @@ class NotificationService {
     String? appIconString,
     bool debug = isDebugMode,
   }) async {
+    await _notification.resetGlobalBadge();
     await _notification
         .initialize(
       appIconString,
@@ -172,7 +175,7 @@ class NotificationService {
       channelGroups: [
         NotificationChannelGroup(
           channelGroupKey: 'com.owoblog.taskify.group',
-          channelGroupName: 'Taskify\'s Notification channel Group',
+          channelGroupName: 'Taskify\'s Notification Channel Group',
         ),
       ],
       debug: debug,
@@ -226,7 +229,7 @@ class NotificationService {
     String? body,
     String? summary,
     String? icon = 'resource://mipmap/ic_launcher',
-    String? largeIcon,
+    String? largeIcon = 'resource://mipmap/ic_launcher',
     Color color = Colors.white,
     Color backgroundColor = Colors.blue,
     NotificationLayout notificationLayout = NotificationLayout.Default,
@@ -239,6 +242,11 @@ class NotificationService {
     int? interval,
   }) async {
     if (NotificationService.inDismissList(id)) return false;
+
+    if (await isNotificationPresent(id)) {
+      Application.debug('Notification ID "${id.toString()}" has been presented, ignore this message push.');
+      return false;
+    }
 
     return await _notification.isNotificationAllowed().then((isAllowed) async {
       if (isAllowed) {
@@ -375,5 +383,16 @@ class NotificationService {
 
   static bool inDismissList(int id) {
     return _dismissList.contains(id);
+  }
+
+  static Future<bool> isNotificationPresent(int notificationId) async {
+    try {
+      const platform = MethodChannel('notification_checker');
+      final bool result = await platform.invokeMethod('isNotificationPresent', {"notificationId": notificationId});
+      return result;
+    } on PlatformException catch (e) {
+      Application.debug("Failed to check notification: '${e.message}'.");
+      return false;
+    }
   }
 }

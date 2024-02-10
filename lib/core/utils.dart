@@ -17,6 +17,7 @@
  */
 // core/utils.dart
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
 
@@ -56,5 +57,11 @@ class Utils {
       storageInfo = 'Failed to fetch storage info';
     }
     return storageInfo;
+  }
+
+  static int generateUniqueId() {
+    Random random = Random();
+    int uniqueId = random.nextInt(pow(2, 31).toInt() - 1);
+    return uniqueId;
   }
 }
