@@ -70,7 +70,7 @@ void main() async {
 /// 主程序类
 class Application {
   static const String appName = 'Taskify';
-  static const int buildVersion = 2024021;
+  static const int buildVersion = 20240210;
   static const String versionName = '0.0.4';
   static const String author = 'Jay Hanski';
   static const String description = 'A free app developed by HanskiJay';
