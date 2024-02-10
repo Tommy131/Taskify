@@ -28,19 +28,19 @@ class FunctionButtons {
   ];
 
   static const List<Widget?> _dialogs = [
+    AddTaskDialog(),
+    null,
     AddCategoryDialog(),
     null,
     DeleteCategoryDialog(),
-    null,
-    AddTaskDialog(),
   ];
 
   static const List<Icon?> _buttonIcons = [
+    Icon(Icons.add),
+    null,
     Icon(Icons.playlist_add),
     null,
     Icon(Icons.delete_sweep),
-    null,
-    Icon(Icons.add),
   ];
 
   static List<Widget> buildList(BuildContext context) {

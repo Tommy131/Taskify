@@ -135,7 +135,7 @@ class CardBuilderWidget {
       widget: TextFormField(
         initialValue: currentValue,
         keyboardType: TextInputType.text,
-        onFieldSubmitted: onChanged,
+        onChanged: onChanged,
       ),
       onPressed: onDataSave,
     );

@@ -93,7 +93,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         CardBuilderWidget.buildWithNumberPicker(
-          title: 'Minimum dismiss in days:',
+          title: 'Send a system notification when the task is less than this number of days:',
           currentValue: _notificationSettings['minimumDismissDay'],
           minValue: 1,
           maxValue: 30,

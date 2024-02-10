@@ -153,7 +153,7 @@ class _FocusModeScreenState extends State<FocusModeScreen> with TickerProviderSt
             _buildTaskText(
               task,
               fontSize: 12.0,
-              text: 'Due to: ${task.dueDate.toString()}',
+              text: 'Due date: ${task.dueDate.toString()}',
               fontStyle: FontStyle.italic,
             ),
             const SizedBox(height: 10.0),

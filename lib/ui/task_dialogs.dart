@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 21:26:22
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 15:23:24
+ * @LastEditTime : 2024-02-09 23:58:35
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -19,6 +19,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:taskify/core/utils.dart';
 
 import 'package:taskify/main.dart';
 import 'package:taskify/models/category.dart';
@@ -91,7 +92,7 @@ class AddTaskDialog extends StatelessWidget {
           decoration: UI.input('Add a Remark...'),
         ),
         const SizedBox(height: 10.0),
-        const Text('Due to Date:'),
+        const Text('Due Date:'),
         const SizedBox(height: 5.0),
         TextField(
           controller: dueDateController,
@@ -107,6 +108,7 @@ class AddTaskDialog extends StatelessWidget {
         String taskTitle = titleController.text;
         if (taskTitle.isNotEmpty) {
           Task newTask = Task(
+            uid: Utils.generateUniqueId(),
             title: taskTitle,
             remark: remarkController.text,
             category: todoProvider.getCurrentCategory(),
@@ -171,7 +173,7 @@ class EditTaskDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [const SizedBox(height: 10.0), ...children],
               ),
-        const Text('Due to Date:'),
+        const Text('Due Date:'),
         const SizedBox(height: 5.0),
         TextField(
           controller: dueDateController,

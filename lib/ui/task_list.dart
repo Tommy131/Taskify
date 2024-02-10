@@ -117,7 +117,7 @@ class TaskListItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4.0),
                 _buildTextStyle(
-                  'Due to date: ${DateFormat('yyyy-MM-dd').format(task.dueDate)}',
+                  'Due date: ${DateFormat('yyyy-MM-dd').format(task.dueDate)}',
                   fontWeight: FontWeight.bold,
                   color: task.isCompleted
                       ? Colors.grey
