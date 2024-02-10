@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:57:02
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 16:18:39
+ * @LastEditTime : 2024-02-10 00:05:45
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -18,6 +18,7 @@
 // providers/todo_provider.dart
 
 import 'package:flutter/material.dart';
+import 'package:taskify/core/utils.dart';
 
 import 'package:taskify/main.dart';
 import 'package:taskify/models/task.dart';
@@ -265,6 +266,7 @@ class TodoProvider extends ChangeNotifier {
 
           loadedTasks.add(
             Task(
+              uid: taskData['uid'] ?? Utils.generateUniqueId(),
               title: taskData['title'],
               remark: taskData['remark'],
               category: category,

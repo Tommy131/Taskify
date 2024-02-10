@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 21:00:22
+ * @LastEditTime : 2024-02-10 00:57:37
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -44,7 +44,7 @@ class ScreenManager extends StatefulWidget {
   State<ScreenManager> createState() => _ScreenManagerState();
 }
 
-class _ScreenManagerState extends State<ScreenManager> {
+class _ScreenManagerState extends State<ScreenManager> with WidgetsBindingObserver {
   int selectedIndex = 0;
 
   static const List<Widget> _pages = [
@@ -86,10 +86,11 @@ class _ScreenManagerState extends State<ScreenManager> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // 先调用一次更新检测API, 以实现开启App后的第一次更新检测
     UpdateChecker.checkForUpdates(context);
-    Timer.periodic(const Duration(hours: 1), (Timer timer) {
-      UpdateChecker.checkForUpdates(context);
+    Timer.periodic(const Duration(hours: 1), (Timer timer) async {
+      UpdateChecker.showAvailableUpdate(context);
     });
     mainLogger.info('成功初始化更新检测服务.');
 
@@ -116,13 +117,12 @@ class _ScreenManagerState extends State<ScreenManager> {
               if (sortedTasks.isEmpty) return;
 
               if (Platform.isAndroid || Platform.isIOS) {
-                int id = 0;
                 for (Task? task in sortedTasks) {
                   if (task == null) return;
 
-                  if (task.dueDate.difference(DateTime.now()).inDays <= (settings['minimumNoticeDay'] ?? 1)) {
+                  if (task.dueDate.difference(DateTime.now()).inDays <= (settings['minimumDismissDay'] ?? 1)) {
                     NotificationService.showBigTextWithActionNotification(
-                      id: id++,
+                      id: task.uid,
                       title: 'Task "${task.title}" will expired soon!',
                       body: 'Click me to check more details.',
                       summary: '${task.category.name}\'s task will expired',
@@ -136,6 +136,24 @@ class _ScreenManagerState extends State<ScreenManager> {
         );
       });
       mainLogger.info('成功初始化任务临期通知.');
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      // 提示已进入后台运行
+      UI.showBottomSheet(
+        context: context,
+        message: '${Application.appName} is running in the background.',
+      );
     }
   }
 

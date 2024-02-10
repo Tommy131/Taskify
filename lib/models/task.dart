@@ -21,6 +21,7 @@ import 'package:taskify/models/category.dart';
 
 class Task {
   static final DateTime defaultDate = DateTime(1990, 1, 1);
+  int uid;
   String title;
   String remark;
   Category category;
@@ -30,6 +31,7 @@ class Task {
   bool isImportant;
 
   Task({
+    required this.uid,
     required this.title,
     required this.category,
     required this.creationDate,
@@ -41,6 +43,7 @@ class Task {
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
+      uid: json['uid'],
       title: json['title'],
       remark: json['remark'],
       category: Category.fromJson(json),
@@ -53,6 +56,7 @@ class Task {
 
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'title': title,
       'remark': remark,
       'category': category.name,
