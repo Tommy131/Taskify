@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-10 00:17:12
+ * @LastEditTime : 2024-02-12 21:26:01
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -70,7 +70,7 @@ void main() async {
 /// 主程序类
 class Application {
   static const String appName = 'Taskify';
-  static const int buildVersion = 20240210;
+  static const int buildVersion = 20240212;
   static const String versionName = '0.0.4';
   static const String author = 'Jay Hanski';
   static const String description = 'A free app developed by HanskiJay';
