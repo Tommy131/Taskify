@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-01 00:08:28
+ * @LastEditTime : 2024-02-12 18:30:53
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -21,7 +21,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:taskify/app.dart';
 import 'package:taskify/widgets/animated_app_bar_widget.dart';
 
 class TicTacToeGame extends StatefulWidget {
@@ -41,8 +40,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   int playerOScore = 0;
 
   // Use a 2D List for the game board
-  List<List<String>> board =
-      List.generate(boardSize, (_) => List.filled(boardSize, ''));
+  List<List<String>> board = List.generate(boardSize, (_) => List.filled(boardSize, ''));
 
   bool playerX = true; // true: X, false: O
 
@@ -69,8 +67,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   void _startColorChangingTimer() {
-    _colorChangeTimer =
-        Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _colorChangeTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _changeColor();
     });
   }
@@ -94,12 +91,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyApp(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -193,14 +185,12 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   bool _checkWinner() {
     for (int i = 0; i < boardSize; i++) {
-      if (_checkLine(board[i][0], board[i][1], board[i][2]) ||
-          _checkLine(board[0][i], board[1][i], board[2][i])) {
+      if (_checkLine(board[i][0], board[i][1], board[i][2]) || _checkLine(board[0][i], board[1][i], board[2][i])) {
         return true;
       }
     }
 
-    return _checkLine(board[0][0], board[1][1], board[2][2]) ||
-        _checkLine(board[0][2], board[1][1], board[2][0]);
+    return _checkLine(board[0][0], board[1][1], board[2][2]) || _checkLine(board[0][2], board[1][1], board[2][0]);
   }
 
   bool _checkLine(String a, String b, String c) {
@@ -223,8 +213,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       context: context,
       builder: (BuildContext context) {
         !playerX ? playerXScore++ : playerOScore++;
-        return _buildGameOverDialog(
-            'Player ${!playerX ? playerXSymbol : playerOSymbol} wins!');
+        return _buildGameOverDialog('Player ${!playerX ? playerXSymbol : playerOSymbol} wins!');
       },
     );
   }

@@ -10,7 +10,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-01-31 22:23:39
+ * @LastEditTime : 2024-02-12 18:12:52
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -19,6 +19,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:taskify/app.dart';
 
 import 'package:taskify/main.dart';
 import 'package:taskify/tests/test_widget.dart';
@@ -127,11 +128,10 @@ class _EsterEggState extends State<EsterEggScreen> {
         title: 'Bingo~',
         content: 'You have successfully unlocked the game!',
         actionCall: (context) {
-          Navigator.pushReplacement(
-            context!,
-            MaterialPageRoute(
-              builder: (context) => const TicTacToeGame(),
-            ),
+          MyApp.navigatorKey.currentState?.push(
+            MaterialPageRoute(builder: (_) {
+              return const TicTacToeGame();
+            }),
           );
         },
       );
