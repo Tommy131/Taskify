@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-07 17:57:35
+ * @LastEditTime : 2024-02-16 21:17:46
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -23,6 +23,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
@@ -98,7 +99,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
       const SizedBox(height: 10.0),
       _buildElevatedButton('Export JSON', _exportJson),
       const SizedBox(height: 10.0),
-      _buildElevatedButton('Clean Choose', () {
+      _buildElevatedButton('Clean Chose', () {
         setState(() {
           selectedFilePath = null;
           jsonController.text = '';
@@ -212,12 +213,12 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
           return;
         }
         if (selectedFilePath != null) {
-          String basename = path.basename(selectedFilePath!);
+          String basename = path.basename(selectedFilePath!).split('.').first;
 
           if (!Platform.isAndroid && !Platform.isIOS) {
             String? result = await FilePicker.platform.saveFile(
               dialogTitle: 'Save file to:',
-              fileName: '${basename}_exported_${DateTime.now().toString()}',
+              fileName: '${basename}_${DateFormat('y_MM_d').format(DateTime.now())}_exported.json',
               type: FileType.custom,
               allowedExtensions: ['json'],
             );

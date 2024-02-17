@@ -42,7 +42,7 @@ const bool isDebugMode = bool.fromEnvironment('dart.vm.product') == false;
 final Logger mainLogger = Logger('MainLogger');
 
 /// 全局常量: 文件夹名称
-const savePathName = 'userData';
+const String savePathName = 'userData';
 
 final List<String> jsonFileNames = ['userSettings', 'todoList'];
 
