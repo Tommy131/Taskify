@@ -12,7 +12,7 @@
  * @Date         : 2024-01-19 00:55:40
  * @Author       : HanskiJay
  * @LastEditors  : HanskiJay
- * @LastEditTime : 2024-02-16 21:17:46
+ * @LastEditTime : 2024-05-26 16:57:15
  * @E-Mail       : support@owoblog.com
  * @Telegram     : https://t.me/HanskiJay
  * @GitHub       : https://github.com/Tommy131
@@ -106,14 +106,7 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
         });
       }),
       const SizedBox(height: 20.0),
-      SingleChildScrollView(
-        child: isJsonValid
-            ? _buildHighlightedJson()
-            : const Text(
-                'Invalid JSON!',
-                style: TextStyle(color: Colors.red),
-              ),
-      ),
+      _buildHighlightedJson(),
     ];
 
     return Scaffold(
@@ -267,13 +260,18 @@ class _JsonImportExportScreenState extends State<JsonImportExportScreen> {
       // String formattedJson = jsonEncode(jsonData);
       const JsonEncoder encoder = JsonEncoder.withIndent('  ');
       String prettyPrintedJson = encoder.convert(jsonData);
-      return HighlightView(
-        prettyPrintedJson,
-        language: 'json',
-        theme: githubTheme,
-        padding: const EdgeInsets.all(10),
-        textStyle: const TextStyle(fontSize: 12),
-      );
+      return isJsonValid
+          ? HighlightView(
+              prettyPrintedJson,
+              language: 'json',
+              theme: githubTheme,
+              padding: const EdgeInsets.all(10),
+              textStyle: const TextStyle(fontSize: 12),
+            )
+          : const Text(
+              'Invalid JSON!',
+              style: TextStyle(color: Colors.red),
+            );
     } catch (e) {
       return const SizedBox.shrink();
     }
