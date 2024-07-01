@@ -37,6 +37,8 @@ To run this project locally, follow these steps:
    build
    ```
 
+2. Installation for Backend: [Taskify-Go](https://github.com/your-username/Taskify-Go.git)
+
 ## Open Source License
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the LICENSE file for details.
