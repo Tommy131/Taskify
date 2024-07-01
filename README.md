@@ -30,14 +30,14 @@ To run this project locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/taskify.git
+   git clone https://github.com/Tommy131/taskify.git
    flutter clean
    flutter run
    REM or
    build
    ```
 
-2. Installation for Backend: [Taskify-Go](https://github.com/your-username/Taskify-Go.git)
+2. Installation for Backend: [Taskify-Go](https://github.com/Tommy131/Taskify-Go.git)
 
 ## Open Source License
 
