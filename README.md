@@ -37,7 +37,7 @@ To run this project locally, follow these steps:
    build
    ```
 
-2. Installation for Backend: [Taskify-Go](https://github.com/Tommy131/Taskify-Go.git)
+2. Installation for Backend: [Taskify-Go](https://github.com/Tommy131/OwOWeb-Go/tree/main/modules/taskify)
 
 ## Open Source License
 
