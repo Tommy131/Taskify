@@ -48,10 +48,12 @@ final List<String> jsonFileNames = ['userSettings', 'todoList'];
 
 /// 主函数
 void main() async {
-  String title = '${Application.appName} v${Application.versionName} By HanskiJay';
+  String title =
+      '${Application.appName} v${Application.versionName} By HanskiJay';
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((LogRecord rec) {
-    developer.log('[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
+    developer.log(
+        '[${rec.loggerName}] ${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -211,7 +213,8 @@ class Application {
 
   static bool isValidEmail(String email) {
     // 使用正则表达式验证邮箱格式
-    final RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    final RegExp emailRegex =
+        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
 
@@ -251,11 +254,13 @@ class Application {
       File sourceFile = File(sourcePath);
 
       if (sourceFile.existsSync()) {
-        String destinationPath = '$destinationDirectory${sourceFile.uri.pathSegments.last}';
+        String destinationPath =
+            '$destinationDirectory${sourceFile.uri.pathSegments.last}';
 
         sourceFile.renameSync(destinationPath);
 
-        Application.debug('File moved successfully from $sourcePath to $destinationPath');
+        Application.debug(
+            'File moved successfully from $sourcePath to $destinationPath');
         return true;
       } else {
         Application.debug('WARN >> Source file does not exist.');
@@ -390,7 +395,8 @@ class UI {
   }) {
     Color backgroundColor = color ?? Colors.black.withOpacity(0.7);
 
-    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) && (context != null)) {
+    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) &&
+        (context != null)) {
       final snackBar = SnackBar(
         content: Text(message!),
         backgroundColor: backgroundColor,
@@ -430,7 +436,8 @@ class UI {
     );
   }
 
-  static Ink decoratedContainer(Widget widget, {Function? onLongPressCall, Function? onTapCall}) {
+  static Ink decoratedContainer(Widget widget,
+      {Function? onLongPressCall, Function? onTapCall}) {
     return Ink(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
@@ -460,31 +467,36 @@ class UI {
     );
   }
 
-  static InputDecoration input(String hintText, {Color color = Colors.black45}) {
+  static InputDecoration input(String hintText,
+      {Color color = Colors.black45}) {
     return InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: color),
     );
   }
 
-  static Future<DateTime?> selectDate(BuildContext context, DateTime selectedDate) async {
+  static Future<DateTime?> selectDate(
+      BuildContext context, DateTime selectedDate) async {
     return await showDatePicker(
       context: context,
       initialDate: selectedDate,
       currentDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2080),
     );
   }
 
-  static Future<TimeOfDay?> selectTime(BuildContext context, TimeOfDay selectedTime) async {
+  static Future<TimeOfDay?> selectTime(
+      BuildContext context, TimeOfDay selectedTime) async {
     return await showTimePicker(
       context: context,
       initialTime: selectedTime,
     );
   }
 
-  static ElevatedButton addPickDateButton(BuildContext context, DateTime selectedDate, {Function(DateTime?)? onResult}) {
+  static ElevatedButton addPickDateButton(
+      BuildContext context, DateTime selectedDate,
+      {Function(DateTime?)? onResult}) {
     return ElevatedButton(
       onPressed: () {
         selectDate(context, selectedDate).then((value) {
@@ -497,7 +509,9 @@ class UI {
     );
   }
 
-  static ElevatedButton addPickTimeButton(BuildContext context, TimeOfDay selectedTime, {Function(TimeOfDay?)? onResult}) {
+  static ElevatedButton addPickTimeButton(
+      BuildContext context, TimeOfDay selectedTime,
+      {Function(TimeOfDay?)? onResult}) {
     return ElevatedButton(
       onPressed: () {
         selectTime(context, selectedTime).then((value) {
@@ -510,7 +524,9 @@ class UI {
     );
   }
 
-  static ElevatedButton addPickDateTimeButton(BuildContext context, DateTime selectedDateTime, {Function(DateTime?)? onResult}) {
+  static ElevatedButton addPickDateTimeButton(
+      BuildContext context, DateTime selectedDateTime,
+      {Function(DateTime?)? onResult}) {
     return ElevatedButton(
       onPressed: () async {
         await selectDate(context, selectedDateTime).then(

@@ -86,7 +86,7 @@ class AboutScreenState extends State<AboutScreen> {
                   Icons.update,
                   ElevatedButton(
                     onPressed: () => _checkForUpdates(context),
-                    style: ElevatedButton.styleFrom(primary: Colors.blue[100]),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[100]),
                     child: const Text('Check Update'),
                   ),
                 ),
@@ -112,7 +112,7 @@ class AboutScreenState extends State<AboutScreen> {
                         });
                       }
                     },
-                    style: ElevatedButton.styleFrom(primary: Colors.blue[100]),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[100]),
                     child: const Text('Open System Settings'),
                   ),
                 ),
